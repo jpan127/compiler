@@ -41,22 +41,25 @@ public:
      * @return the next token from the source.
      * @throw a string message if an error occurred.
      */
-    Token *next_token(Token *prev_token) throw (string);
+    Token *next_token(Token *prev_token);
 
     /**
      * @return the current character from the source.
      * @throw a string message if an error occurred.
      */
-    char current_char() throw (string);
+    char current_char();
 
     /**
      * @return the next character from the source.
      * @throw a string message if an error occurred.
      */
-    char next_char() throw (string);
+    char next_char();
+
+    Source *source;
+
+    int get_position();
 
 protected:
-    Source *source;
 
     /**
      * Extract the next token from the source.
@@ -64,7 +67,7 @@ protected:
      * @return the token.
      * @throw a string message if an error occurred.
      */
-    virtual Token *extract_token() throw (string) = 0;
+    virtual Token *extract_token() = 0;
 
 private:
     Token *token;

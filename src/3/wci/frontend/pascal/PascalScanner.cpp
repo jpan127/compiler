@@ -25,9 +25,10 @@ using namespace wci::frontend::pascal::tokens;
 
 PascalScanner::PascalScanner(Source *source) : Scanner(source)
 {
+    /* EMPTY */
 }
 
-Token *PascalScanner::extract_token() throw (string)
+Token *PascalScanner::extract_token()
 {
     skip_white_space();
 
@@ -69,7 +70,7 @@ Token *PascalScanner::extract_token() throw (string)
     return token;
 }
 
-void PascalScanner::skip_white_space() throw (string)
+void PascalScanner::skip_white_space()
 {
     char current_ch = current_char();
 

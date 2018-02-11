@@ -26,6 +26,16 @@ SRCS =  Pascal.cpp \
         wci/frontend/pascal/tokens/PascalSpecialSymbolToken.cpp \
         wci/frontend/pascal/tokens/PascalStringToken.cpp \
         wci/frontend/pascal/tokens/PascalWordToken.cpp \
+        wci/frontend/java/JavaError.cpp \
+        wci/frontend/java/JavaErrorHandler.cpp \
+        wci/frontend/java/JavaParserTD.cpp \
+        wci/frontend/java/JavaScanner.cpp \
+        wci/frontend/java/JavaToken.cpp \
+        wci/frontend/java/tokens/JavaErrorToken.cpp \
+        wci/frontend/java/tokens/JavaNumberToken.cpp \
+        wci/frontend/java/tokens/JavaSpecialSymbolToken.cpp \
+        wci/frontend/java/tokens/JavaStringToken.cpp \
+        wci/frontend/java/tokens/JavaWordToken.cpp \
         wci/message/Message.cpp \
         wci/message/MessageHandler.cpp
         
@@ -35,7 +45,7 @@ CC = g++
 # Replace with the path on your machine to the directory
 # where you installed the Boost include files.
 # See http://www.boost.org
-BOOST_INCLUDE_DIR = /c/Users/jp/Desktop/152/Book/boost_1_66_0
+BOOST_INCLUDE_DIR = D:\boost_1_66_0
 
 CFLAGS = -std=c++0x -O0 -g3 -Wall -I$(BOOST_INCLUDE_DIR)
 

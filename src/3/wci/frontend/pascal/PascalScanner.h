@@ -33,14 +33,14 @@ protected:
      * @return the next token.
      * @throw a string message if an error occurred.
      */
-    Token *extract_token() throw (string);
+    Token *extract_token();
 
 private:
     /**
      * Skip whitespace characters by consuming them.  A comment is whitespace.
      * @throw a string message if an error occurred.
      */
-    void skip_white_space() throw (string);
+    void skip_white_space();
 };
 
 }}} // namespace wci::frontend::pascal

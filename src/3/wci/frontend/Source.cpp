@@ -32,39 +32,33 @@ int Source::get_line_number() const { return line_number; }
 
 int Source::get_position() const { return current_pos; }
 
-char Source::current_char() throw (string)
+char Source::current_char()
 {
-    // First time?
-    if (current_pos == -2) {
+    // Read next line if necessary
+    if (-2 == current_pos || current_pos >= line_text.length())
+    {
         read_line();
-        return next_char();
+        ++current_pos;
     }
 
-    // At end of file?
-    else if (reader.eof()) return END_OF_FILE;
-
-    // At end of line?
-    else if ((current_pos == -1) || (current_pos == line_text.length())) {
-        return END_OF_LINE;
+    // If EOF bit is set AND finished reading the current line
+    if (reader.eof() && current_pos >= line_text.length())
+    {
+        return END_OF_FILE;
     }
-
-    // Need to read the next line?
-    else if (current_pos > line_text.length()) {
-        read_line();
-        return next_char();
+    else
+    {
+        return line_text[current_pos];
     }
-
-    // Return the character at the current position.
-    else return line_text[current_pos];
 }
 
-char Source::next_char() throw (string)
+char Source::next_char()
 {
     ++current_pos;
     return current_char();
 }
 
-char Source::peek_char() throw (string)
+char Source::peek_char()
 {
     current_char();
 
@@ -75,21 +69,38 @@ char Source::peek_char() throw (string)
                                          : END_OF_LINE;
 }
 
-void Source::read_line() throw (string)
+void Source::put_back()
 {
-    getline(reader, line_text);
+    --current_pos;
+}
 
-    if (reader.eof()) return;
-    if (reader.fail() || reader.bad()) throw string("Source input failure.");
-
+void Source::read_line()
+{
     current_pos = -1;
 
-    if (reader.good())
+    // Clear string so string length is reset
+    line_text.clear();
+
+    getline(reader, line_text);
+
+    if (reader.eof() && line_text.length() == 0)
     {
-        int line_length = line_text.length();
+        return;
+    }
+    else if (reader.fail() || reader.bad())
+    {
+        throw string("Source input failure.");
+    }
+    else
+    {
+        // Always add the newline on since getline ignores it
+        // Especially if the line is empty
+        line_text += "\n";
+
+        const uint32_t line_length = line_text.length();
         if ((line_length > 0) && (line_text[line_length - 1] == '\r'))
         {
-            line_text.resize(--line_length);
+            line_text.resize(line_length - 1);
         }
 
         ++line_number;
@@ -97,13 +108,13 @@ void Source::read_line() throw (string)
         // Send a source line message containing the line number
         // and the line text to all the listeners.
         Message message(SOURCE_LINE,
-                        LINE_NUMBER, to_string(line_number),
-                        LINE_TEXT, line_text);
+                        LINE_NUMBER , to_string(line_number), ///< Key : Value
+                        LINE_TEXT   , line_text);             ///< Key : Value
         send_message(message);
     }
 }
 
-void Source::close() throw (string)
+void Source::close()
 {
     reader.close();
 }

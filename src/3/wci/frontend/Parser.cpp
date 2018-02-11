@@ -42,7 +42,7 @@ Token *Parser::current_token()
     return scanner->current_token();
 }
 
-Token *Parser::next_token(Token *prev_token) throw (string)
+Token *Parser::next_token(Token *prev_token)
 {
     return scanner->next_token(prev_token);
 }

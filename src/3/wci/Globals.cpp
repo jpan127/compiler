@@ -6,7 +6,7 @@
  */
 #include <string>
 #include <algorithm>
-#include "Object.h"
+#include "Globals.h"
 
 using namespace std;
 
@@ -18,8 +18,7 @@ using namespace std;
 string to_upper(const string str)
 {
     string upper_case(str);
-    transform(upper_case.begin(), upper_case.end(),
-              upper_case.begin(), ::toupper);
+    transform(upper_case.begin(), upper_case.end(), upper_case.begin(), ::toupper);
     return upper_case;
 }
 
@@ -31,8 +30,7 @@ string to_upper(const string str)
 string to_lower(const string str)
 {
     string lower_case(str);
-    transform(lower_case.begin(), lower_case.end(),
-              lower_case.begin(), ::tolower);
+    transform(lower_case.begin(), lower_case.end(), lower_case.begin(), ::tolower);
     return lower_case;
 }
 
@@ -43,16 +41,10 @@ string to_lower(const string str)
  */
 string stringify(const Object& obj)
 {
-    if (obj.type() == typeid(int))
-        return to_string(boost::any_cast<int>(obj));
-    else if (obj.type() == typeid(float))
-        return to_string(boost::any_cast<float>(obj));
-    else if (obj.type() == typeid(bool))
-        return to_string(boost::any_cast<bool>(obj));
-    else if (obj.type() == typeid(string))
-        return boost::any_cast<string>(obj);
-    else if (obj.type() == typeid(char))
-        return to_string(boost::any_cast<char>(obj));
-    else
-        return "";
+    if (obj.type() == typeid(int))         return to_string(boost::any_cast<int>(obj));
+    else if (obj.type() == typeid(float))  return to_string(boost::any_cast<float>(obj));
+    else if (obj.type() == typeid(bool))   return to_string(boost::any_cast<bool>(obj));
+    else if (obj.type() == typeid(string)) return boost::any_cast<string>(obj);
+    else if (obj.type() == typeid(char))   return to_string(boost::any_cast<char>(obj));
+    else                                   return "";
 }

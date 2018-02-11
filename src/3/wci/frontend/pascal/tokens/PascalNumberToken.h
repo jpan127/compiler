@@ -25,7 +25,7 @@ public:
      * @param source the source from where to fetch the token's characters.
      * @throw a string message if an error occurred.
      */
-    PascalNumberToken(Source *source) throw (string);
+    PascalNumberToken(Source *source);
 
 protected:
     /**
@@ -33,14 +33,14 @@ protected:
      * Override of wci::frontend::Token.
      * @throw a string message if an error occurred.
      */
-    void extract() throw (string);
+    void extract();
 
     /**
      * Extract a Pascal number token from the source.
      * @param textBuffer the buffer to append the token's characters.
      * @throw a string message if an error occurred.
      */
-    void extract_number(string text) throw (string);
+    void extract_number(string text);
 
 private:
     static int MAX_EXPONENT;
@@ -51,7 +51,7 @@ private:
      * @return the string of digits.
      * @throw a string message if an error occurred.
      */
-    string unsigned_integer_digits() throw (string);
+    string unsigned_integer_digits();
 
     /**
      * Compute and return the integer value of a string of digits.

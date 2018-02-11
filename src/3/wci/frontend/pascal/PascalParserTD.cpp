@@ -35,7 +35,7 @@ PascalParserTD::PascalParserTD(PascalParserTD *parent)
 {
 }
 
-void PascalParserTD::parse() throw (string)
+void PascalParserTD::parse()
 {
     Token *token = nullptr;
     int last_line_number;
@@ -56,7 +56,7 @@ void PascalParserTD::parse() throw (string)
             case PT_STRING:
             {
                 type_str = "STRING";
-                value_str = cast(value, string);
+                value_str = CAST(value, string);
                 break;
             }
 
@@ -70,14 +70,14 @@ void PascalParserTD::parse() throw (string)
             case PT_INTEGER:
             {
                 type_str = "INTEGER";
-                value_str = to_string(cast(value, int));
+                value_str = to_string(CAST(value, int));
                 break;
             }
 
             case PT_REAL:
             {
                 type_str = "REAL";
-                value_str = to_string(cast(value, float));
+                value_str = to_string(CAST(value, float));
                 break;
             }
 
@@ -88,7 +88,7 @@ void PascalParserTD::parse() throw (string)
                 // Reserved word
                 if (!value.empty())
                 {
-                    value_str = cast(value, string);
+                    value_str = CAST(value, string);
                     type_str = value_str;
                 }
 
@@ -118,7 +118,7 @@ void PascalParserTD::parse() throw (string)
         else
         {
             PascalErrorCode error_code =
-                                    (PascalErrorCode) cast(value, int);
+                                    (PascalErrorCode) CAST(value, int);
             error_handler.flag(token, error_code, this);
         }
     }

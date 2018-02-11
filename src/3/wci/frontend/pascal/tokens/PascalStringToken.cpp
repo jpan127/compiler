@@ -16,13 +16,13 @@ using namespace std;
 using namespace wci::frontend;
 using namespace wci::frontend::pascal;
 
-PascalStringToken::PascalStringToken(Source *source) throw (string)
+PascalStringToken::PascalStringToken(Source *source)
     : PascalToken(source)
 {
     extract();
 }
 
-void PascalStringToken::extract() throw (string)
+void PascalStringToken::extract()
 {
     string value_str = "";
 

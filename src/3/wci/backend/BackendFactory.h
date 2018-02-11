@@ -25,7 +25,7 @@ public:
      * @return a compiler or an interpreter back end component.
      * @throws Exception if an error occurred.
      */
-    static Backend *create_backend(string operation) throw (string);
+    static Backend *create_backend(string operation);
 };
 
 }} // namespace wci::backend

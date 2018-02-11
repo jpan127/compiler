@@ -17,7 +17,7 @@ using namespace wci::frontend::pascal;
 
 PascalErrorToken::PascalErrorToken(Source *source, PascalErrorCode error_code,
                                    string token_text)
-    throw (string)
+   
     : PascalToken(source)
 {
     type = (TokenType) PT_ERROR;
@@ -25,7 +25,7 @@ PascalErrorToken::PascalErrorToken(Source *source, PascalErrorCode error_code,
     value = (int) error_code;
 }
 
-void PascalErrorToken::extract() throw (string)
+void PascalErrorToken::extract()
 {
     // do nothing
 }

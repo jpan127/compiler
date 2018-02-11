@@ -30,7 +30,7 @@ public:
      */
     PascalErrorToken(Source *source, PascalErrorCode error_code,
                      string token_text)
-        throw (string);
+       ;
 
 protected:
     /**
@@ -38,7 +38,7 @@ protected:
      * Override of wci::frontend::Token.
      * @throw a string message if an error occurred.
      */
-    void extract() throw (string);
+    void extract();
 };
 
 }}}}  // namespace wci::frontend::pascal::tokens

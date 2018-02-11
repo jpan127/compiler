@@ -25,21 +25,26 @@ Scanner::~Scanner()
 
 Token *Scanner::current_token() { return token; }
 
-Token *Scanner::next_token(Token *prev_token) throw (string)
+Token *Scanner::next_token(Token *prev_token)
 {
     if (prev_token != nullptr) delete prev_token;
     token = extract_token();
     return token;
 }
 
-char Scanner::current_char() throw (string)
+char Scanner::current_char()
 {
     return source->current_char();
 }
 
-char Scanner::next_char() throw (string)
+char Scanner::next_char()
 {
     return source->next_char();
+}
+
+int Scanner::get_position()
+{
+    return source->get_position();
 }
 
 }} // namespace wci::frontend

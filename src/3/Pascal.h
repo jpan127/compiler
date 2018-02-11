@@ -38,8 +38,7 @@ public:
      * @param filePath the source file path.
      * @param flags the command line flags.
      */
-    Pascal(string operation, string file_path, string flags)
-        throw (string);
+    Pascal(string operation, string file_path, string flags);
 
     /**
      * Destructor.

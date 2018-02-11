@@ -18,7 +18,7 @@ using namespace std;
 using namespace wci::frontend;
 using namespace wci::frontend::pascal;
 
-PascalWordToken::PascalWordToken(Source *source) throw (string)
+PascalWordToken::PascalWordToken(Source *source)
     : PascalToken(source)
 {
     extract();
@@ -28,7 +28,7 @@ PascalWordToken::PascalWordToken(Source *source) throw (string)
  * Extract a Pascal word token from the source.
  * @throws Exception if an error occurred.
  */
-void PascalWordToken::extract() throw (string)
+void PascalWordToken::extract()
 {
     char current_ch = current_char();
 

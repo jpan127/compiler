@@ -140,7 +140,7 @@ void PascalToken::initialize()
     INITIALIZED = true;
 }
 
-PascalToken::PascalToken(Source *source) throw (string)
+PascalToken::PascalToken(Source *source)
     : Token(source)
 {
     initialize();

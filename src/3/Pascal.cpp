@@ -31,8 +31,7 @@ using namespace wci::backend;
 using namespace wci::message;
 
 const string FLAGS = "[-ix]";
-const string USAGE =
-    "Usage: Pascal execute|compile " + FLAGS + " <source file path>";
+const string USAGE = "Usage: Pascal execute|compile " + FLAGS + " <source file path>";
 
 /**
  * The main method.
@@ -76,7 +75,6 @@ int main(int argc, char *args[])
 }
 
 Pascal::Pascal(string operation, string file_path, string flags)
-    throw (string)
 {
     ifstream input;
     input.open(file_path);
@@ -88,7 +86,7 @@ Pascal::Pascal(string operation, string file_path, string flags)
     source = new Source(input);
     source->add_message_listener(this);
 
-    parser = FrontendFactory::create_parser("Pascal", "top-down", source);
+    parser = FrontendFactory::create_parser("Java", "top-down", source);
     parser->add_message_listener(this);
     parser->parse();
 
@@ -126,11 +124,9 @@ const string Pascal::COMPILER_SUMMARY_FORMAT =
     string("\n%20d instructions generated.\n") +
     string("%20.2f seconds total code generation time.\n");
 
-const string Pascal::TOKEN_FORMAT =
-    ">>> %-15s line=%03d, pos=%2d, text=\"%s\"\n";
+const string Pascal::TOKEN_FORMAT = ">>> %-15s line=%03d, pos=%2d, text=\"%s\"\n";
 
-const string Pascal::VALUE_FORMAT =
-    ">>>                 value=%s\n";
+const string Pascal::VALUE_FORMAT = ">>>                 value=%s\n";
 
 const int Pascal::PREFIX_WIDTH = 5;
 
@@ -200,9 +196,9 @@ void Pascal::message_received(Message& message)
                    token_type.c_str(), stoi(line_number),
                    stoi(position), token_text.c_str());
 
-            if (   (token_type == "INTEGER")
-                || (token_type == "REAL")
-                || (token_type == "STRING"))
+            if ((token_type == "INTEGER") ||
+                (token_type == "REAL")    ||
+                (token_type == "STRING"))
             {
                 if (token_type == "STRING")
                 {
@@ -235,10 +231,10 @@ void Pascal::message_received(Message& message)
             // Text, if any, of the bad token.
             if (token_text.length() > 0)
             {
-                flag += " [at \"" + token_text + "\"]\n";
+                flag += " [at \"" + token_text + "\"]";
             }
 
-            cout << flag;
+            cout << flag << endl;
             break;
         }
 

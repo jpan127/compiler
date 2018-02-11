@@ -11,7 +11,7 @@
 
 #include <string>
 #include "Source.h"
-#include "../Object.h"
+#include "../Globals.h"
 
 namespace wci { namespace frontend {
 
@@ -34,7 +34,7 @@ public:
      * @param source the source from where to fetch the token.
      * @throw a string message if an error occurred.
      */
-    Token(Source *source) throw (string);
+    Token(Source *source);
 
     /**
      * Copy constructor.
@@ -91,25 +91,28 @@ protected:
      * will be one beyond the last token character.
      * @throw a string message if an error occurred.
      */
-    void extract() throw (string);
+    void extract();
 
     /**
      * @return the current character from the source.
      * @throw a string message if an error occurred.
      */
-    char current_char() const throw (string);
+    char current_char() const;
 
     /**
      * @return the next character from the source after moving forward.
      * @throw a string message if an error occurred.
      */
-    char next_char() const throw (string);
+    char next_char() const;
 
     /**
      * @return the next character from the source without moving forward.
      * @throw a string message if an error occurred.
      */
-    char peek_char() const throw (string);
+    char peek_char() const;
+
+    void put_back() const;
+
 };
 
 }} // namespace wci::frontend

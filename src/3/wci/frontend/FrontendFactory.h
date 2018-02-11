@@ -27,8 +27,7 @@ public:
      * @throws a string message if an error occurred.
      */
     static Parser *create_parser(string language, string type,
-                                 Source *source)
-        throw (string);
+                                 Source *source);
 };
 
 }} // namespace wci::frontend

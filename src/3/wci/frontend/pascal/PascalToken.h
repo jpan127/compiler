@@ -129,7 +129,7 @@ protected:
      * @param source the source from where to fetch the token's characters.
      * @throw a string message if an error occurred.
      */
-    PascalToken(Source *source) throw (string);
+    PascalToken(Source *source);
 
 private:
     static bool INITIALIZED;

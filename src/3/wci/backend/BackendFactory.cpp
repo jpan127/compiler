@@ -7,6 +7,7 @@
  * <p>For instructional purposes only.  No warranties.</p>
  */
 #include <string>
+#include <iostream>
 #include "BackendFactory.h"
 #include "compiler/CodeGenerator.h"
 #include "interpreter/Executor.h"
@@ -17,7 +18,7 @@ using namespace std;
 using namespace wci::backend::compiler;
 using namespace wci::backend::interpreter;
 
-Backend *BackendFactory::create_backend(string operation) throw (string)
+Backend *BackendFactory::create_backend(string operation)
 {
     if (operation == "compile")
     {
@@ -29,8 +30,7 @@ Backend *BackendFactory::create_backend(string operation) throw (string)
     }
     else
     {
-        throw new string("Backend factory: Invalid operation '" +
-                         operation + "'");
+        throw string("Backend factory: Invalid operation '" + operation + "'");
     }
 }
 

@@ -72,14 +72,14 @@ public:
      * @return the next token.
      * @throw a string message if an error occurred.
      */
-    Token *next_token(Token *prev_token) throw (string);
+    Token *next_token(Token *prev_token);
 
     /**
      * Parse a source program and generate the intermediate code and the
      * symbol table.  To be implemented by a language-specific parser
      * subclass.
      */
-    virtual void parse() throw (string) = 0;
+    virtual void parse() = 0;
 
     /**
      * Return the number of syntax errors found by the parser.

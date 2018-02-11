@@ -18,7 +18,7 @@ using namespace std::chrono;
 using namespace wci::backend;
 using namespace wci::message;
 
-void Executor::process(ICode *icode, SymTab *symtab) throw (string)
+void Executor::process(ICode *icode, SymTab *symtab)
 {
     steady_clock::time_point start_time = steady_clock::now();
     int execution_count = 0;

@@ -48,7 +48,7 @@ public:
      * @param symtab the symbol table.
      * @throw a string message if an error occurred.
      */
-    virtual void process(ICode *icode, SymTab *symtab) throw (string) = 0;
+    virtual void process(ICode *icode, SymTab *symtab) = 0;
 
     /**
      * Add a message listener to the listener list.

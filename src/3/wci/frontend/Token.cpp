@@ -14,7 +14,7 @@ namespace wci { namespace frontend {
 
 using namespace std;
 
-Token::Token(Source *source) throw (string)
+Token::Token(Source *source)
     : type((TokenType) 0), text(""), source(source),
       line_number(source->get_line_number()),
       position(source->get_position())
@@ -42,25 +42,30 @@ int Token::get_line_number() const { return line_number; }
  */
 int Token::get_position() const { return position; }
 
-void Token::extract() throw (string)
+void Token::extract()
 {
     text = to_string(current_char());
     next_char();  // consume current character
 }
 
-char Token::current_char() const throw (string)
+char Token::current_char() const
 {
     return source->current_char();
 }
 
-char Token::next_char() const throw (string)
+char Token::next_char() const
 {
     return source->next_char();
 }
 
-char Token::peek_char() const throw (string)
+char Token::peek_char() const
 {
     return source->peek_char();
+}
+
+void Token::put_back() const
+{
+    source->put_back();
 }
 
 }} // namespace wci::frontend

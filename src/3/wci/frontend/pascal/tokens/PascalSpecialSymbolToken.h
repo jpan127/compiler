@@ -25,7 +25,7 @@ public:
      * @param source the source from where to fetch the token's characters.
      * @throw a string message if an error occurred.
      */
-    PascalSpecialSymbolToken(Source *source) throw (string);
+    PascalSpecialSymbolToken(Source *source);
 
 protected:
     /**
@@ -33,7 +33,7 @@ protected:
      * Override of wci::frontend::Token.
      * @throw a string message if an error occurred.
      */
-    void extract() throw (string);
+    void extract();
 };
 
 }}}}  // namespace wci::frontend::pascal::tokens

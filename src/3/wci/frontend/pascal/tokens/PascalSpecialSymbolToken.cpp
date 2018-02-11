@@ -16,13 +16,13 @@ using namespace std;
 using namespace wci::frontend;
 using namespace wci::frontend::pascal;
 
-PascalSpecialSymbolToken::PascalSpecialSymbolToken(Source *source) throw (string)
+PascalSpecialSymbolToken::PascalSpecialSymbolToken(Source *source)
     : PascalToken(source)
 {
     extract();
 }
 
-void PascalSpecialSymbolToken::extract() throw (string)
+void PascalSpecialSymbolToken::extract()
 {
     char current_ch = current_char();
     bool good_symbol = true;

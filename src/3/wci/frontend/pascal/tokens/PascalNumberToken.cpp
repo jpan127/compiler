@@ -20,7 +20,7 @@ using namespace wci::frontend::pascal;
 
 int PascalNumberToken::MAX_EXPONENT = 37;
 
-PascalNumberToken::PascalNumberToken(Source *source) throw (string)
+PascalNumberToken::PascalNumberToken(Source *source)
     : PascalToken(source)
 {
     extract();
@@ -30,7 +30,7 @@ PascalNumberToken::PascalNumberToken(Source *source) throw (string)
  * Extract a Pascal number token from the source.
  * @throws Exception if an error occurred.
  */
-void PascalNumberToken::extract() throw (string)
+void PascalNumberToken::extract()
 {
     string whole_digits = "";     // digits before the decimal point
     string fraction_digits = "";  // digits after the decimal point
@@ -126,7 +126,7 @@ void PascalNumberToken::extract() throw (string)
  * @return the string of digits.
  * @throws Exception if an error occurred.
  */
-string PascalNumberToken::unsigned_integer_digits() throw (string)
+string PascalNumberToken::unsigned_integer_digits()
 {
     char current_ch = current_char();
 

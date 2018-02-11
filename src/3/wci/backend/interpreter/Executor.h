@@ -27,7 +27,7 @@ public:
      * @param symtab the symbol table.
      * @throw a string message if an error occurred.
      */
-    void process(ICode *icode, SymTab *symtab) throw (string);
+    void process(ICode *icode, SymTab *symtab);
 };
 
 }}} // namespace wci::backend::interpreter

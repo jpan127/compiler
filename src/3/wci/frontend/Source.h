@@ -48,14 +48,14 @@ public:
      * @return the source character at the current position.
      * @throw a string message if an error occurred.
      */
-    char current_char() throw (string);
+    char current_char();
 
     /**
      * Consume the current source character and return the next character.
      * @return the next source character.
      * @throw a string message if an error occurred.
      */
-    char next_char() throw (string);
+    char next_char();
 
     /**
      * Return the source character following the current character without
@@ -63,13 +63,16 @@ public:
      * @return the following character.
      * @throw a string message if an error occurred.
      */
-    char peek_char() throw (string);
+    char peek_char();
+
+    /// Decrement the position pointer to "put back" a character
+    void put_back();
 
     /**
      * Close the source.
      * @throw a string message if an error occurred.
      */
-    void close() throw (string);
+    void close();
 
     /**
      * Add a message listener to the listener list.
@@ -99,7 +102,7 @@ private:
      * Read the next source line.
      * @throw a string message if an error occurred.
      */
-    void read_line() throw (string);
+    void read_line();
 };
 
 }} // namespace wci::frontend

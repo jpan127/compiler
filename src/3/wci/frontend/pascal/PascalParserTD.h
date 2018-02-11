@@ -39,7 +39,7 @@ public:
      * Implementation of wci::frontend::Parser.
      * @throw a string message if an error occurred.
      */
-    void parse() throw (string);
+    void parse();
 
     /**
      * Return the number of syntax errors found by the parser.
