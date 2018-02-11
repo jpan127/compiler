@@ -27,7 +27,6 @@ namespace wci::frontend::java
 
     JavaToken::JavaToken(Source *source) : Token(source)
     {
-        initialize();
     }
 
     void JavaToken::initialize()

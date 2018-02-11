@@ -47,6 +47,7 @@ namespace wci::frontend::java
             error_messages[JavaErrorCode::INVALID_TARGET]           = STRINGIFY(INVALID_TARGET);
             error_messages[JavaErrorCode::INVALID_TYPE]             = STRINGIFY(INVALID_TYPE);
             error_messages[JavaErrorCode::INVALID_VAR_PARM]         = STRINGIFY(INVALID_VAR_PARM);
+            error_messages[JavaErrorCode::INVALID_STRING]           = STRINGIFY(INVALID_STRING);
             error_messages[JavaErrorCode::MIN_GT_MAX]               = STRINGIFY(MIN_GT_MAX);
             error_messages[JavaErrorCode::MISSING_BEGIN]            = STRINGIFY(MISSING_BEGIN);
             error_messages[JavaErrorCode::MISSING_COLON]            = STRINGIFY(MISSING_COLON);
@@ -79,6 +80,7 @@ namespace wci::frontend::java
             error_messages[JavaErrorCode::TOO_MANY_LEVELS]          = STRINGIFY(TOO_MANY_LEVELS);
             error_messages[JavaErrorCode::TOO_MANY_SUBSCRIPTS]      = STRINGIFY(TOO_MANY_SUBSCRIPTS);
             error_messages[JavaErrorCode::UNEXPECTED_EOF]           = STRINGIFY(UNEXPECTED_EOF);
+            error_messages[JavaErrorCode::UNEXPECTED_EOS]           = STRINGIFY(UNEXPECTED_EOS);
             error_messages[JavaErrorCode::UNEXPECTED_TOKEN]         = STRINGIFY(UNEXPECTED_TOKEN);
             error_messages[JavaErrorCode::UNIMPLEMENTED]            = STRINGIFY(UNIMPLEMENTED);
             error_messages[JavaErrorCode::UNRECOGNIZABLE]           = STRINGIFY(UNRECOGNIZABLE);

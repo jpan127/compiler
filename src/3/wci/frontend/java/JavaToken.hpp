@@ -122,6 +122,8 @@ namespace wci::frontend::java
         static map <string, JavaTokenType> SPECIAL_SYMBOLS;
         static map <JavaTokenType, string> SPECIAL_SYMBOL_NAMES;
 
+        static void initialize();
+
     protected:
 
         /**
@@ -134,11 +136,6 @@ namespace wci::frontend::java
     private:
 
         static bool is_initialized;
-
-        /**
-         * Initialize the static maps.
-         */
-        static void initialize();
     };
 
 } /// namespace wci::frontend::java

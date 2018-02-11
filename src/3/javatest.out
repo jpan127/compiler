@@ -1,0 +1,171 @@
+001 /* This is a comment. */
+
+002 // So is this.
+
+003 
+
+004 /* Here's a comment
+
+005    that spans several
+
+006    source lines. */
+
+007 
+
+008 Two/*comments in*//***a row***/ here.
+
+>>> IDENTIFIER      line=008, pos= 0, text="Two"
+>>> IDENTIFIER      line=008, pos=32, text="here"
+>>> token_dot       line=008, pos=36, text="."
+009 /* This is /* not a nested comment. */
+
+010 // Nor is /* this */ one.
+
+011 
+
+012 { Not a comment. }
+
+>>> token_opening_curly line=012, pos= 0, text="{"
+>>> IDENTIFIER      line=012, pos= 2, text="Not"
+>>> IDENTIFIER      line=012, pos= 6, text="a"
+>>> IDENTIFIER      line=012, pos= 8, text="comment"
+>>> token_dot       line=012, pos=15, text="."
+>>> token_closing_curly line=012, pos=17, text="}"
+013 
+
+014 // Word tokens
+
+015 Hello world
+
+>>> IDENTIFIER      line=015, pos= 0, text="Hello"
+>>> IDENTIFIER      line=015, pos= 6, text="world"
+016 Abstract abstract ABSTRACT aBsTrAcT
+
+>>> IDENTIFIER      line=016, pos= 0, text="Abstract"
+>>> IDENTIFIER      line=016, pos= 9, text="abstract"
+>>> IDENTIFIER      line=016, pos=18, text="ABSTRACT"
+>>> IDENTIFIER      line=016, pos=27, text="aBsTrAcT"
+017 What?
+
+>>> IDENTIFIER      line=017, pos= 0, text="What"
+>>> token_ternary   line=017, pos= 4, text="?"
+018 
+
+019 // Character tokens
+
+020 'x' 'A' '\'' 'a' '\n' '\t' '\\'
+
+>>> STRING          line=020, pos= 0, text="x"
+>>>                 value="x"
+>>> STRING          line=020, pos= 4, text="A"
+>>>                 value="A"
+>>> STRING          line=020, pos= 8, text="'"
+>>>                 value="'"
+>>> STRING          line=020, pos=13, text="a"
+>>>                 value="a"
+>>> STRING          line=020, pos=17, text="
+"
+>>>                 value="
+"
+>>> STRING          line=020, pos=22, text="    "
+>>>                 value="    "
+>>> STRING          line=020, pos=27, text="\"
+>>>                 value="\"
+021 
+
+022 // String tokens
+
+023 "Hello, world."
+
+>>> STRING          line=023, pos= 0, text="Hello, world."
+>>>                 value="Hello, world."
+024 "Hello,\tworld!"
+
+>>> STRING          line=024, pos= 0, text="Hello,    world!"
+>>>                 value="Hello,    world!"
+025 "Hello,\n\"world!\""
+
+>>> STRING          line=025, pos= 0, text="Hello,
+"world!""
+>>>                 value="Hello,
+"world!""
+026 "It's Friday!"
+
+>>> STRING          line=026, pos= 0, text="It's Friday!"
+>>>                 value="It's Friday!"
+027 ""  "\""
+
+>>> STRING          line=027, pos= 0, text=""
+>>>                 value=""
+>>> STRING          line=027, pos= 4, text="""
+>>>                 value="""
+028 
+
+029 // Special symbol tokens
+
+030 + - * / := . , ; : = <> < <= >= > ( ) [ ] { } } ^ ..
+
+>>> token_add       line=030, pos= 0, text="+"
+>>> token_minus     line=030, pos= 2, text="-"
+>>> token_multiply  line=030, pos= 4, text="*"
+>>> token_divide    line=030, pos= 6, text="/"
+--------------------------------------
+Operator := found, this is not pascal!
+--------------------------------------
+            ^
+*** INVALID_CHARACTER [at ":"]
+>>> token_dot       line=030, pos=11, text="."
+>>> token_comma     line=030, pos=13, text=","
+>>> token_semicolon line=030, pos=15, text=";"
+>>> token_colon     line=030, pos=17, text=":"
+>>> token_assign    line=030, pos=19, text="="
+--------------------------------------
+Operator <> found, this is not pascal!
+--------------------------------------
+                         ^
+*** INVALID_CHARACTER [at "<"]
+>>> token_less_than line=030, pos=24, text="<"
+>>> token_less_than_or_equal line=030, pos=26, text="<="
+>>> token_greater_than_or_equal line=030, pos=29, text=">="
+>>> token_greater_than line=030, pos=32, text=">"
+>>> token_opening_parentheses line=030, pos=34, text="("
+>>> token_closing_parentheses line=030, pos=36, text=")"
+>>> token_opening_bracket line=030, pos=38, text="["
+>>> token_closing_bracket line=030, pos=40, text="]"
+>>> token_opening_curly line=030, pos=42, text="{"
+>>> token_closing_curly line=030, pos=44, text="}"
+>>> token_closing_curly line=030, pos=46, text="}"
+>>> token_xor       line=030, pos=48, text="^"
+--------------------------------------
+Operator .. found, this is not pascal!
+--------------------------------------
+                                                      ^
+*** INVALID_CHARACTER [at "."]
+031 <<=  >>=
+
+>>> token_shift_left_equal line=031, pos= 0, text="<<="
+>>> token_shift_right_equal line=031, pos= 5, text=">>="
+032 :=<>=<==>>===
+
+--------------------------------------
+Operator := found, this is not pascal!
+--------------------------------------
+    ^
+*** INVALID_CHARACTER [at ":"]
+--------------------------------------
+Operator <> found, this is not pascal!
+--------------------------------------
+      ^
+*** INVALID_CHARACTER [at "<"]
+>>> token_assign    line=032, pos= 4, text="="
+>>> token_less_than_or_equal line=032, pos= 5, text="<="
+>>> token_assign    line=032, pos= 7, text="="
+>>> token_shift_right_equal line=032, pos= 8, text=">>="
+>>> token_equal     line=032, pos=11, text="=="
+
+                  32 source lines.
+                   5 syntax errors.
+                0.00 seconds total parsing time.
+
+                   0 instructions generated.
+                0.00 seconds total code generation time.

@@ -23,7 +23,10 @@ Scanner::~Scanner()
 {
 }
 
-Token *Scanner::current_token() { return token; }
+Token *Scanner::current_token() 
+{ 
+    return token;
+}
 
 Token *Scanner::next_token(Token *prev_token)
 {
@@ -45,6 +48,16 @@ char Scanner::next_char()
 int Scanner::get_position()
 {
     return source->get_position();
+}
+
+char Scanner::peek_char()
+{
+    return source->peek_char();
+}
+
+void Scanner::put_back()
+{
+    source->put_back();
 }
 
 }} // namespace wci::frontend

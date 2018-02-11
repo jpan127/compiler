@@ -26,14 +26,12 @@ namespace wci::frontend::java
 
     JavaScanner::JavaScanner(Source *source) : Scanner(source)
     {
-        /* Empty */
+        JavaToken::initialize();
     }
 
     Token * JavaScanner::extract_token()
     {
-        // cout << "   <<<    " << get_position() << endl;
         find_next_token();
-        // cout << "   <<<<<  " << get_position() << endl;
 
         Token * token = NULL;
         char c = current_char();
@@ -45,13 +43,7 @@ namespace wci::frontend::java
         else if (isdigit(c))                                token = new JavaNumberToken(source);
         else if (c == '\'' || c == '\"')                    token = new JavaStringToken(source);
         else if (JavaToken::SPECIAL_SYMBOLS.count(str) > 0) token = new JavaSpecialSymbolToken(source);
-        else
-        {
-            token = new JavaErrorToken(source, JavaErrorCode::INVALID_CHARACTER, str);
-            // next_char();
-        }
-
-        // cout << "   <<<<<< " << get_position() << " " << c << endl;
+        else                                                token = new JavaErrorToken(source, JavaErrorCode::INVALID_CHARACTER, str);
 
         return token;
     }
@@ -62,7 +54,6 @@ namespace wci::frontend::java
         while (isspace(c) && c != eof)
         {
             c = next_char();
-cout << "4 ---> " << c << " ---> " << source->get_position() << endl;
         }
     }
 
@@ -85,19 +76,13 @@ cout << "4 ---> " << c << " ---> " << source->get_position() << endl;
 
         while (c != eof)
         {
-            // c = next_char();
-
             // Read all preceeding spaces
             ignore_all_whitespaces(c);
-
-cout << "0 ---> " << c << " ---> " << source->get_position() << endl;
 
             // Finding the first slash
             if (c == slash)
             {
                 c = next_char();
-
-cout << "1 ----> " << c << " ---> " << source->get_position() << endl;
 
                 // Finds a second slash, so it is a single line comment
                 if (c == slash)
@@ -106,7 +91,6 @@ cout << "1 ----> " << c << " ---> " << source->get_position() << endl;
                     while (c != new_line && c != eof)
                     {
                         c = next_char();
-cout << "2 -----> " << c << " ---> " << source->get_position() << endl;
                     }
 
                     // Read all subsequent spaces
@@ -121,8 +105,6 @@ cout << "2 -----> " << c << " ---> " << source->get_position() << endl;
                     while (c != eof)
                     {
                         c = next_char();
-
-cout << "3 -----> " << c << " ---> " << source->get_position() << endl;
 
                         // If parsing the comment and finds an asterisk
                         if (state == scanner_state_E::ignoring_characters && c == asterisk)
@@ -145,17 +127,18 @@ cout << "3 -----> " << c << " ---> " << source->get_position() << endl;
                     c = next_char();
                     ignore_all_whitespaces(c);
                 }
+                else
+                {
+                    put_back();
+                    break;
+                }
             }
             // If the next character is not a space or a slash then it must be a token
             else if (!isspace(c))
             {
                 break;
             }
-
-            cout << "### End of loop " << c << " " << static_cast<int>(c) << endl;
         }
-
-        cout << "### End of function " << c << endl;
     }
 
 } /// wci::frontend::java

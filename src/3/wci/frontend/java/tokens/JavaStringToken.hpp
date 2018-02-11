@@ -29,6 +29,12 @@ namespace wci::frontend::java::tokens
          * @throw a string message if an error occurred.
          */
         void extract();
+
+    private:
+
+        inline bool is_double_quote(char c) const;
+        inline bool is_single_quote(char c) const;
+        void replace_escape_sequences(char &c, string &str);
     };
 
 } /// namespace wci::frontend::java::tokens

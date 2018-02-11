@@ -62,16 +62,19 @@ char Source::peek_char()
 {
     current_char();
 
-    if (reader.eof()) return END_OF_FILE;
-
-    int next_pos = current_pos + 1;
-    return next_pos < line_text.length() ? line_text[next_pos]
-                                         : END_OF_LINE;
+    if (reader.eof() && current_pos >= line_text.length())
+    {
+        return END_OF_FILE;
+    }
+    else
+    {
+        return (current_pos < line_text.length()) ? line_text[current_pos + 1] : END_OF_LINE;
+    }
 }
 
 void Source::put_back()
 {
-    --current_pos;
+    current_pos = (current_pos > 0) ? (current_pos - 1) : (0);
 }
 
 void Source::read_line()

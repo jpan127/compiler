@@ -59,6 +59,10 @@ public:
 
     int get_position();
 
+    char peek_char();
+
+    void put_back();
+
 protected:
 
     /**
