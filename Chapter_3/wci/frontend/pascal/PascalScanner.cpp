@@ -85,7 +85,8 @@ void PascalScanner::skip_white_space() throw (string)
                      (current_ch != Source::END_OF_FILE));
 
             // Found closing '}'?
-            if (current_ch == '}') {
+            if (current_ch == '}')
+            {
                 current_ch = next_char();  // consume the '}'
             }
         }
