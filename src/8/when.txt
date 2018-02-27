@@ -1,0 +1,23 @@
+BEGIN
+    i := 3;
+    
+    WHEN
+        i = 1 => f := 10;
+        i = 2 => f := 20;
+        i = 3 => f := 30;
+        i = 4 => f := 40;
+        OTHERWISE => f := -1
+    END;
+    
+    range := 5.7;
+    
+    WHEN
+        (1.0 <= range) AND (range < 3.0) => level := 1;
+        (4.5 <= range) AND (range < 7.5) => BEGIN
+                                               level := 2;
+                                               range := 0.0;
+                                            END;
+        (8.0 <= range) AND (range < 9.9) => level := 3;
+        OTHERWISE => level := -1
+    END;
+END.
