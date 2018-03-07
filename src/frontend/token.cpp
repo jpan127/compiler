@@ -1,4 +1,5 @@
 #include "Token.hpp"
+#include "Parser.hpp"
 
 
 
@@ -18,18 +19,16 @@ const map <const TokenType, const string> Token::symbol_names =
 
 };
 
-Token::Token(Parser * parser)
+Token::Token(void)
 {
-    parser     = parser;
     type       = first_invalid;
     text       = "";
-    line_num   = parser->get_line_num();
-    column_num = parser->get_column_num();
+    line_num   = Parser::instance().get_line_num();
+    column_num = Parser::instance().get_column_num();
 }
 
 Token::Token(const Token &rhs)
 {
-    parser     = rhs.parser;
     type       = rhs.type;
     text       = rhs.text;
     line_num   = rhs.line_num;

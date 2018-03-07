@@ -35,8 +35,8 @@ public:
     /// Instance getter
     static ParserErrorHandler & instance(void)
     {
-        static ParserErrorHandler instance;
-        return instance;
+        static ParserErrorHandler singleton;
+        return singleton;
     }
 
     /// Deleted copy constructor

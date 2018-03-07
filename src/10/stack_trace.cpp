@@ -1,0 +1,14 @@
+PascalParserTD::parse
+    BlockParser::parse_block
+        DeclarationsParser::parse_declaration
+            VariableDeclarationsParser::parse_declaration
+            VariableDeclarationsParser::parse_identifier_sublist
+                VariableDeclarationsParser::parse_identifier
+                VariableDeclarationsParser::parse_typespec
+                    TypeSpecificationParser::parse_declaration
+                        SimpleTypeParser::parse_declaration
+        StatementParser::parse_statement
+            AssignmentStatementParser::parse_statement
+                VariableParser::parse_variable
+                    VariableParser::parse_variable<2>
+                        VariableParser::parse_field

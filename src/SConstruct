@@ -1,0 +1,40 @@
+import sys
+import os
+import SCons
+
+
+#=======================================================#
+#             Project Directories and Files             #
+#=======================================================#
+
+SOURCE_DIRECTORIES = [
+    ".",
+    "frontend",
+    "intermediate",
+    "backend",
+]
+
+SOURCE_DIRECTORIES = [Dir(dir) for dir in SOURCE_DIRECTORIES]
+
+SOURCE_FILES = Flatten([dir.glob("*.cpp") for dir in SOURCE_DIRECTORIES])
+
+#=======================================================#
+#                   Main Environment                    #
+#=======================================================#
+
+env = Environment(
+    tools    = ["mingw", "g++"],
+    ENV      = os.environ,
+    LIBS     = ["libstdc++"],
+    CPPPATH  = SOURCE_DIRECTORIES,
+    CXXFLAGS = [
+        "-std=c++11",
+        "-O3",
+        "-Wall",
+    ],
+)
+
+env.Program(
+    target = "compiler",
+    source = SOURCE_FILES
+)

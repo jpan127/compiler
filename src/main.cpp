@@ -1,7 +1,14 @@
 #include "globals.hpp"
+// Project libraries
+#include "Parser.hpp"
 
 
 
+/**
+ *  Calls the compiler and executes it
+ *  @param operation : Either a compile or an execute operation @TODO : Should change to enum
+ *  @param path      : Path to file to compile
+ */
 void run_compiler(const string operation, const string path);
 
 int main(int argc, char const *argv[])
@@ -12,7 +19,7 @@ int main(int argc, char const *argv[])
 
     if (argc < 3)
     {
-        printf("%s", usage);
+        cout << usage << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -21,7 +28,7 @@ int main(int argc, char const *argv[])
 
     if (operation != "compile" && operation != "execute")
     {
-        printf("Chosen operation should be either 'execute' or 'compile', incorrect operation: %s\n", operation);
+        cout << "Chosen operation should be either 'execute' or 'compile', incorrect operation: " << operation << endl;
         exit(EXIT_FAILURE);
     }
 
@@ -35,14 +42,14 @@ void run_compiler(const string operation, const string path)
     // Read 100 lines at a time
     const uint32_t capacity = 100;
 
-    // Create Parser
-    Parser * parser = new Parser(path, capacity);
+    // Initialize parser
+    Parser::instance().init(path, capacity);
 
     // Parse
-    parser.parse_file();
+    Parser::instance().parse_file();
 
-    // Close
-    parser.close();
+    // Close file
+    Parser::instance().close();
 
     // Compile
 }

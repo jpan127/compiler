@@ -108,12 +108,12 @@ public:
         // @note : Using a string = '\' + 'n' does not equal "\n" so cannot do a straight lookup
         switch (c)
         {
-            case 'n'  :   text += escape_sequences.at("\n");   str += escape_sequences.at("\n");   break;
-            case 't'  :   text += escape_sequences.at("\t");   str += escape_sequences.at("\t");   break;
-            case '\'' :   text += escape_sequences.at("\'");   str += escape_sequences.at("\'");   break;
-            case '\"' :   text += escape_sequences.at("\"");   str += escape_sequences.at("\"");   break;
-            case '\\' :   text += escape_sequences.at("\\");   str += escape_sequences.at("\\");   break;
-            default   :                                                                            break;
+            case 'n'  :   text += escape_sequences["\n"];   str += escape_sequences["\n"];   break;
+            case 't'  :   text += escape_sequences["\t"];   str += escape_sequences["\t"];   break;
+            case '\'' :   text += escape_sequences["\'"];   str += escape_sequences["\'"];   break;
+            case '\"' :   text += escape_sequences["\""];   str += escape_sequences["\""];   break;
+            case '\\' :   text += escape_sequences["\\"];   str += escape_sequences["\\"];   break;
+            default   :                                                                      break;
         }
     }
 
@@ -311,7 +311,7 @@ private:
 
 };
 
-/// This token is to signify 
+/// This token is to signify an error
 class ErrorToken : public Token
 {
 public:

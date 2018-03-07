@@ -3,6 +3,7 @@
 #include <fstream>
 
 #include "globals.hpp"
+#include "Token.hpp"
 
 
 
@@ -10,21 +11,29 @@
  *  Parses the input source file, responsible for reading sequentially by characters
  *  Retrieves character or tokens and stores them in private member variables
  *  The main parsing of the file is done through [Parser::parse]
+ *  @note : This class is a singleton
  */
+
+/// Forward declare Token to enable circular dependency
+class Token;
 
 class Parser
 {
 public:
 
+    /// Singleton get instance
+    static Parser & instance(void)
+    {
+        static Parser singleton;
+        return singleton;
+    }
+
     /**
-     *  Constructor
+     *  Initializes the singleton
      *  @param path     : Path to input file
      *  @param capacity : Size of vector [lines]
      */
-    Parser(const string path, const uint32_t capacity=100);
-
-    /// Destructor
-    ~Parser(void);
+    init(const string path, const uint32_t capacity=100);
 
     /// Returns the current line / row number
     uint32_t get_line_number(void) const;
@@ -55,9 +64,16 @@ public:
 
 private:
 
-    /// File handle
-    ifstream file;
+    /// Private constructor
+    Parser(void);
 
+    /// Private destructor
+    ~Parser(void);
+
+    /// File handle
+    std::ifstream file;
+
+    /// Max capacity of vector [lines]
     uint32_t capacity;
 
     /// Stores the next <capacity> lines to keep file reads to a minimum

@@ -2,7 +2,7 @@
 
 
 
-Parser::Parser(const string path, const uint32_t capacity) : file(path)
+Parser::init(const string path, const uint32_t capacity) : file(path)
 {
     if (!file.good())
     {
@@ -23,6 +23,16 @@ Parser::Parser(const string path, const uint32_t capacity) : file(path)
     lines.reserve(capacity);
 
     read_from_file();
+}
+
+Parser::~Parser(void)
+{
+    if (nullptr != token)
+    {
+        delete token;
+    }
+
+    close();
 }
 
 uint32_t Parser::get_line_number(void) const
@@ -106,7 +116,10 @@ void Parser::put_back(void)
 void Parser::close(void)
 {
     // @TODO : I see no benefit to this function for now, delete later maybe
-    file.close();
+    if (file.is_open())
+    {
+        file.close();
+    }
 }
 
 /// White space + comment skipping functions, to be implemented when comment style is finalized

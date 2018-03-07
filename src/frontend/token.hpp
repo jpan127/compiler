@@ -23,11 +23,8 @@ class Token
 {
 public:
 
-    /**
-     *  Constructor
-     *  @param parser : Handle to the parser in which this class can use to parse the rest of the token
-     */
-    Token(Parser * parser);
+    /// Constructor
+    Token(void);
 
     /// Copy constructor
     Token(const Token &rhs);
@@ -48,9 +45,6 @@ public:
     uint32_t get_column_num(void) const;
 
 protected:
-
-    /// Handle to the parser object
-    Parser * parser;
 
     /// Type of token
     TokenType type;
