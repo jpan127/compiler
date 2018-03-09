@@ -3,6 +3,8 @@
 #include "globals.hpp"
 #include "Token.hpp"
 #include "Parser.hpp"
+#include "ParserErrorHandler.hpp"
+#include "ErrorHandler.hpp"
 
 
 
@@ -18,17 +20,19 @@ class WordToken : public Token
 {
 public:
 
-    WordToken(Parser * parser) : Token(parser)
+    WordToken() : Token()
     {
-        char c = parser->get_current_char();
+        cout << "WordToken\n";
+        char c = Parser::instance().get_current_char();
 
         // Parse until not a letter
         while (c != EOF && isalnum(c))
         {
             text += c;
-            if (isalnum(parser->peek_char()))
+// cout << text << endl;
+            if (isalnum(Parser::instance().peek_next_char()))
             {
-                c = parser->get_next_char();
+                c = Parser::instance().get_next_char();
             }
             else
             {
@@ -36,10 +40,13 @@ public:
             }
         }
 
-        const string token = "token_" + text;
+        const string token_name = "token_" + text;
 
         // Look it up, if it is not a keyword
-        type = (keywords.count(token) > 0) ? (keywords[token]) : (TokenType::identifier);
+        type = (keywords.count(token_name) > 0) ? (keywords.at(token_name)) : (TokenType::identifier);
+        
+        // Continue
+        Parser::instance().get_next_char();
     }
 
 };
@@ -48,28 +55,30 @@ class SymbolToken : public Token
 {
 public:
 
-    SymbolToken(Parser * parser) : Token(parser)
+    SymbolToken() : Token()
     {
-        char curr = parser->get_current_char();
-        text = curr;
+        cout << "SymbolToken\n";
+        // char curr = Parser::instance().get_current_char();
+        // text = curr;
 
-        // See if any of the symbols match
-        switch (curr)
-        {
-            // To be implemented
+        // // See if any of the symbols match
+        // switch (curr)
+        // {
+        //     // To be implemented
 
-            default:
-                parser->get_next_char();
-                type  = TokenType::error;
-                value = ErrorCode::invalid_character;
-                break;
-        }
+        //     default:
 
-        // If something matches, look it up in the table
-        if (TokenType::error != type)
-        {
-            type = Token::symbols[text];
-        }
+        //         Parser::instance().get_next_char();
+        //         type  = TokenType::error;
+        //         value = ErrorCode::invalid_character;
+        //         break;
+        // }
+
+        // // If something matches, look it up in the table
+        // if (TokenType::error != type)
+        // {
+        //     type = Token::symbols[text];
+        // }
     }
 
 };
@@ -78,47 +87,9 @@ class StringToken : public Token
 {
 public:
 
-    inline bool JavaStringToken::is_double_quote(char c) const
+    StringToken() : Token()
     {
-        const char double_quote = '"';
-
-        return (double_quote == c);
-    }
-
-    inline bool JavaStringToken::is_single_quote(char c) const
-    {
-        const char single_quote = '\'';
-
-        return (single_quote == c);
-    }
-
-    void JavaStringToken::replace_escape_sequences(char &c, string &str)
-    {
-        static const map <string, string> escape_sequences =
-        {
-            { "\n", "\n"   },
-            { "\t", "    " },
-            { "\'", "'"    },
-            { "\"", "\""   },
-            { "\\", "\\"   },
-        };
-
-        c = next_char();
-
-        // @note : Using a string = '\' + 'n' does not equal "\n" so cannot do a straight lookup
-        switch (c)
-        {
-            case 'n'  :   text += escape_sequences["\n"];   str += escape_sequences["\n"];   break;
-            case 't'  :   text += escape_sequences["\t"];   str += escape_sequences["\t"];   break;
-            case '\'' :   text += escape_sequences["\'"];   str += escape_sequences["\'"];   break;
-            case '\"' :   text += escape_sequences["\""];   str += escape_sequences["\""];   break;
-            case '\\' :   text += escape_sequences["\\"];   str += escape_sequences["\\"];   break;
-            default   :                                                                      break;
-        }
-    }
-
-    StringToken(Parser * parser) : Token(parser)
-    {
+        cout << "StringToken\n";
         /**
          *  1. Current char should either be a single quote or a double quote, otherwise parsing or syntax error
          *  2. If single quote, get character or get escaped character
@@ -129,30 +100,28 @@ public:
         const char escape = '\\';
         const char eof    = 0;
      
-        string value_str;
-        char current_ch = current_char();
+        char current_ch = Parser::instance().get_current_char();
         bool exit_condition = false;
 
         if (is_single_quote(current_ch))
         {
-            if (peek_char() == escape)
+            if (Parser::instance().peek_next_char() == escape)
             {
-                next_char();
-                replace_escape_sequences(current_ch, value_str);
+                Parser::instance().get_next_char();
+                replace_escape_sequences(current_ch);
             }
             else
             {
-                current_ch = next_char();
-                text      += current_ch;
-                value_str += current_ch;
+                current_ch = Parser::instance().get_next_char();
+                text += current_ch;
             }
-            next_char();
+            Parser::instance().get_next_char();
         }
         else if (is_double_quote(current_ch))
         {
             do
             {
-                current_ch = next_char();
+                current_ch = Parser::instance().get_next_char();
 
                 // EOF, exit
                 if (eof == current_ch)
@@ -162,47 +131,81 @@ public:
                 // Replace any whitespace character with a blank.
                 else if (isspace(current_ch))
                 {
-                    text       += ' ';
-                    value_str  += ' ';
+                    text += ' ';
                 }
                 // Replace any escape sequences
                 else if (escape == current_ch)
                 {
-                    replace_escape_sequences(current_ch, value_str);
+                    replace_escape_sequences(current_ch);
                     // Skip exit condition check
                     continue;
                 }
                 // Normal character
                 else if (!is_double_quote(current_ch))
                 {
-                    text       += current_ch;
-                    value_str  += current_ch;
+                    text += current_ch;
                 }
 
                 // The condition to exit loop is if next character is closing quote AND current character is not a slash
                 // Because if current character is a slash then the next quote character is escaped
-                exit_condition = (is_double_quote(current_char()));
+                exit_condition = (is_double_quote(Parser::instance().get_current_char()));
 
             } while ((!exit_condition) && (current_ch != eof));
         }
         else
         {
-            type  = (TokenType) JavaTokenType::token_error;
-            value = (int) JavaErrorCode::INVALID_STRING;
+            type = (TokenType) TokenType::error;
             return;
         }
 
-        if (is_double_quote(current_char()) || is_single_quote(current_char()))
+        if (is_double_quote(Parser::instance().get_current_char()) || is_single_quote(Parser::instance().get_current_char()))
         {
             // Throw away closing single or double quote
-            next_char();
-            type   = (TokenType) JavaTokenType::token_string;
-            value  = value_str;
+            Parser::instance().get_next_char();
+            type = (TokenType) TokenType::string;
         }
         else
         {
-            type = (TokenType) JavaTokenType::token_error;
-            value = (int) JavaErrorCode::UNEXPECTED_EOS;
+            type = (TokenType) TokenType::error;
+        }
+    }
+
+private:
+
+    inline bool is_double_quote(char c) const
+    {
+        const char double_quote = '"';
+
+        return (double_quote == c);
+    }
+
+    inline bool is_single_quote(char c) const
+    {
+        const char single_quote = '\'';
+
+        return (single_quote == c);
+    }
+
+    void replace_escape_sequences(char &c)
+    {
+        static const string new_line     = "\n"   ;
+        static const string tab          = "    " ;
+        static const string single_quote = "'"    ;
+        static const string double_quote = "\""   ;
+        static const string slash        = "\\"   ;
+
+        string replacement;
+        c = Parser::instance().get_next_char();
+
+        // @note : Using a string = '\' + 'n' does not equal "\n" so cannot do a straight lookup
+        switch (c)
+        {
+            case 'n'  : text += new_line;     break;
+            case 't'  : text += tab;          break;
+            case '\'' : text += single_quote; break;
+            case '\"' : text += double_quote; break;
+            case '\\' : text += slash;        break;
+            default   :                       break;
         }
     }
 
@@ -212,8 +215,9 @@ class NumberToken : public Token
 {
 public:
 
-    NumberToken(Parser * parser) : Token(parser), type(TokenType::integer)
+    NumberToken() : Token(TokenType::integer)
     {
+        cout << "NumberToken\n";
         /**
          *  Possibilities:
          *      A   1       +1      -1
@@ -224,31 +228,31 @@ public:
          *      F   1.2e3   +1.2e3  -1.2e3
          */
 
-        char c = get_current_char();
+        char c = Parser::instance().get_current_char();
 
         // If there is a sign, parse that first
         if (c == '+' || c == '-')
         {
             text += c;
-            c = get_next_char();
+            c = Parser::instance().get_next_char();
         }
 
         // Case A : get everything up to the decimal / exponent splitter, or a space
-        parse_digits();
+        parse_digits(c);
 
         // Case B
         if (is_decimal(c))
         {
             type = TokenType::fpoint;
             text += c;
-            c = get_next_char();
+            c = Parser::instance().get_next_char();
 
-            parse_digits();
+            parse_digits(c);
 
             // Case E + F
             if (is_exponent(c))
             {
-                parse_digits();
+                parse_digits(c);
             }
             // Cannot happen after a decimal
             else if (is_decimal(c))
@@ -262,9 +266,9 @@ public:
         {
             type = TokenType::fpoint;
             text += c;
-            c = get_next_char();
+            c = Parser::instance().get_next_char();
 
-            parse_digits();
+            parse_digits(c);
 
             // Cannot happen after an exponent
             if (is_decimal(c) || is_exponent(c))
@@ -290,6 +294,8 @@ public:
 
 private:
 
+    uint32_t value;
+
     inline bool is_exponent(char c)
     {
         return (c == 'e' || c == 'E');
@@ -300,12 +306,12 @@ private:
         return (c == '.');
     }
 
-    inline void parse_digits(void)
+    inline void parse_digits(char & c)
     {
         while (isdigit(c))
         {
             text += c;
-            c = get_next_char();
+            c = Parser::instance().get_next_char();
         }
     }
 
@@ -316,9 +322,15 @@ class ErrorToken : public Token
 {
 public:
 
-    ErrorToken(Parser * parser) : Token(parser)
+    ErrorToken() : Token()
     {
+        cout << "ErrorToken\n";
         type = TokenType::invalid_character;
+
+        ParserErrorHandler::instance().print_error(this, ErrorCode::invalid_character);
+
+        // Continue
+        Parser::instance().get_next_char();
     }
 
 };

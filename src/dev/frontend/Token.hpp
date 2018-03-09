@@ -15,6 +15,7 @@ enum class TokenType
     string,
     symbol,
     error,
+    invalid_character,
 };
 
 /// Contains information about an individual token, whether an identifier, number, symbol, etc.
@@ -25,12 +26,13 @@ public:
 
     /// Constructor
     Token(void);
+    Token(TokenType type) : type(type) { }
 
     /// Copy constructor
     Token(const Token &rhs);
 
     /// Virtual destructor
-    virtual ~Token(void);
+    virtual ~Token(void) {  }
 
     /// Returns the type of the token
     TokenType get_type(void) const;
@@ -43,6 +45,10 @@ public:
 
     /// Returns the position the token was found at
     uint32_t get_column_num(void) const;
+
+    /// Public accessors to check presence of token in protected maps
+    static bool is_keyword(const string str) { return (keywords.count(str) > 0); }
+    static bool is_symbol(const string str)  { return (symbols.count(str)  > 0); }
 
 protected:
 
@@ -63,14 +69,14 @@ protected:
      *  @key   : String of keyword
      *  @value : TokenType corresponding to keyword
      */
-    static const map <const string, const TokenType> keywords;
+    static const map <const string, TokenType> keywords;
 
     /**
      *  Map of symbols
      *  @key   : String of symbol
      *  @value : TokenType corresponding to the symbol
      */
-    static const map <const string, const TokenType> symbols;
+    static const map <const string, TokenType> symbols;
 
     /**
      *  Map of names of symbols

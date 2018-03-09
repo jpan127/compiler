@@ -42,7 +42,7 @@ protected:
     }
 
     /// Virtual destructor
-    virtual ~ ErrorHandler(void);
+    virtual ~ ErrorHandler(void) { }
 
     /// Returns the current number of errors
     uint32_t get_error_count(void) const

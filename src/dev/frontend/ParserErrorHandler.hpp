@@ -24,6 +24,8 @@ public:
         /// @TODO : Some unique way to print out errors that's more legible than how C++ does it
         ///         Python does it ok, but we can do better
 
+        cout << ">>> Parser Error : " << token->get_text() << endl;
+
         // So if there are endless errors in the program, the compiler stops before freaking out and burying
         // the first offending errors
         if (++error_count >= threshold)
@@ -53,7 +55,7 @@ private:
         // Initialize map
         error_messages = 
         {
-            { error_parsing_fpoint, "Error parsing floating point number" },
+            { ErrorCode::error_parsing_fpoint, "Error parsing floating point number" },
         };
     }
 

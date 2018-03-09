@@ -4,12 +4,12 @@
 
 
 /// Token:: protected static members
-const map <const string, const TokenType> Token::keywords = 
+const map <const string, TokenType> Token::keywords = 
 {
 
 };
 
-const map <const string, const TokenType> Token::symbols = 
+const map <const string, TokenType> Token::symbols = 
 {
 
 };
@@ -21,7 +21,7 @@ const map <const TokenType, const string> Token::symbol_names =
 
 Token::Token(void)
 {
-    type       = first_invalid;
+    type       = TokenType::first_invalid;
     text       = "";
     line_num   = Parser::instance().get_line_num();
     column_num = Parser::instance().get_column_num();
