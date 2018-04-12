@@ -15,20 +15,23 @@ GRAMMAR_FILE_NAME     = "C"
 GENERATED_STATIC_LIB  = "generated_antlr.lib"
 BUILD_SCRIPT          = "build_parser.sh"
 
+# Update default environment path
+DefaultEnvironment(
+    ENV = { "PATH" : os.environ["PATH"] },
+)
+
 #=======================================================#
 #             Project Directories and Files             #
 #=======================================================#
 
-CPPPATH = Flatten(
-    [
-        GENERATED_DIR,
-        "antlr4-runtime",
-        get_all_subdirectories("antlr4-runtime"),
-    ]
-)
+CPPPATH = [
+    GENERATED_DIR,
+    "antlr4-runtime",
+    # get_all_subdirectories("antlr4-runtime"),
+]
 
 # Glob all source files from the source directories
-SOURCE_FILES = Flatten([Dir(dir).glob("*.cpp") for dir in CPPPATH])
+SOURCE_FILES = [Dir(dir).glob("*.cpp") for dir in CPPPATH]
 
 #=======================================================#
 #                   Main Environment                    #
@@ -36,9 +39,9 @@ SOURCE_FILES = Flatten([Dir(dir).glob("*.cpp") for dir in CPPPATH])
 
 env = Environment(
     tools    = ["mingw", "g++"],
-    ENV      = os.environ,
+    ENV      = { "PATH" : os.environ["PATH"] },
     LIBS     = ["libstdc++"],
-    CPPPATH  = CPPPATH,
+    CPPPATH  = Flatten(CPPPATH),
     CXXFLAGS = [
         "-std=c++11",
         "-O3",
@@ -54,23 +57,23 @@ env = Environment(
 autogenerate_antlr = env.Command(
     target = "autogenerate_antlr",
     source = [],
-    action = (
-        "bash $BUILD_SCRIPT",
-        "Calling $BUILD_SCRIPT to autogenerate antlr code...",
+    action = env.Action(
+        "bash {}".format(BUILD_SCRIPT),
+        "Calling {} to autogenerate antlr code...".format(BUILD_SCRIPT),
     ),
 )
 
-generated_antlr = env.StaticLibrary(
-    target = GENERATED_STATIC_LIB,
-    source = [Dir(GENERATED_DIR).glob("*.cpp"), autogenerate_antlr],
-)
+# generated_antlr = env.StaticLibrary(
+#     target = GENERATED_STATIC_LIB,
+#     source = [Dir(GENERATED_DIR).glob("*.cpp"), autogenerate_antlr],
+# )
 
-env.Program(
-    target = "compiler",
-    source = [
-        SOURCE_FILES,
-        autogenerate_antlr,
-    ],
-    LIBS = generated_antlr,
-    LIBPATH = "./",
-)
+# env.Program(
+#     target = "compiler",
+#     source = [
+#         SOURCE_FILES,
+#         autogenerate_antlr,
+#     ],
+#     LIBS = generated_antlr,
+#     LIBPATH = "./",
+# )

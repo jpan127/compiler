@@ -1,0 +1,13 @@
+# Target labels
+ antlr4cpp
+# Source files and their labels
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp.rule
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp-complete.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-install.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-mkdir.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-download.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-update.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-patch.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-configure.rule
+C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-build.rule
