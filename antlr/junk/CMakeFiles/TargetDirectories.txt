@@ -1,0 +1,5 @@
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/test_antlr.dir
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp_generation_antlrcpptest.dir
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp.dir
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/edit_cache.dir
+C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/rebuild_cache.dir

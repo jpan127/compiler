@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/CMakeFiles/antlr4cpp-complete.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-install.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-mkdir.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-download.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-update.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-patch.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-configure.rule"
+		},
+		{
+			"file" : "C:/Users/JP/Desktop/compiler/antlr/externals/antlr4cpp/src/antlr4cpp-stamp/antlr4cpp-build.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"antlr4cpp"
+		],
+		"name" : "antlr4cpp"
+	}
+}
