@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E remove -f CMakeFiles\test_antlr.dir/objects.a
-C:\mingw\mingw64\bin\ar.exe cr CMakeFiles\test_antlr.dir/objects.a @CMakeFiles\test_antlr.dir\objects1.rsp
-C:\mingw\mingw64\bin\g++.exe    -Wl,--whole-archive CMakeFiles\test_antlr.dir/objects.a -Wl,--no-whole-archive  -o test_antlr.exe -Wl,--out-implib,libtest_antlr.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\test_antlr.dir\linklibs.rsp
