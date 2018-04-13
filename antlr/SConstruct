@@ -11,10 +11,10 @@ DefaultEnvironment(
 #                       Constants                       #
 #=======================================================#
 
-GENERATED_DIR        = "generated_antlr"
+GENERATED_DIR        = "generated"
 GRAMMAR_FILE_NAME    = "C"
 GENERATED_STATIC_LIB = "generated_antlr"
-BUILD_SCRIPT         = "build_parser.sh"
+ANTLR_DLL_DIR        = Dir("antlr")
 
 #=======================================================#
 #                   Helper Functions                    #
@@ -26,7 +26,10 @@ def get_all_subdirectories(root_dir):
     @param root_dir : Starting directory to traverse
     @returns        : List of all directories
     """
-    return [dirs for root, dirs, files in os.walk(root_dir)]
+    subdirs = []
+    for root, dirs, files in os.walk(root_dir):
+        subdirs += [os.path.join(root, dir) for dir in dirs]
+    return subdirs
 
 #=======================================================#
 #             Project Directories and Files             #
@@ -37,11 +40,14 @@ CPPPATH = Flatten(
         GENERATED_DIR,
         "antlr4-runtime",
         get_all_subdirectories("antlr4-runtime"),
+        "src",
     ]
 )
 
+CPPPATH = [Dir(".").Dir(dir) for dir in CPPPATH]
+
 # Glob all source files from the source directories
-SOURCE_FILES = [Dir(dir).glob("*.cpp") for dir in CPPPATH]
+SOURCE_FILES = [Dir("src").glob("*.cpp")]
 
 #=======================================================#
 #                   Main Environment                    #
@@ -49,44 +55,29 @@ SOURCE_FILES = [Dir(dir).glob("*.cpp") for dir in CPPPATH]
 
 env = Environment(
     tools    = ["mingw", "g++"],
-    ENV      = os.environ, #{ "PATH" : os.environ["PATH"] },
-    LIBS     = ["libstdc++"],
-    CPPPATH  = Flatten(CPPPATH),
+    ENV      = os.environ,          #{ "PATH" : os.environ["PATH"] },
+    CPPPATH  = CPPPATH,
     CXXFLAGS = [
-        "-std=c++14",
-        "-O3",
+        "-std=c++11",
+        # "-O3",
         # "-Wall",
         # "-Werror",
     ],
+    LINKFLAGS = [
+        "-static-libstdc++",
+    ],
 )
 
-#=======================================================#
-#                    Compile Sources                    #
-#=======================================================#
-
-autogenerate_antlr = env.Command(
-    target = "autogenerate_antlr",
-    source = [],
-    action = env.Action(
-        "bash {}".format(BUILD_SCRIPT),
-        "Calling {} to autogenerate antlr code...".format(BUILD_SCRIPT),
-    ),
+SConscript(
+    "SConscript.py",
+    variant_dir="build",
+    duplicate=0,
+    exports=[
+        "env",
+        "GENERATED_DIR",
+        "GRAMMAR_FILE_NAME",
+        "GENERATED_STATIC_LIB",
+        "SOURCE_FILES",
+        "ANTLR_DLL_DIR",
+    ],
 )
-
-generated_antlr = env.StaticLibrary(
-    target   = GENERATED_STATIC_LIB,
-    source   = [Dir(GENERATED_DIR).glob("*.cpp")],
-    CXXFLAGS = env["CXXFLAGS"] + ["-w", "-fPIC"],            # Disable warnings, nothing we can do
-)
-
-Depends(generated_antlr, autogenerate_antlr)
-
-# env.Program(
-#     target = "compiler",
-#     source = [
-#         SOURCE_FILES,
-#         autogenerate_antlr,
-#     ],
-#     LIBS = generated_antlr,
-#     LIBPATH = "./",
-# )
