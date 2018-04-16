@@ -1,0 +1,39 @@
+001 BEGIN
+002     i := 3;
+003     
+004     WHEN
+005         i = 1 => f := 10;
+006         i = 2 => f := 20;
+007         i = 3 => f := 30;
+008         i = 4 => f := 40;
+009         OTHERWISE => f := -1
+010     END;
+011     
+012     range := 5.7;
+013     
+014     WHEN
+015         (1.0 <= range) AND (range < 3.0) => level := 1;
+016         (4.5 <= range) AND (range < 7.5) => BEGIN
+017                                                level := 2;
+018                                                range := 0.0;
+019                                             END;
+020         (8.0 <= range) AND (range < 9.9) => level := 3;
+021         OTHERWISE => level := -1
+022     END;
+023 END.
+
+                  23 source lines.
+                   0 syntax errors.
+                0.00 seconds total parsing time.
+
+===== OUTPUT =====
+
+>>> LINE 002: i = 3
+>>> LINE 007: f = 30
+>>> LINE 012: range = 5.700000
+>>> LINE 017: level = 2
+>>> LINE 018: range = 0.000000
+
+                   7 statements executed.
+                   0 runtime errors.
+                0.00 seconds total execution time.
