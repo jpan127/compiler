@@ -1,2 +1,9 @@
-*.exe
 *.o
+
+*.dblite
+
+*.exe
+
+generated/*
+
+build/*

@@ -1,12 +1,8 @@
-# <LANGUAGE_NAME_TB> Compiler
+# Quick and Dirty Compiler
+As students that appreciate the simplicty and complexity of C, we wanted to find ways to enhance the language using modern constructs and simplify certain unwieldy corners of the language.  The language we are designing is primarily C with hints of C++, Python, Swift, and absorbing GNU built ins into the language.
 
 
 ### Folder Hierarchy
-    
-    src   : Where all the source files can be found
-    src/3 : Old chapter 3 files for inspiration
-    src/8 : Old chapter 8 files for inspiration
-    src/* : Skeleton of the compiler, general architecture and lots of unimplemented brainstorming
 
 ### Symbols
 
@@ -14,5 +10,3 @@
 
 ### Innovative Ideas
 
-    - This language will be const by default, mutable by request
-    - It will be a spinoff of C, with some inspiration from modern langauges like C++11 - C++17, Python, and Swift
