@@ -82,7 +82,6 @@ function parse_args()
     while (( "$#" )); do
         case $1 in
             "-c" )
-                shift
                 COMPILE=true
                 ;;
             "-g" )
@@ -98,11 +97,10 @@ function parse_args()
                 TARGET=$1
                 ;;
             "-p" )
-                shift
                 GENERATE_PARSE_TREE=true
                 ;;
               *  )
-                echo -e "${RED}[ERROR] Unrecognized argument : $var"
+                echo -e "${RED}[ERROR] Unrecognized argument : $1"
                 print_menu
                 exit
                 ;;
@@ -134,6 +132,7 @@ function run_script()
         if [ "$GENERATE_PARSE_TREE" == true ]; then
             # Generate parse tree
             echo "Generating parse tree..."
+            cd $OUTPUT_DIR/java
             java org.antlr.v4.gui.TestRig $LANGUAGE compilationUnit -gui < $SAMPLES_PATH/$SAMPLE_C_FILE
         fi
 

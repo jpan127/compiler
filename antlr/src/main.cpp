@@ -44,9 +44,17 @@ static void token_dump(CommonTokenStream & token_stream)
 /// MAIN
 int main(int argc, const char* argv[])
 {
-    if (argc < 2)
+    try
     {
-        throw "Missing required argument : source file";
+        if (argc < 2)
+        {
+            throw "Missing required argument : source file";
+        }
+    }
+    catch (const char * error)
+    {
+        std::cerr << error << std::endl;
+        return -1;
     }
 
     std::ifstream     stream(argv[1]);  ///< Open STDIN stream for input source file

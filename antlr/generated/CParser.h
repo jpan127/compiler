@@ -13,23 +13,24 @@ class  CParser : public antlr4::Parser {
 public:
   enum {
     T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    T__7 = 8, T__8 = 9, T__9 = 10, Constant = 11, DigitSequence = 12, StringLiteral = 13, 
-    Coalescing = 14, Bit = 15, Power = 16, IgnoreWildCard = 17, Namespace = 18, 
-    ScopeResolution = 19, String = 20, Break = 21, Case = 22, Char = 23, 
-    Const = 24, Continue = 25, Bool = 26, Default = 27, Double = 28, Else = 29, 
-    Extern = 30, Float = 31, For = 32, If = 33, Int = 34, Uint32 = 35, Int32 = 36, 
-    Long = 37, Return = 38, Short = 39, Signed = 40, Sizeof = 41, Static = 42, 
-    Switch = 43, Typedef = 44, Unsigned = 45, Void = 46, While = 47, LeftParen = 48, 
-    RightParen = 49, LeftBracket = 50, RightBracket = 51, LeftBrace = 52, 
-    RightBrace = 53, Less = 54, LessEqual = 55, Greater = 56, GreaterEqual = 57, 
-    LeftShift = 58, RightShift = 59, Plus = 60, PlusPlus = 61, Minus = 62, 
-    MinusMinus = 63, Star = 64, Div = 65, Mod = 66, And = 67, Or = 68, Caret = 69, 
-    Question = 70, Colon = 71, Semi = 72, Comma = 73, Assign = 74, StarAssign = 75, 
-    DivAssign = 76, ModAssign = 77, PlusAssign = 78, MinusAssign = 79, LeftShiftAssign = 80, 
-    RightShiftAssign = 81, AndAssign = 82, XorAssign = 83, OrAssign = 84, 
-    Arrow = 85, Dot = 86, Ellipsis = 87, Tilde = 88, AndAnd = 89, OrOr = 90, 
-    Not = 91, Equal = 92, NotEqual = 93, Identifier = 94, Whitespace = 95, 
-    Newline = 96, BlockComment = 97, LineComment = 98
+    T__7 = 8, T__8 = 9, T__9 = 10, T__10 = 11, T__11 = 12, T__12 = 13, T__13 = 14, 
+    Constant = 15, DigitSequence = 16, StringLiteral = 17, Coalescing = 18, 
+    Bit = 19, Power = 20, IgnoreWildCard = 21, Namespace = 22, ScopeResolution = 23, 
+    String = 24, Break = 25, Case = 26, Char = 27, Const = 28, Continue = 29, 
+    Bool = 30, Default = 31, Double = 32, Else = 33, Extern = 34, Float = 35, 
+    For = 36, If = 37, Int = 38, Uint32 = 39, Int32 = 40, Long = 41, Return = 42, 
+    Short = 43, Signed = 44, Sizeof = 45, Static = 46, Switch = 47, Typedef = 48, 
+    Unsigned = 49, Void = 50, While = 51, LeftParen = 52, RightParen = 53, 
+    LeftBracket = 54, RightBracket = 55, LeftBrace = 56, RightBrace = 57, 
+    Less = 58, LessEqual = 59, Greater = 60, GreaterEqual = 61, LeftShift = 62, 
+    RightShift = 63, Plus = 64, PlusPlus = 65, Minus = 66, MinusMinus = 67, 
+    Star = 68, Div = 69, Mod = 70, And = 71, Or = 72, Negate = 73, Caret = 74, 
+    Question = 75, Colon = 76, Semi = 77, Comma = 78, Assign = 79, StarAssign = 80, 
+    DivAssign = 81, ModAssign = 82, PlusAssign = 83, MinusAssign = 84, LeftShiftAssign = 85, 
+    RightShiftAssign = 86, AndAssign = 87, XorAssign = 88, OrAssign = 89, 
+    NegateAssign = 90, Arrow = 91, Dot = 92, Ellipsis = 93, AndAnd = 94, 
+    OrOr = 95, Not = 96, Equal = 97, NotEqual = 98, Identifier = 99, Whitespace = 100, 
+    Newline = 101, BlockComment = 102, LineComment = 103
   };
 
   enum {
@@ -405,6 +406,7 @@ public:
   public:
     AssignmentOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NegateAssign();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

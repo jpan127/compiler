@@ -66,7 +66,6 @@ void arithmetic(void)
     y = x / 9999;
     y = x * 9999;
     y = x ^ 9999;
-    y = x ~ 9999;
     y = x | 9999;
     y = x & 9999;
 
