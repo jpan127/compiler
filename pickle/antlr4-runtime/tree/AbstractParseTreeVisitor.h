@@ -40,7 +40,7 @@ namespace tree {
         }
 
         antlrcpp::Any childResult = node->children[i]->accept(this);
-        result = aggregateResult(result, childResult);
+        result = aggregateResult(result, childResult); /// @note : All this does is return childResult lol
       }
 
       return result;

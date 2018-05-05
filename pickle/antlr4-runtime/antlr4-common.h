@@ -78,8 +78,6 @@
   //   #endif
   // #endif
 
-  class ANTLR4CPP_PUBLIC std::exception; // Needed for VS 2015.
-
 #elif defined(__APPLE__)
   typedef std::u32string UTF32String;
 

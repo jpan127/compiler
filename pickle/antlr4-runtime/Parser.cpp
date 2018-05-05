@@ -81,7 +81,7 @@ Parser::Parser(TokenStream *input) {
 }
 
 Parser::~Parser() {
-  _tracker.reset();
+  // _tracker.reset();
   delete _tracer;
 }
 

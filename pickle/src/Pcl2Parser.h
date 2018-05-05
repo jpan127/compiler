@@ -31,7 +31,7 @@ public:
   };
 
   Pcl2Parser(antlr4::TokenStream *input);
-  ~Pcl2Parser();
+  virtual ~Pcl2Parser();
 
   virtual std::string getGrammarFileName() const override;
   virtual const antlr4::atn::ATN& getATN() const override { return _atn; };

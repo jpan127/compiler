@@ -31,7 +31,7 @@ compilation = env.Program(
     target = "compiler",
     source = SOURCE_FILES,
     LIBS = [
-        "antlr-runtime",
+        "antlr-runtime2",
     ],
     LIBPATH = [
         ".",
