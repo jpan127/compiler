@@ -13,7 +13,6 @@ using namespace wci::intermediate;
 using namespace wci::intermediate::symtabimpl;
 using namespace wci::util;
 
-
 /**
  *  Pass1Visitor << Pcl2BaseVisitor << Pcl2Visitor << AbstractParseTreeVisitor << ParseTreeVisitor
  *  Pass1Visitor:
@@ -61,13 +60,14 @@ ostream& Pass1Visitor::get_assembly_file()
 
 antlrcpp::Any Pass1Visitor::visitProgram(Pcl2Parser::ProgramContext *ctx)
 {
+    auto value = visitChildren(ctx);
     print_debug_context("=== visitProgram: Printing xref table.");
 
     // Print the cross-reference table.
     CrossReferencer cross_referencer;
     cross_referencer.print(symtab_stack);
 
-    return visitChildren(ctx);
+    return value;
 }
 
 antlrcpp::Any Pass1Visitor::visitHeader(Pcl2Parser::HeaderContext *ctx)
@@ -84,7 +84,7 @@ antlrcpp::Any Pass1Visitor::visitHeader(Pcl2Parser::HeaderContext *ctx)
 
     try
     {
-        if (!j_file.is_open())
+        if (j_file && !j_file.is_open())
         {
             // Create the assembly output file.
             j_file.open(program_name + ".j");
@@ -131,13 +131,13 @@ antlrcpp::Any Pass1Visitor::visitDeclarations(Pcl2Parser::DeclarationsContext *c
     return visitChildren(ctx);
 }
 
-antlrcpp::Any Pass1Visitor::visitDecl(Pcl2Parser::DeclContext *ctx)
-{
-    print_debug_context("=== visitDecl: " + ctx->getText());
+// antlrcpp::Any Pass1Visitor::visitDecl(Pcl2Parser::DeclContext *ctx)
+// {
+//     print_debug_context("=== visitDecl: " + ctx->getText());
 
-    j_file << "\n; " << ctx->getText() << "\n" << endl;
-    return visitChildren(ctx);
-}
+//     j_file << "\n; " << ctx->getText() << "\n" << endl;
+//     return visitChildren(ctx);
+// }
 
 antlrcpp::Any Pass1Visitor::visitVarList(Pcl2Parser::VarListContext *ctx)
 {
@@ -154,7 +154,16 @@ antlrcpp::Any Pass1Visitor::visitVarId(Pcl2Parser::VarIdContext *ctx)
     const string variable_name = ctx->IDENTIFIER()->toString();
     SymTabEntry * variable_id = symtab_stack->enter_local(variable_name);
     variable_id->set_definition((Definition) DF_VARIABLE);
-    variable_id_list.push_back(variable_id);
+    // variable_id_list.push_back(variable_id);
+
+    variable_id->set_typespec(current_type);
+    // Emit a field declaration.
+    j_file << ".field private static "
+           << variable_id->get_name() 
+           << " " 
+           << current_type_indicator 
+           << endl;
+
 
     return visitChildren(ctx);
 }
@@ -163,36 +172,38 @@ antlrcpp::Any Pass1Visitor::visitTypeId(Pcl2Parser::TypeIdContext *ctx)
 {
     print_debug_context("=== visitTypeId: " + ctx->getText());
 
-    TypeSpec * type = nullptr;
-    string type_indicator;
+    // TypeSpec * type = nullptr;
+    // string type_indicator;
 
     const string type_name = ctx->IDENTIFIER()->toString();
     if (type_name == "integer")
     {
-        type = Predefined::integer_type;
-        type_indicator = "I";
+        current_type = Predefined::integer_type;
+        current_type_indicator = "I";
     }
     else if (type_name == "real")
     {
-        type = Predefined::real_type;
-        type_indicator = "F";
+        current_type = Predefined::real_type;
+        current_type_indicator = "F";
     }
     else
     {
-        type_indicator = "?";
+        current_type_indicator = "?";
     }
 
-    for (SymTabEntry * id : variable_id_list)
-    {
-        id->set_typespec(type);
+    cout << "Size of variable_id_list: " << variable_id_list.size() << endl;
 
-        // Emit a field declaration.
-        j_file << ".field private static "
-               << id->get_name() 
-               << " " 
-               << type_indicator 
-               << endl;
-    }
+    // for (SymTabEntry * id : variable_id_list)
+    // {
+    //     id->set_typespec(type);
+
+    //     // Emit a field declaration.
+    //     j_file << ".field private static "
+    //            << id->get_name() 
+    //            << " " 
+    //            << type_indicator 
+    //            << endl;
+    // }
 
     return visitChildren(ctx);
 }

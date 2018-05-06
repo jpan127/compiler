@@ -3,11 +3,13 @@ PROGRAM sample;
 VAR
     i, j : integer;
     alpha, beta5x : real;
+    john : tumath;
     
 BEGIN
     i := 32;
     j := i;
     i := -2 + 3*j;
+
 
     alpha := 9.3;
     beta5x := alpha;

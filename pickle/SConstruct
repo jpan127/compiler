@@ -42,15 +42,19 @@ CPPPATH = Flatten(
         get_all_subdirectories("antlr4-runtime"),
         "src", 
         "src/wci",
+        "generated",
     ]
 )
 
 CPPPATH = [Dir(".").Dir(dir) for dir in CPPPATH]
 
+SOURCE_DIRS = Flatten([
+    "src",
+    get_all_subdirectories("src"),
+])
+
 # Glob all source files from the source directories
-SOURCE_FILES = Flatten(
-    [Dir(dir).glob("*.cpp") for dir in get_all_subdirectories("src")] + Dir("src").glob("*.cpp")
-)
+SOURCE_FILES = [Dir(dir).glob("*.cpp") for dir in SOURCE_DIRS]
 
 #=======================================================#
 #                   Main Environment                    #
@@ -62,6 +66,7 @@ env = Environment(
     CPPPATH  = CPPPATH,
     CXXFLAGS = [
         "-std=c++11",
+        "-g",
     ],
     LINKFLAGS = [
         "-static-libstdc++",
@@ -71,6 +76,7 @@ env = Environment(
 SConscript(
     "SConscript.py",
     variant_dir="build",
+    src="../",
     duplicate=0,
     exports=[
         "env",

@@ -121,7 +121,7 @@ function parse_args()
 function run_script()
 {
     echo "Generating lexer and parser code..."
-    $ANTLR $GRAMMAR_PATH/$GRAMMAR -Dlanguage=$TARGET -o $OUTPUT_DIR
+    $ANTLR $GRAMMAR_PATH/$GRAMMAR -Dlanguage=$TARGET -visitor -o $OUTPUT_DIR
 
     if [ "$TARGET" == "Java" ]; then
 

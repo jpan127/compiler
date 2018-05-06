@@ -25,11 +25,12 @@ autogenerate_antlr = env.Command(
     ),
 )
 
-# SOURCE_FILES += Dir(GENERATED_DIR).glob("*.cpp")
+SOURCE_FILES += Dir(GENERATED_DIR).glob("*.cpp")
 
 compilation = env.Program(
     target = "compiler",
-    source = SOURCE_FILES,
+    source = Flatten(SOURCE_FILES),
+    variant_dir=".",
     LIBS = [
         "antlr-runtime2",
     ],

@@ -23,6 +23,8 @@ private:
     vector <SymTabEntry *> variable_id_list;
     ofstream j_file;
     const bool debug_flag;
+    TypeSpec * current_type;
+    string current_type_indicator;
 
     /// Prints the current visit context information if [debug_flag] is true
     void print_debug_context(const std::string & msg) const;
@@ -40,7 +42,7 @@ public:
 
     /// @ { Overriding all visit functions
     antlrcpp::Any visitAddSubExpr(Pcl2Parser::AddSubExprContext *ctx) override;
-    antlrcpp::Any visitDecl(Pcl2Parser::DeclContext *ctx) override;
+    // antlrcpp::Any visitDecl(Pcl2Parser::DeclContext *ctx) override;
     antlrcpp::Any visitDeclarations(Pcl2Parser::DeclarationsContext *ctx) override;
     antlrcpp::Any visitFloatConst(Pcl2Parser::FloatConstContext *ctx) override;
     antlrcpp::Any visitHeader(Pcl2Parser::HeaderContext *ctx) override;

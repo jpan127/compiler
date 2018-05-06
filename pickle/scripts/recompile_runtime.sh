@@ -34,7 +34,7 @@ ARCHIVE_TO_STATIC_LIB="ar -r antlr-runtime.a $RUNTIME_ROOT_DIR/temp/*.o"
 #                      Compile Static Library                      #
 ####################################################################
 
-# $COMPILE
+$COMPILE
 if [ ! -d "${RUNTIME_ROOT_DIR}/temp" ]; then
     $MAKE_TEMP_DIR
 fi

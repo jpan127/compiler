@@ -16,10 +16,11 @@ using namespace wci::intermediate;
 class  Pcl2Lexer : public antlr4::Lexer {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
-    PROGRAM = 8, VAR = 9, BEGIN = 10, END = 11, IDENTIFIER = 12, INTEGER = 13, 
-    FLOAT = 14, MUL_OP = 15, DIV_OP = 16, ADD_OP = 17, SUB_OP = 18, NEWLINE = 19, 
-    WS = 20
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, PROGRAM = 7, 
+    VAR = 8, BEGIN = 9, END = 10, IDENTIFIER = 11, INTEGER = 12, FLOAT = 13, 
+    MUL_OP = 14, DIV_OP = 15, ADD_OP = 16, SUB_OP = 17, CARET = 18, LESS_THAN = 19, 
+    LESS_THAN_EQUAL = 20, GREATER_THAN = 21, GREATER_THAN_EQUAL = 22, NEWLINE = 23, 
+    WS = 24
   };
 
   Pcl2Lexer(antlr4::CharStream *input);

@@ -130,6 +130,7 @@ void CrossReferencer::print_entry(SymTabEntry *entry,
     {
         case DF_CONSTANT:
         {
+            cout << "DF_CONSTANT" << endl;
             EntryValue *entry_value =
                 entry->get_attribute((SymTabKey) CONSTANT_VALUE);
             DataValue *data_value = entry_value->value;
@@ -152,6 +153,7 @@ void CrossReferencer::print_entry(SymTabEntry *entry,
 
         case DF_ENUMERATION_CONSTANT:
         {
+            cout << "DF_ENUMERATION_CONSTANT" << endl;
             EntryValue *entry_value =
                 entry->get_attribute((SymTabKey) CONSTANT_VALUE);
             DataValue *data_value = entry_value->value;
@@ -162,6 +164,7 @@ void CrossReferencer::print_entry(SymTabEntry *entry,
 
         case DF_TYPE:
         {
+            cout << "DF_TYPE" << endl;
             // Print the type details only when the type is first defined.
             if (entry == typespec->get_identifier())
             {
@@ -173,16 +176,26 @@ void CrossReferencer::print_entry(SymTabEntry *entry,
 
         case DF_VARIABLE:
         {
+            cout << "DF_VARIABLE" << endl;
             // Print the type details only if the type is unnamed.
             if (typespec->get_identifier() == nullptr)
             {
+                cout << "null" << endl;
                 print_type_detail(typespec, record_types);
+            }
+            else
+            {
+                cout << "not null" << endl;
             }
 
             break;
         }
 
-        default: break;  // shouldn't get here
+        default:
+        {
+            exit(-1);
+            break;  // shouldn't get here
+        }
     }
 }
 

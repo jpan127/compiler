@@ -10,12 +10,18 @@ header    : PROGRAM IDENTIFIER ';' ;
 mainBlock : block;
 block     : declarations compoundStmt ;
 
+/*
 declarations : VAR declList ';' ;
 declList     : decl ( ';' decl )* ;
 decl         : varList ':' typeId ;
+*/
+
+declarations : declList*            ;
+declList     : decl ( ',' decl )*   ;
+decl         : typeId varList ';'   ;
 varList      : varId ( ',' varId )* ;
-varId        : IDENTIFIER ;
-typeId       : IDENTIFIER ;
+varId        : IDENTIFIER           ;
+typeId       : IDENTIFIER           ;
 
 compoundStmt : BEGIN stmtList END ;
 
@@ -51,6 +57,12 @@ number locals [ TypeSpec *type = nullptr ]
     | FLOAT      # floatConst
     ;
 
+/***************************************************
+ *                                                 *
+ *                      Lexer                      *
+ *                                                 *
+ **************************************************/
+
 PROGRAM : 'PROGRAM' ;
 VAR     : 'VAR' ;
 BEGIN   : 'BEGIN' ;
@@ -60,10 +72,16 @@ IDENTIFIER : [a-zA-Z][a-zA-Z0-9]* ;
 INTEGER    : [0-9]+ ;
 FLOAT      : [0-9]+ '.' [0-9]+ ;
 
-MUL_OP :   '*' ;
-DIV_OP :   '/' ;
-ADD_OP :   '+' ;
-SUB_OP :   '-' ;
+MUL_OP          : '*' ;
+DIV_OP          : '/' ;
+ADD_OP          : '+' ;
+SUB_OP          : '-' ;
+CARET           : '^' ;
+
+LESS_THAN          : '<';
+LESS_THAN_EQUAL    : '<=';
+GREATER_THAN       : '>';
+GREATER_THAN_EQUAL : '>=';
 
 NEWLINE : '\r'? '\n' -> skip  ;
 WS      : [ \t]+ -> skip ; 
