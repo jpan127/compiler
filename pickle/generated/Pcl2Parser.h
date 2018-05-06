@@ -114,9 +114,8 @@ public:
   public:
     BlockContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    DeclarationsContext *declarations();
     CompoundStmtContext *compoundStmt();
-    std::vector<DeclarationsContext *> declarations();
-    DeclarationsContext* declarations(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -131,7 +130,8 @@ public:
   public:
     DeclarationsContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    DeclListContext *declList();
+    std::vector<DeclListContext *> declList();
+    DeclListContext* declList(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

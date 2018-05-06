@@ -1,5 +1,5 @@
 Import("*")
-
+import os
 
 
 #=======================================================#
@@ -7,37 +7,40 @@ Import("*")
 #=======================================================#
 
 bash_script_arguments = {
+    "SCRIPT"  : "scripts/build.sh",
     "GRAMMAR" : "Pcl2.g4",
     "TARGET"  : "Cpp",
-    "SAMPLE"  : "sample.pas",
-    "SCRIPT"  : "scripts/build.sh",
+    "FILE"    : "sample.pas",
 }
 
 autogenerate_antlr = env.Command(
     target = "autogenerate_antlr",
     source = [],
     action = env.Action(
-        "bash {0} -g {1} -t {2} -f {3}".format(bash_script_arguments["SCRIPT"],
-                                               bash_script_arguments["GRAMMAR"],
-                                               bash_script_arguments["TARGET"],
-                                               bash_script_arguments["SAMPLE"]),
+        "bash {SCRIPT} -g {GRAMMAR} -t {TARGET} -f {FILE}".format(**bash_script_arguments),
         "Calling {} to autogenerate antlr code...".format(bash_script_arguments["SCRIPT"]),
     ),
 )
 
 SOURCE_FILES += Dir(GENERATED_DIR).glob("*.cpp")
+SOURCE_FILES = Flatten(SOURCE_FILES)
+
+object_files = []
+for cpp in SOURCE_FILES:
+    object_files.append(
+        env.Object(
+            target  = os.path.splitext(cpp.name)[0],
+            source  = cpp,
+            LIBS    = [ANLTR_STATIC_LIB],
+            LIBPATH = [ANTLR_LIB_DIR],
+        )
+    )
 
 compilation = env.Program(
-    target = "compiler",
-    source = Flatten(SOURCE_FILES),
-    variant_dir=".",
-    LIBS = [
-        "antlr-runtime2",
-    ],
-    LIBPATH = [
-        ".",
-        ANTLR_DLL_DIR,
-    ],
+    target  = "compiler",
+    source  = object_files,
+    LIBS    = [ANLTR_STATIC_LIB],
+    LIBPATH = [ANTLR_LIB_DIR],
 )
 
 Depends(compilation, autogenerate_antlr)

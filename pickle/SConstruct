@@ -4,17 +4,19 @@ import SCons
 
 # Set up default environment path
 DefaultEnvironment(
-    ENV = { "PATH" : os.environ["PATH"] },
+    ENV = {
+        "PATH" : os.environ["PATH"]
+    },
 )
 
 #=======================================================#
 #                       Constants                       #
 #=======================================================#
 
-GENERATED_DIR        = "generated"
-GRAMMAR_FILE_NAME    = "C"
-GENERATED_STATIC_LIB = "generated_antlr"
-ANTLR_DLL_DIR        = Dir("antlr")
+GENERATED_DIR     = "generated"
+GRAMMAR_FILE_NAME = "C"
+ANLTR_STATIC_LIB  = "antlr-runtime2"
+ANTLR_LIB_DIR     = Dir("antlr")
 
 #=======================================================#
 #                   Helper Functions                    #
@@ -35,16 +37,14 @@ def get_all_subdirectories(root_dir):
 #             Project Directories and Files             #
 #=======================================================#
 
-CPPPATH = Flatten(
-    [
-        GENERATED_DIR,
-        "antlr4-runtime",
-        get_all_subdirectories("antlr4-runtime"),
-        "src", 
-        "src/wci",
-        "generated",
-    ]
-)
+CPPPATH = Flatten([
+    GENERATED_DIR,
+    "antlr4-runtime",
+    get_all_subdirectories("antlr4-runtime"),
+    "src", 
+    "src/wci",
+    "generated",
+])
 
 CPPPATH = [Dir(".").Dir(dir) for dir in CPPPATH]
 
@@ -61,29 +61,28 @@ SOURCE_FILES = [Dir(dir).glob("*.cpp") for dir in SOURCE_DIRS]
 #=======================================================#
 
 env = Environment(
-    tools    = ["mingw", "g++"],
-    ENV      = os.environ,
-    CPPPATH  = CPPPATH,
-    CXXFLAGS = [
+    tools      = ["mingw", "g++"],
+    ENV        = os.environ,
+    CPPPATH    = CPPPATH,
+    LINKFLAGS  = ["-static-libstdc++"],
+    CXXCOMSTR  = "[Compiling $TARGET]",
+    LINKCOMSTR = "[Linking $TARGET]",
+    CXXFLAGS   = [
         "-std=c++11",
         "-g",
-    ],
-    LINKFLAGS = [
-        "-static-libstdc++",
     ],
 )
 
 SConscript(
     "SConscript.py",
-    variant_dir="build",
-    src="../",
-    duplicate=0,
-    exports=[
+    variant_dir = "build",
+    duplicate   = 0,
+    exports     = [
         "env",
         "GENERATED_DIR",
         "GRAMMAR_FILE_NAME",
-        "GENERATED_STATIC_LIB",
+        "ANLTR_STATIC_LIB",
         "SOURCE_FILES",
-        "ANTLR_DLL_DIR",
+        "ANTLR_LIB_DIR",
     ],
 )
