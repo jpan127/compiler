@@ -58,6 +58,7 @@ ostream& Pass1Visitor::get_assembly_file()
     return j_file; 
 }
 
+#if 0
 antlrcpp::Any Pass1Visitor::visitProgram(Pcl2Parser::ProgramContext *ctx)
 {
     auto value = visitChildren(ctx);
@@ -131,13 +132,13 @@ antlrcpp::Any Pass1Visitor::visitDeclarations(Pcl2Parser::DeclarationsContext *c
     return visitChildren(ctx);
 }
 
-// antlrcpp::Any Pass1Visitor::visitDecl(Pcl2Parser::DeclContext *ctx)
-// {
-//     print_debug_context("=== visitDecl: " + ctx->getText());
+antlrcpp::Any Pass1Visitor::visitDecl(Pcl2Parser::DeclContext *ctx)
+{
+    print_debug_context("=== visitDecl: " + ctx->getText());
 
-//     j_file << "\n; " << ctx->getText() << "\n" << endl;
-//     return visitChildren(ctx);
-// }
+    j_file << "\n; " << ctx->getText() << "\n" << endl;
+    return visitChildren(ctx);
+}
 
 antlrcpp::Any Pass1Visitor::visitVarList(Pcl2Parser::VarListContext *ctx)
 {
@@ -304,3 +305,140 @@ antlrcpp::Any Pass1Visitor::visitParenExpr(Pcl2Parser::ParenExprContext *ctx)
     ctx->type = ctx->expr()->type;
     return visitChildren(ctx);
 }
+#else
+    antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *context)
+    {
+        print_debug_context("=== visitDeclaration: " + context->getText());
+
+        const string variable_name = context->Identifier()->toString();
+        SymTabEntry * variable_id = symtab_stack->enter_local(variable_name);
+        variable_id->set_definition((Definition) DF_VARIABLE);
+
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitDeclarationSpecifiers(Pcl2Parser::DeclarationSpecifiersContext *context)
+    {
+        print_debug_context("=== visitDeclarationSpecifiers: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitDeclarationSpecifier(Pcl2Parser::DeclarationSpecifierContext *context)
+    {
+        print_debug_context("=== visitDeclarationSpecifier: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitDeclarator(Pcl2Parser::DeclaratorContext *context)
+    {
+        print_debug_context("=== visitDeclarator: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context)
+    {
+        print_debug_context("=== visitTypeSpecifier: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext *context)
+    {
+        print_debug_context("=== visitDirectDeclarator: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitParameterTypeList(Pcl2Parser::ParameterTypeListContext *context)
+    {
+        print_debug_context("=== visitParameterTypeList: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitParameterList(Pcl2Parser::ParameterListContext *context)
+    {
+        print_debug_context("=== visitParameterList: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext *context)
+    {
+        print_debug_context("=== visitParameterDeclaration: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitIdentifierList(Pcl2Parser::IdentifierListContext *context)
+    {
+        print_debug_context("=== visitIdentifierList: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitStatement(Pcl2Parser::StatementContext *context)
+    {
+        print_debug_context("=== visitStatement: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context)
+    {
+        print_debug_context("=== visitCompoundStatement: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitBlockItemList(Pcl2Parser::BlockItemListContext *context)
+    {
+        print_debug_context("=== visitBlockItemList: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitBlockItem(Pcl2Parser::BlockItemContext *context)
+    {
+        print_debug_context("=== visitBlockItem: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context)
+    {
+        auto value = visitChildren(context);
+        print_debug_context("=== visitCompilationUnit: Printing xref table.");
+
+#if 0
+        const string program_name = context->externalDeclaration()->declaration()->Identifier()->toString();
+
+        cout << "************************* " << program_name << endl;
+
+        program_id = symtab_stack->enter_local(program_name);
+        program_id->set_definition((Definition)DF_PROGRAM);
+        program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB, new EntryValue(symtab_stack->push()));
+        symtab_stack->set_program_id(program_id);
+
+        try
+        {
+            if (j_file && !j_file.is_open())
+            {
+                // Create the assembly output file.
+                j_file.open(program_name + ".j");
+                if (j_file.fail())
+                {
+                    throw "***** Cannot open assembly file";
+                }
+            }
+        }
+        catch (const char * exception)
+        {
+            cerr << exception << endl;
+            exit(-1);
+        }
+
+        // Emit the program header.
+        j_file << ".class public " << program_name                      << endl;
+        j_file << ".super java/lang/Object"                             << endl;
+
+        // Emit the RunTimer and PascalTextIn fields.
+        j_file                                                          << endl;
+        j_file << ".field private static _runTimer LRunTimer;"          << endl;
+        j_file << ".field private static _standardIn LPascalTextIn;"    << endl;
+
+
+        // Print the cross-reference table
+        CrossReferencer cross_referencer;
+        cross_referencer.print(symtab_stack);
+#endif
+        
+        return value;
+    }
+    antlrcpp::Any Pass1Visitor::visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context)
+    {
+        print_debug_context("=== visitExternalDeclaration: " + context->getText());
+        return visitChildren(context);        
+    }
+    antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
+    {
+        print_debug_context("=== visitFunctionDefinition: " + context->getText());
+        return visitChildren(context);
+    }
+#endif

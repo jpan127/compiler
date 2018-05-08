@@ -16,11 +16,23 @@ using namespace wci::intermediate;
 class  Pcl2Lexer : public antlr4::Lexer {
 public:
   enum {
-    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, PROGRAM = 7, 
-    VAR = 8, BEGIN = 9, END = 10, IDENTIFIER = 11, INTEGER = 12, FLOAT = 13, 
-    MUL_OP = 14, DIV_OP = 15, ADD_OP = 16, SUB_OP = 17, CARET = 18, LESS_THAN = 19, 
-    LESS_THAN_EQUAL = 20, GREATER_THAN = 21, GREATER_THAN_EQUAL = 22, NEWLINE = 23, 
-    WS = 24
+    Constant = 1, DigitSequence = 2, Coalescing = 3, Bit = 4, Power = 5, 
+    IgnoreWildCard = 6, Namespace = 7, ScopeResolution = 8, String = 9, 
+    Break = 10, Case = 11, Char = 12, Const = 13, Continue = 14, Bool = 15, 
+    Default = 16, Double = 17, Else = 18, Extern = 19, Float = 20, For = 21, 
+    If = 22, Int = 23, Uint32 = 24, Int32 = 25, Long = 26, Return = 27, 
+    Short = 28, Signed = 29, Sizeof = 30, Static = 31, Switch = 32, Typedef = 33, 
+    Unsigned = 34, Void = 35, While = 36, LeftParen = 37, RightParen = 38, 
+    LeftBracket = 39, RightBracket = 40, LeftBrace = 41, RightBrace = 42, 
+    Less = 43, LessEqual = 44, Greater = 45, GreaterEqual = 46, LeftShift = 47, 
+    RightShift = 48, Plus = 49, PlusPlus = 50, Minus = 51, MinusMinus = 52, 
+    Star = 53, Div = 54, Mod = 55, And = 56, Or = 57, Negate = 58, Caret = 59, 
+    Question = 60, Colon = 61, Semi = 62, Comma = 63, Assign = 64, StarAssign = 65, 
+    DivAssign = 66, ModAssign = 67, PlusAssign = 68, MinusAssign = 69, LeftShiftAssign = 70, 
+    RightShiftAssign = 71, AndAssign = 72, XorAssign = 73, OrAssign = 74, 
+    NegateAssign = 75, Arrow = 76, Dot = 77, Ellipsis = 78, AndAnd = 79, 
+    OrOr = 80, Not = 81, Equal = 82, NotEqual = 83, Identifier = 84, Whitespace = 85, 
+    Newline = 86, BlockComment = 87, LineComment = 88
   };
 
   Pcl2Lexer(antlr4::CharStream *input);

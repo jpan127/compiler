@@ -26,7 +26,7 @@ int main(int argc, const char *args[])
     CommonTokenStream tokens(&lexer);
 
     Pcl2Parser parser(&tokens);
-    tree::ParseTree *tree = parser.program();
+    tree::ParseTree *tree = parser.compilationUnit();
 
     Pass1Visitor *pass1 = new Pass1Visitor(true);
     pass1->visit(tree);

@@ -20,86 +20,56 @@ using namespace wci::intermediate;
 class  Pcl2BaseListener : public Pcl2Listener {
 public:
 
-  virtual void enterProgram(Pcl2Parser::ProgramContext * /*ctx*/) override { }
-  virtual void exitProgram(Pcl2Parser::ProgramContext * /*ctx*/) override { }
+  virtual void enterCompilationUnit(Pcl2Parser::CompilationUnitContext * /*ctx*/) override { }
+  virtual void exitCompilationUnit(Pcl2Parser::CompilationUnitContext * /*ctx*/) override { }
 
-  virtual void enterHeader(Pcl2Parser::HeaderContext * /*ctx*/) override { }
-  virtual void exitHeader(Pcl2Parser::HeaderContext * /*ctx*/) override { }
+  virtual void enterDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
+  virtual void exitDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
 
-  virtual void enterMainBlock(Pcl2Parser::MainBlockContext * /*ctx*/) override { }
-  virtual void exitMainBlock(Pcl2Parser::MainBlockContext * /*ctx*/) override { }
+  virtual void enterDeclarationSpecifiers(Pcl2Parser::DeclarationSpecifiersContext * /*ctx*/) override { }
+  virtual void exitDeclarationSpecifiers(Pcl2Parser::DeclarationSpecifiersContext * /*ctx*/) override { }
 
-  virtual void enterBlock(Pcl2Parser::BlockContext * /*ctx*/) override { }
-  virtual void exitBlock(Pcl2Parser::BlockContext * /*ctx*/) override { }
+  virtual void enterDeclarationSpecifier(Pcl2Parser::DeclarationSpecifierContext * /*ctx*/) override { }
+  virtual void exitDeclarationSpecifier(Pcl2Parser::DeclarationSpecifierContext * /*ctx*/) override { }
 
-  virtual void enterDeclarations(Pcl2Parser::DeclarationsContext * /*ctx*/) override { }
-  virtual void exitDeclarations(Pcl2Parser::DeclarationsContext * /*ctx*/) override { }
+  virtual void enterDeclarator(Pcl2Parser::DeclaratorContext * /*ctx*/) override { }
+  virtual void exitDeclarator(Pcl2Parser::DeclaratorContext * /*ctx*/) override { }
 
-  virtual void enterDeclList(Pcl2Parser::DeclListContext * /*ctx*/) override { }
-  virtual void exitDeclList(Pcl2Parser::DeclListContext * /*ctx*/) override { }
+  virtual void enterTypeSpecifier(Pcl2Parser::TypeSpecifierContext * /*ctx*/) override { }
+  virtual void exitTypeSpecifier(Pcl2Parser::TypeSpecifierContext * /*ctx*/) override { }
 
-  virtual void enterDecl(Pcl2Parser::DeclContext * /*ctx*/) override { }
-  virtual void exitDecl(Pcl2Parser::DeclContext * /*ctx*/) override { }
+  virtual void enterDirectDeclarator(Pcl2Parser::DirectDeclaratorContext * /*ctx*/) override { }
+  virtual void exitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext * /*ctx*/) override { }
 
-  virtual void enterVarList(Pcl2Parser::VarListContext * /*ctx*/) override { }
-  virtual void exitVarList(Pcl2Parser::VarListContext * /*ctx*/) override { }
+  virtual void enterParameterTypeList(Pcl2Parser::ParameterTypeListContext * /*ctx*/) override { }
+  virtual void exitParameterTypeList(Pcl2Parser::ParameterTypeListContext * /*ctx*/) override { }
 
-  virtual void enterVarId(Pcl2Parser::VarIdContext * /*ctx*/) override { }
-  virtual void exitVarId(Pcl2Parser::VarIdContext * /*ctx*/) override { }
+  virtual void enterParameterList(Pcl2Parser::ParameterListContext * /*ctx*/) override { }
+  virtual void exitParameterList(Pcl2Parser::ParameterListContext * /*ctx*/) override { }
 
-  virtual void enterTypeId(Pcl2Parser::TypeIdContext * /*ctx*/) override { }
-  virtual void exitTypeId(Pcl2Parser::TypeIdContext * /*ctx*/) override { }
+  virtual void enterParameterDeclaration(Pcl2Parser::ParameterDeclarationContext * /*ctx*/) override { }
+  virtual void exitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext * /*ctx*/) override { }
 
-  virtual void enterCompoundStmt(Pcl2Parser::CompoundStmtContext * /*ctx*/) override { }
-  virtual void exitCompoundStmt(Pcl2Parser::CompoundStmtContext * /*ctx*/) override { }
+  virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
+  virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
 
-  virtual void enterStmt(Pcl2Parser::StmtContext * /*ctx*/) override { }
-  virtual void exitStmt(Pcl2Parser::StmtContext * /*ctx*/) override { }
+  virtual void enterStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
+  virtual void exitStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
 
-  virtual void enterStmtList(Pcl2Parser::StmtListContext * /*ctx*/) override { }
-  virtual void exitStmtList(Pcl2Parser::StmtListContext * /*ctx*/) override { }
+  virtual void enterCompoundStatement(Pcl2Parser::CompoundStatementContext * /*ctx*/) override { }
+  virtual void exitCompoundStatement(Pcl2Parser::CompoundStatementContext * /*ctx*/) override { }
 
-  virtual void enterAssignmentStmt(Pcl2Parser::AssignmentStmtContext * /*ctx*/) override { }
-  virtual void exitAssignmentStmt(Pcl2Parser::AssignmentStmtContext * /*ctx*/) override { }
+  virtual void enterBlockItemList(Pcl2Parser::BlockItemListContext * /*ctx*/) override { }
+  virtual void exitBlockItemList(Pcl2Parser::BlockItemListContext * /*ctx*/) override { }
 
-  virtual void enterVariable(Pcl2Parser::VariableContext * /*ctx*/) override { }
-  virtual void exitVariable(Pcl2Parser::VariableContext * /*ctx*/) override { }
+  virtual void enterBlockItem(Pcl2Parser::BlockItemContext * /*ctx*/) override { }
+  virtual void exitBlockItem(Pcl2Parser::BlockItemContext * /*ctx*/) override { }
 
-  virtual void enterVariableExpr(Pcl2Parser::VariableExprContext * /*ctx*/) override { }
-  virtual void exitVariableExpr(Pcl2Parser::VariableExprContext * /*ctx*/) override { }
+  virtual void enterExternalDeclaration(Pcl2Parser::ExternalDeclarationContext * /*ctx*/) override { }
+  virtual void exitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext * /*ctx*/) override { }
 
-  virtual void enterAddSubExpr(Pcl2Parser::AddSubExprContext * /*ctx*/) override { }
-  virtual void exitAddSubExpr(Pcl2Parser::AddSubExprContext * /*ctx*/) override { }
-
-  virtual void enterUnsignedNumberExpr(Pcl2Parser::UnsignedNumberExprContext * /*ctx*/) override { }
-  virtual void exitUnsignedNumberExpr(Pcl2Parser::UnsignedNumberExprContext * /*ctx*/) override { }
-
-  virtual void enterMulDivExpr(Pcl2Parser::MulDivExprContext * /*ctx*/) override { }
-  virtual void exitMulDivExpr(Pcl2Parser::MulDivExprContext * /*ctx*/) override { }
-
-  virtual void enterParenExpr(Pcl2Parser::ParenExprContext * /*ctx*/) override { }
-  virtual void exitParenExpr(Pcl2Parser::ParenExprContext * /*ctx*/) override { }
-
-  virtual void enterSignedNumberExpr(Pcl2Parser::SignedNumberExprContext * /*ctx*/) override { }
-  virtual void exitSignedNumberExpr(Pcl2Parser::SignedNumberExprContext * /*ctx*/) override { }
-
-  virtual void enterMulDivOp(Pcl2Parser::MulDivOpContext * /*ctx*/) override { }
-  virtual void exitMulDivOp(Pcl2Parser::MulDivOpContext * /*ctx*/) override { }
-
-  virtual void enterAddSubOp(Pcl2Parser::AddSubOpContext * /*ctx*/) override { }
-  virtual void exitAddSubOp(Pcl2Parser::AddSubOpContext * /*ctx*/) override { }
-
-  virtual void enterSignedNumber(Pcl2Parser::SignedNumberContext * /*ctx*/) override { }
-  virtual void exitSignedNumber(Pcl2Parser::SignedNumberContext * /*ctx*/) override { }
-
-  virtual void enterSign(Pcl2Parser::SignContext * /*ctx*/) override { }
-  virtual void exitSign(Pcl2Parser::SignContext * /*ctx*/) override { }
-
-  virtual void enterIntegerConst(Pcl2Parser::IntegerConstContext * /*ctx*/) override { }
-  virtual void exitIntegerConst(Pcl2Parser::IntegerConstContext * /*ctx*/) override { }
-
-  virtual void enterFloatConst(Pcl2Parser::FloatConstContext * /*ctx*/) override { }
-  virtual void exitFloatConst(Pcl2Parser::FloatConstContext * /*ctx*/) override { }
+  virtual void enterFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
+  virtual void exitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

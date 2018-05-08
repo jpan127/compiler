@@ -11,13 +11,25 @@ using namespace wci;
 using namespace wci::intermediate;
 using namespace wci::intermediate::symtabimpl;
 
-Pass2Visitor::Pass2Visitor(ostream& j_file)
-    : program_name(""), j_file(j_file)
+Pass2Visitor::Pass2Visitor(ostream& j_file, const bool debug) : program_name(""), j_file(j_file), debug_flag(debug)
 {
+    /// Empty
 }
 
-Pass2Visitor::~Pass2Visitor() {}
+Pass2Visitor::~Pass2Visitor()
+{
+    /// Empty
+}
 
+void Pass2Visitor::print_debug_context(const std::string & msg) const
+{
+    if (debug_flag)
+    {
+        cout << msg << endl;
+    }
+}
+
+#if 0
 antlrcpp::Any Pass2Visitor::visitProgram(Pcl2Parser::ProgramContext *ctx)
 {
     auto value = visitChildren(ctx);
@@ -206,3 +218,20 @@ antlrcpp::Any Pass2Visitor::visitFloatConst(Pcl2Parser::FloatConstContext *ctx)
 
     return visitChildren(ctx);
 }
+#else
+    antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
+    {
+        print_debug_context("=== visitFunctionDefinition: " + context->getText());
+        return visitChildren(context);
+    }
+    antlrcpp::Any Pass2Visitor::visitStatement(Pcl2Parser::StatementContext *context)
+    {
+        print_debug_context("=== visitStatement: " + context->getText());
+        return visitChildren(context);
+    }
+    antlrcpp::Any Pass2Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context)
+    {
+        print_debug_context("=== visitCompoundStatement: " + context->getText());
+        return visitChildren(context);
+    }
+#endif

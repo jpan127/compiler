@@ -20,11 +20,16 @@ class Pass2Visitor : public Pcl2BaseVisitor
 private:
 	string program_name;
 	ostream& j_file;
+    const bool debug_flag;
+
+    void print_debug_context(const std::string & msg) const;
 
 public:
-	Pass2Visitor(ostream& j_file);
+	Pass2Visitor(ostream& j_file, const bool debug=false);
     virtual ~Pass2Visitor();
 
+    /// @ { Overriding all visit functions
+#if 0
     antlrcpp::Any visitProgram(Pcl2Parser::ProgramContext *ctx) override;
     antlrcpp::Any visitHeader(Pcl2Parser::HeaderContext *ctx) override;
     antlrcpp::Any visitMainBlock(Pcl2Parser::MainBlockContext *ctx) override;
@@ -36,6 +41,12 @@ public:
     antlrcpp::Any visitSignedNumber(Pcl2Parser::SignedNumberContext *ctx) override;
     antlrcpp::Any visitIntegerConst(Pcl2Parser::IntegerConstContext *ctx) override;
     antlrcpp::Any visitFloatConst(Pcl2Parser::FloatConstContext *ctx) override;
+#else
+    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
+    antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context) override;
+    antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context) override;
+#endif
+    /// @ }
 };
 
 #endif /* PASS2VISITOR_H_ */

@@ -41,8 +41,9 @@ public:
     ostream& get_assembly_file();
 
     /// @ { Overriding all visit functions
+#if 0
     antlrcpp::Any visitAddSubExpr(Pcl2Parser::AddSubExprContext *ctx) override;
-    // antlrcpp::Any visitDecl(Pcl2Parser::DeclContext *ctx) override;
+    antlrcpp::Any visitDecl(Pcl2Parser::DeclContext *ctx) override;
     antlrcpp::Any visitDeclarations(Pcl2Parser::DeclarationsContext *ctx) override;
     antlrcpp::Any visitFloatConst(Pcl2Parser::FloatConstContext *ctx) override;
     antlrcpp::Any visitHeader(Pcl2Parser::HeaderContext *ctx) override;
@@ -57,6 +58,25 @@ public:
     antlrcpp::Any visitVarId(Pcl2Parser::VarIdContext *ctx) override;
     antlrcpp::Any visitVariableExpr(Pcl2Parser::VariableExprContext *ctx) override;
     antlrcpp::Any visitVarList(Pcl2Parser::VarListContext *ctx) override;
+#else
+    antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) override;
+    antlrcpp::Any visitDeclarationSpecifiers(Pcl2Parser::DeclarationSpecifiersContext *context) override;
+    antlrcpp::Any visitDeclarationSpecifier(Pcl2Parser::DeclarationSpecifierContext *context) override;
+    antlrcpp::Any visitDeclarator(Pcl2Parser::DeclaratorContext *context) override;
+    antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context) override;
+    antlrcpp::Any visitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext *context) override;
+    antlrcpp::Any visitParameterTypeList(Pcl2Parser::ParameterTypeListContext *context) override;
+    antlrcpp::Any visitParameterList(Pcl2Parser::ParameterListContext *context) override;
+    antlrcpp::Any visitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext *context) override;
+    antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context) override;
+    antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context) override;
+    antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context) override;
+    antlrcpp::Any visitBlockItemList(Pcl2Parser::BlockItemListContext *context) override;
+    antlrcpp::Any visitBlockItem(Pcl2Parser::BlockItemContext *context) override;
+    antlrcpp::Any visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context) override;
+    antlrcpp::Any visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context) override;
+    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
+#endif
     /// @ }
 };
 
