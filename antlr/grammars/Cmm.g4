@@ -190,6 +190,7 @@ identifierList
 statement
     :   compoundStatement
     |   expressionStatement
+    |   selectionStatement
     ;
 //        |   expressionStatement
 //        |   selectionStatement
@@ -216,6 +217,10 @@ initializer
 
 expressionStatement
     :   expression? ';'
+    ;
+
+selectionStatement
+    :   'if' '(' expression ')' statement ('else' statement)?
     ;
 
 compilationUnit
