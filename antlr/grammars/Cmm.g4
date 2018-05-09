@@ -6,6 +6,118 @@ grammar Cmm;
  *                                                 *
  **************************************************/
 
+primaryExpression
+    :   Identifier
+    |   Constant
+    |   StringLiteral+
+    |   '(' expression ')'
+    ;
+
+postfixExpression
+    :   primaryExpression
+    |   postfixExpression '(' argumentExpressionList? ')'
+    |   postfixExpression '++'
+    |   postfixExpression '--'
+    ;
+
+argumentExpressionList
+    :   assignmentExpression
+    |   argumentExpressionList ',' assignmentExpression
+    ;
+
+unaryExpression
+    :   postfixExpression
+    |   '++' unaryExpression
+    |   '--' unaryExpression
+    |   unaryOperator unaryExpression
+    |   DigitSequence
+    ;
+
+unaryOperator
+    :   '&' | '*' | '+' | '-' | '~' | '!'
+    ;
+
+multiplicativeExpression
+    :   unaryExpression
+    |   multiplicativeExpression '*' unaryExpression
+    |   multiplicativeExpression '/' unaryExpression
+    |   multiplicativeExpression '%' unaryExpression
+    ;
+
+additiveExpression
+    :   multiplicativeExpression
+    |   additiveExpression '+' multiplicativeExpression
+    |   additiveExpression '-' multiplicativeExpression
+    ;
+
+shiftExpression
+    :   additiveExpression
+    |   shiftExpression '<<' additiveExpression
+    |   shiftExpression '>>' additiveExpression
+    ;
+
+relationalExpression
+    :   shiftExpression
+    |   relationalExpression '<' shiftExpression
+    |   relationalExpression '>' shiftExpression
+    |   relationalExpression '<=' shiftExpression
+    |   relationalExpression '>=' shiftExpression
+    ;
+
+equalityExpression
+    :   relationalExpression
+    |   equalityExpression 'is' relationalExpression
+    |   equalityExpression 'is not' relationalExpression
+    |   equalityExpression '==' relationalExpression
+    |   equalityExpression '!=' relationalExpression
+    ;
+
+andExpression
+    :   equalityExpression
+    |   andExpression '&' equalityExpression
+    ;
+
+exclusiveOrExpression
+    :   andExpression
+    |   exclusiveOrExpression '^' andExpression
+    ;
+
+inclusiveOrExpression
+    :   exclusiveOrExpression
+    |   inclusiveOrExpression '|' exclusiveOrExpression
+    ;
+
+logicalAndExpression
+    :   inclusiveOrExpression
+    |   logicalAndExpression '&&' inclusiveOrExpression
+    |   logicalAndExpression 'and' inclusiveOrExpression
+    ;
+
+logicalOrExpression
+    :   logicalAndExpression
+    |   logicalOrExpression '||' logicalAndExpression
+    |   logicalOrExpression 'or' logicalAndExpression
+    ;
+
+conditionalExpression
+    :   logicalOrExpression ('?' expression ':' conditionalExpression)?
+    ;
+
+assignmentExpression
+    :   conditionalExpression
+    |   unaryExpression assignmentOperator assignmentExpression
+    |   DigitSequence // for
+    ;
+
+assignmentOperator
+    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' | NegateAssign
+    ;
+
+expression
+    :   assignmentExpression
+    |   expression ',' assignmentExpression
+    ;
+
 declaration
     :   declarationSpecifiers Identifier ';'
     ;
@@ -18,8 +130,14 @@ declarationSpecifier
     :   typeSpecifier
     ;
 
-declarator
-    :   '*'? directDeclarator
+initDeclaratorList
+    :   initDeclarator (',' initDeclarator)*
+    |   initDeclaratorList ',' initDeclarator
+    ;
+
+initDeclarator
+    :   declarator
+    |   declarator '=' initializer
     ;
 
 typeSpecifier
@@ -36,6 +154,10 @@ typeSpecifier
     |   'uint32_t'
     |   'int32_t'
     )
+    ;
+
+declarator
+    :   '*'? directDeclarator
     ;
 
 directDeclarator
@@ -66,6 +188,7 @@ identifierList
 
 statement
     :   compoundStatement
+    |   expressionStatement
     ;
 //        |   expressionStatement
 //        |   selectionStatement
@@ -84,6 +207,14 @@ blockItemList
 blockItem
     :   statement
     |   declaration
+    ;
+
+initializer
+    :   assignmentExpression;
+
+
+expressionStatement
+    :   expression? ';'
     ;
 
 compilationUnit
@@ -116,7 +247,6 @@ fragment
 IdentifierNondigit
     :   Nondigit
     |   UniversalCharacterName
-    //|   // other implementation-defined characters...
     ;
 
 fragment
