@@ -191,6 +191,7 @@ statement
     :   compoundStatement
     |   expressionStatement
     |   selectionStatement
+    |   iterationStatement
     ;
 //        |   expressionStatement
 //        |   selectionStatement
@@ -209,6 +210,25 @@ blockItemList
 blockItem
     :   statement
     |   declaration
+    ;
+
+iterationStatement
+    :   For '(' forCondition ')' statement
+    ;
+
+forCondition
+    :   forDeclaration ';' forExpression? ';' forExpression?
+    |   expression? ';' forExpression? ';' forExpression?
+    ;
+
+forDeclaration
+    :   declarationSpecifiers initDeclaratorList
+    |   declarationSpecifiers
+    ;
+
+forExpression
+    :   assignmentExpression
+    |   forExpression ',' assignmentExpression
     ;
 
 initializer
