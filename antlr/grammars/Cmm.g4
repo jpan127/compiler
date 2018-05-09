@@ -119,7 +119,8 @@ expression
     ;
 
 declaration
-    :   declarationSpecifiers Identifier ';'
+    :   declarationSpecifiers initDeclaratorList ';'
+    |   declarationSpecifier ';'
     ;
 
 declarationSpecifiers
