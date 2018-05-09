@@ -30,12 +30,12 @@ void arithmetic(void)
                   ((x & (1 << 4)) >> (31 - 4)) |
                   ((x & (1 << 5)) >> (31 - 4));
                         
-    const bool a = false;
-    const bool b = true;
-    const bool c = false;
-    const bool d = true;
-    const bool e = false;
-    const bool f = true;
+    bool a = false;
+    bool b = true;
+    bool c = false;
+    bool d = true;
+    bool e = false;
+    bool f = true;
 
     if (a)                               { }
     else if (b)                          { }

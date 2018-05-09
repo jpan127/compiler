@@ -11,46 +11,27 @@ using namespace wci::intermediate;
  *                                                 *
  **************************************************/
 
+/// @TODO : Organize the grammar how we want the generated code to be organized
+/// @TODO : Remove unnecessary typespecs
+
 compilationUnit
-    :   translationUnit? EOF
-    ;
-
-translationUnit
-    :   externalDeclaration
-    |   translationUnit externalDeclaration
-    ;
-
-externalDeclaration
-    :   functionDefinition
-    |   declaration
-    |   ';' // stray ;
-    ;
-
-functionDefinition
-    :   declarationSpecifiers? declarator compoundStatement
+    :   externalDeclaration? EOF
     ;
 
 declaration locals [ TypeSpec *type = nullptr ]
-    :   declarationSpecifiers initDeclaratorList ';'
-    |   declarationSpecifier ';'
+    :   declarationSpecifiers identifierList ';'
     ;
 
-declarationSpecifiers
+declarationSpecifiers locals [ TypeSpec *type = nullptr ]
     :   declarationSpecifier+
     ;
 
-declarationSpecifier
+declarationSpecifier locals [ TypeSpec *type = nullptr ]
     :   typeSpecifier
     ;
 
-initDeclaratorList
-    :   initDeclarator (',' initDeclarator)*
-    |   initDeclaratorList ',' initDeclarator
-    ;
-
-initDeclarator
-    :   declarator
-    |   declarator '=' initializer
+declarator locals [ TypeSpec *type = nullptr ]
+    :   '*'? directDeclarator
     ;
 
 typeSpecifier locals [ TypeSpec *type = nullptr ]
@@ -66,10 +47,6 @@ typeSpecifier locals [ TypeSpec *type = nullptr ]
     |   'unsigned'  # unsignedType
     |   'uint32_t'  # uint32_tType
     |   'int32_t'   # int32_tType
-    ;
-
-declarator
-    :   '*'? directDeclarator
     ;
 
 directDeclarator
@@ -88,121 +65,9 @@ parameterList
     |   parameterList ',' parameterDeclaration
     ;
 
-parameterDeclaration
+parameterDeclaration locals [ TypeSpec *type = nullptr ]
     :   declarationSpecifiers declarator
     |   declarationSpecifiers
-    ;
-
-primaryExpression
-    :   Identifier
-    |   Constant
-    |   StringLiteral+
-    |   '(' expression ')'
-    ;
-
-postfixExpression
-    :   primaryExpression
-    |   postfixExpression '(' argumentExpressionList? ')'
-    |   postfixExpression '++'
-    |   postfixExpression '--'
-    ;
-
-argumentExpressionList
-    :   assignmentExpression
-    |   argumentExpressionList ',' assignmentExpression
-    ;
-
-unaryExpression
-    :   postfixExpression
-    |   '++' unaryExpression
-    |   '--' unaryExpression
-    |   unaryOperator unaryExpression
-    |   DigitSequence
-    ;
-
-unaryOperator
-    :   '&' | '*' | '+' | '-' | '~' | '!'
-    ;
-
-multiplicativeExpression
-    :   unaryExpression
-    |   multiplicativeExpression '*' unaryExpression
-    |   multiplicativeExpression '/' unaryExpression
-    |   multiplicativeExpression '%' unaryExpression
-    ;
-
-additiveExpression
-    :   multiplicativeExpression
-    |   additiveExpression '+' multiplicativeExpression
-    |   additiveExpression '-' multiplicativeExpression
-    ;
-
-shiftExpression
-    :   additiveExpression
-    |   shiftExpression '<<' additiveExpression
-    |   shiftExpression '>>' additiveExpression
-    ;
-
-relationalExpression
-    :   shiftExpression
-    |   relationalExpression '<' shiftExpression
-    |   relationalExpression '>' shiftExpression
-    |   relationalExpression '<=' shiftExpression
-    |   relationalExpression '>=' shiftExpression
-    ;
-
-equalityExpression
-    :   relationalExpression
-    |   equalityExpression 'is' relationalExpression
-    |   equalityExpression 'is not' relationalExpression
-    |   equalityExpression '==' relationalExpression
-    |   equalityExpression '!=' relationalExpression
-    ;
-
-andExpression
-    :   equalityExpression
-    |   andExpression '&' equalityExpression
-    ;
-
-exclusiveOrExpression
-    :   andExpression
-    |   exclusiveOrExpression '^' andExpression
-    ;
-
-inclusiveOrExpression
-    :   exclusiveOrExpression
-    |   inclusiveOrExpression '|' exclusiveOrExpression
-    ;
-
-logicalAndExpression
-    :   inclusiveOrExpression
-    |   logicalAndExpression '&&' inclusiveOrExpression
-    |   logicalAndExpression 'and' inclusiveOrExpression
-    ;
-
-logicalOrExpression
-    :   logicalAndExpression
-    |   logicalOrExpression '||' logicalAndExpression
-    |   logicalOrExpression 'or' logicalAndExpression
-    ;
-
-conditionalExpression
-    :   logicalOrExpression ('?' expression ':' conditionalExpression)?
-    ;
-
-assignmentExpression locals [ TypeSpec *type = nullptr ]
-    :   conditionalExpression
-    |   unaryExpression assignmentOperator assignmentExpression
-    |   DigitSequence // for
-    ;
-
-assignmentOperator
-    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' | NegateAssign
-    ;
-
-expression
-    :   assignmentExpression
-    |   expression ',' assignmentExpression
     ;
 
 identifierList
@@ -212,9 +77,6 @@ identifierList
 
 statement
     :   compoundStatement
-    |   expressionStatement
-    |   selectionStatement
-    |   iterationStatement
     ;
 //        |   expressionStatement
 //        |   selectionStatement
@@ -235,35 +97,14 @@ blockItem
     |   declaration
     ;
 
-iterationStatement
-    :   For '(' forCondition ')' statement
+externalDeclaration locals [ TypeSpec *type = nullptr ]
+    :   functionDefinition
+    |   declaration
+    |   ';' // stray ;
     ;
 
-forCondition
-    :   forDeclaration ';' forExpression? ';' forExpression?
-    |   expression? ';' forExpression? ';' forExpression?
-    ;
-
-forDeclaration
-    :   declarationSpecifiers initDeclaratorList
-    |   declarationSpecifiers
-    ;
-
-forExpression
-    :   assignmentExpression
-    |   forExpression ',' assignmentExpression
-    ;
-
-initializer
-    :   assignmentExpression;
-
-
-expressionStatement
-    :   expression? ';'
-    ;
-
-selectionStatement
-    :   'if' '(' expression ')' statement ('else' statement)?
+functionDefinition locals [ TypeSpec *type = nullptr ]
+    :   declarationSpecifiers? declarator compoundStatement
     ;
 
 
@@ -277,6 +118,7 @@ fragment
 IdentifierNondigit
     :   Nondigit
     |   UniversalCharacterName
+    //|   // other implementation-defined characters...
     ;
 
 fragment
@@ -483,10 +325,6 @@ HexadecimalEscapeSequence
     :   '\\x' HexadecimalDigit+
     ;
 
-StringLiteral
-    :   EncodingPrefix? '"' SCharSequence? '"'
-    ;
-
 fragment
 EncodingPrefix
     :   'u8'
@@ -495,18 +333,6 @@ EncodingPrefix
     |   'L'
     ;
 
-fragment
-SCharSequence
-    :   SChar+
-    ;
-
-fragment
-SChar
-    :   ~["\\\r\n]
-    |   EscapeSequence
-    |   '\\\n'   // Added line
-    |   '\\\r\n' // Added line
-    ;
 /***************************************************
  *                                                 *
  *                      Lexer                      *

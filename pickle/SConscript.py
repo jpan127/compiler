@@ -22,6 +22,8 @@ autogenerate_antlr = env.Command(
     ),
 )
 
+AlwaysBuild(autogenerate_antlr)
+
 SOURCE_FILES += Dir(GENERATED_DIR).glob("*.cpp")
 SOURCE_FILES = Flatten(SOURCE_FILES)
 
@@ -36,11 +38,24 @@ for cpp in SOURCE_FILES:
         )
     )
 
-compilation = env.Program(
+Depends(object_files, autogenerate_antlr)
+
+link_exe = env.Program(
     target  = "compiler",
     source  = object_files,
     LIBS    = [ANLTR_STATIC_LIB],
     LIBPATH = [ANTLR_LIB_DIR],
 )
 
-Depends(compilation, autogenerate_antlr)
+Default(link_exe)
+Depends(link_exe, autogenerate_antlr)
+
+if EXECUTE is not None:
+    execute = env.Command(
+        target = "execute",
+        source = [link_exe],
+        action = "build\compiler samples/sample2.c",
+    )
+
+    Default(execute)
+    AlwaysBuild(execute)

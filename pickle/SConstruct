@@ -17,6 +17,7 @@ GENERATED_DIR     = "generated"
 GRAMMAR_FILE_NAME = "C"
 ANLTR_STATIC_LIB  = "antlr-runtime2"
 ANTLR_LIB_DIR     = Dir("antlr")
+EXECUTE           = ARGUMENTS.get("run", None)
 
 #=======================================================#
 #                   Helper Functions                    #
@@ -84,5 +85,6 @@ SConscript(
         "ANLTR_STATIC_LIB",
         "SOURCE_FILES",
         "ANTLR_LIB_DIR",
+        "EXECUTE",
     ],
 )

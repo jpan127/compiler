@@ -25,11 +25,11 @@ COMPILE=false
 #                     Variable Paths                   #
 #======================================================#
 
-ANTLR_JAR_PATH="C:/Users/JP/Desktop/compiler/pickle/antlr"
-ANTLR_JAR_FILE_NAME="antlr-4.7-complete.jar"
 JAVA_JDK_PATH="C:/Program Files/Java/jdk-9/bin"
-GRAMMAR_PATH="C:/Users/JP/Desktop/compiler/pickle/grammars"
-SAMPLES_PATH="C:/Users/JP/Desktop/compiler/pickle/samples"
+ANTLR_JAR_PATH="antlr"
+ANTLR_JAR_FILE_NAME="antlr-4.7-complete.jar"
+GRAMMAR_PATH="grammars"
+SAMPLES_PATH="samples"
 
 # Set up class path for the Java compiler
 export CLASSPATH=".;$JAVA_JDK_PATH;$ANTLR_JAR_PATH/$ANTLR_JAR_FILE_NAME;$OUTPUT_DIR;"

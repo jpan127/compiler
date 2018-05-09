@@ -3,7 +3,7 @@
 using namespace wci::intermediate;
 
 
-// Generated from C:/Users/JP/Desktop/compiler/pickle/grammars/Pcl2.g4 by ANTLR 4.7
+// Generated from grammars/Pcl2.g4 by ANTLR 4.7
 
 #pragma once
 
@@ -16,23 +16,24 @@ using namespace wci::intermediate;
 class  Pcl2Lexer : public antlr4::Lexer {
 public:
   enum {
-    Constant = 1, DigitSequence = 2, Coalescing = 3, Bit = 4, Power = 5, 
-    IgnoreWildCard = 6, Namespace = 7, ScopeResolution = 8, String = 9, 
-    Break = 10, Case = 11, Char = 12, Const = 13, Continue = 14, Bool = 15, 
-    Default = 16, Double = 17, Else = 18, Extern = 19, Float = 20, For = 21, 
-    If = 22, Int = 23, Uint32 = 24, Int32 = 25, Long = 26, Return = 27, 
-    Short = 28, Signed = 29, Sizeof = 30, Static = 31, Switch = 32, Typedef = 33, 
-    Unsigned = 34, Void = 35, While = 36, LeftParen = 37, RightParen = 38, 
-    LeftBracket = 39, RightBracket = 40, LeftBrace = 41, RightBrace = 42, 
-    Less = 43, LessEqual = 44, Greater = 45, GreaterEqual = 46, LeftShift = 47, 
-    RightShift = 48, Plus = 49, PlusPlus = 50, Minus = 51, MinusMinus = 52, 
-    Star = 53, Div = 54, Mod = 55, And = 56, Or = 57, Negate = 58, Caret = 59, 
-    Question = 60, Colon = 61, Semi = 62, Comma = 63, Assign = 64, StarAssign = 65, 
-    DivAssign = 66, ModAssign = 67, PlusAssign = 68, MinusAssign = 69, LeftShiftAssign = 70, 
-    RightShiftAssign = 71, AndAssign = 72, XorAssign = 73, OrAssign = 74, 
-    NegateAssign = 75, Arrow = 76, Dot = 77, Ellipsis = 78, AndAnd = 79, 
-    OrOr = 80, Not = 81, Equal = 82, NotEqual = 83, Identifier = 84, Whitespace = 85, 
-    Newline = 86, BlockComment = 87, LineComment = 88
+    T__0 = 1, T__1 = 2, T__2 = 3, T__3 = 4, T__4 = 5, T__5 = 6, T__6 = 7, 
+    T__7 = 8, T__8 = 9, Constant = 10, DigitSequence = 11, StringLiteral = 12, 
+    Coalescing = 13, Bit = 14, Power = 15, IgnoreWildCard = 16, Namespace = 17, 
+    ScopeResolution = 18, String = 19, Break = 20, Case = 21, Char = 22, 
+    Const = 23, Continue = 24, Bool = 25, Default = 26, Double = 27, Else = 28, 
+    Extern = 29, Float = 30, For = 31, If = 32, Int = 33, Uint32 = 34, Int32 = 35, 
+    Long = 36, Return = 37, Short = 38, Signed = 39, Sizeof = 40, Static = 41, 
+    Switch = 42, Typedef = 43, Unsigned = 44, Void = 45, While = 46, LeftParen = 47, 
+    RightParen = 48, LeftBracket = 49, RightBracket = 50, LeftBrace = 51, 
+    RightBrace = 52, Less = 53, LessEqual = 54, Greater = 55, GreaterEqual = 56, 
+    LeftShift = 57, RightShift = 58, Plus = 59, PlusPlus = 60, Minus = 61, 
+    MinusMinus = 62, Star = 63, Div = 64, Mod = 65, And = 66, Or = 67, Negate = 68, 
+    Caret = 69, Question = 70, Colon = 71, Semi = 72, Comma = 73, Assign = 74, 
+    StarAssign = 75, DivAssign = 76, ModAssign = 77, PlusAssign = 78, MinusAssign = 79, 
+    LeftShiftAssign = 80, RightShiftAssign = 81, AndAssign = 82, XorAssign = 83, 
+    OrAssign = 84, NegateAssign = 85, Arrow = 86, Dot = 87, Ellipsis = 88, 
+    AndAnd = 89, OrOr = 90, Not = 91, Equal = 92, NotEqual = 93, Identifier = 94, 
+    Whitespace = 95, Newline = 96, BlockComment = 97, LineComment = 98
   };
 
   Pcl2Lexer(antlr4::CharStream *input);

@@ -23,20 +23,52 @@ using namespace wci::intermediate;
 class Predefined
 {
 public:
+    /// @ { JP
+    static TypeSpec * void_type;
+    static TypeSpec * bool_type;
+    static TypeSpec * char_type;
+    static TypeSpec * short_type;
+    static TypeSpec * int_type;
+    static TypeSpec * long_type;
+    static TypeSpec * float_type;
+    static TypeSpec * double_type;
+    static TypeSpec * signed_type;
+    static TypeSpec * unsigned_type;
+    static TypeSpec * uint32_t_type;
+    static TypeSpec * int32_t_type;
+
+    static SymTabEntry * void_id;
+    static SymTabEntry * bool_id;
+    static SymTabEntry * char_id;
+    static SymTabEntry * short_id;
+    static SymTabEntry * int_id;
+    static SymTabEntry * long_id;
+    static SymTabEntry * float_id;
+    static SymTabEntry * double_id;
+    static SymTabEntry * signed_id;
+    static SymTabEntry * unsigned_id;
+    static SymTabEntry * uint32_t_id;
+    static SymTabEntry * int32_t_id;
+    /// @ }
+
+    static TypeSpec * integer_type;
+    static TypeSpec * real_type;
+    static TypeSpec * undefined_type;
+    static SymTabEntry *false_id;
+    static SymTabEntry *true_id;
+    static SymTabEntry *integer_id;
+    static SymTabEntry *real_id;
+
+#if 0
     // Predefined types.
-    static TypeSpec *integer_type;
     static TypeSpec *real_type;
     static TypeSpec *boolean_type;
     static TypeSpec *char_type;
-    static TypeSpec *undefined_type;
 
     // Predefined identifiers.
-    static SymTabEntry *integer_id;
     static SymTabEntry *real_id;
     static SymTabEntry *boolean_id;
     static SymTabEntry *char_id;
-    static SymTabEntry *false_id;
-    static SymTabEntry *true_id;
     static SymTabEntry *read_id;
     static SymTabEntry *readln_id;
     static SymTabEntry *write_id;
@@ -58,6 +90,7 @@ public:
     static SymTabEntry *sqrt_id;
     static SymTabEntry *succ_id;
     static SymTabEntry *trunc_id;
+#endif
 
     /**
      * Initialize a symbol table stack with predefined identifiers.
@@ -66,6 +99,9 @@ public:
     static void initialize(SymTabStack *symtab_stack);
 
 private:
+
+    static void init_symbol_table(SymTabStack *symtab_stack, const string name, TypeSpec ** type, SymTabEntry ** id);
+
     /**
      * Initialize the predefined types.
      * @param symtab_stack the symbol table stack to initialize.

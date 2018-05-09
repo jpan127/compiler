@@ -56,7 +56,7 @@ bool TypeChecker::is_at_least_one_real(TypeSpec *typespec1, TypeSpec *typespec2)
 bool TypeChecker::is_boolean(TypeSpec *typespec)
 {
     return    (typespec != nullptr)
-           && (typespec->base_type() == Predefined::boolean_type);
+           && (typespec->base_type() == Predefined::bool_type);
 }
 
 bool TypeChecker::are_both_boolean(TypeSpec *typespec1,

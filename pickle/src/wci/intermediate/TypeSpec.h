@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <map>
+#include "symtabimpl/Predefined.h"
 #include "SymTabEntry.h"
 
 namespace wci { namespace intermediate {
@@ -108,6 +109,23 @@ public:
      * @return the base type of this type.
      */
     virtual TypeSpec *base_type() = 0;
+
+    /// @TODO
+    // friend ostream & operator << (ostream & out, const TypeSpec & other)
+    // {
+    //          if (other == *(symtabimpl::Predefined::void_type)     ) { cout << "void_type"     << endl; }
+    //     else if (other == *(symtabimpl::Predefined::bool_type)     ) { cout << "bool_type"     << endl; }
+    //     else if (other == *(symtabimpl::Predefined::char_type)     ) { cout << "char_type"     << endl; }
+    //     else if (other == *(symtabimpl::Predefined::short_type)    ) { cout << "short_type"    << endl; }
+    //     else if (other == *(symtabimpl::Predefined::int_type)      ) { cout << "int_type"      << endl; }
+    //     else if (other == *(symtabimpl::Predefined::long_type)     ) { cout << "long_type"     << endl; }
+    //     else if (other == *(symtabimpl::Predefined::float_type)    ) { cout << "float_type"    << endl; }
+    //     else if (other == *(symtabimpl::Predefined::double_type)   ) { cout << "double_type"   << endl; }
+    //     else if (other == *(symtabimpl::Predefined::signed_type)   ) { cout << "signed_type"   << endl; }
+    //     else if (other == *(symtabimpl::Predefined::unsigned_type) ) { cout << "unsigned_type" << endl; }
+    //     else if (other == *(symtabimpl::Predefined::uint32_t_type) ) { cout << "uint32_t_type" << endl; }
+    //     else if (other == *(symtabimpl::Predefined::int32_t_type)  ) { cout << "int32_t_type"  << endl; }
+    // }
 };
 
 }}  // namespace wci::intermediate
