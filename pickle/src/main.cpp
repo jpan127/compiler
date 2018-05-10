@@ -11,6 +11,14 @@ using namespace std;
 using namespace antlrcpp;
 using namespace antlr4;
 
+static const char * pass1_msg = "------------------------------------------------\n"
+                                "                   P A S S  1                   \n"
+                                "------------------------------------------------\n";
+
+static const char * pass2_msg = "------------------------------------------------\n"
+                                "                   P A S S  2                   \n"
+                                "------------------------------------------------\n";
+
 int main(int argc, const char *args[])
 {
     /// Make sure argument exists
@@ -27,7 +35,7 @@ int main(int argc, const char *args[])
         return -1;
     }
 
-    /// File Stream
+    /// Input Stream
     ifstream ins(args[1]);
 
     /// ANLTR Input Stream
@@ -45,20 +53,20 @@ int main(int argc, const char *args[])
     /// Parse Tree
     tree::ParseTree *tree = parser.compilationUnit();
 
+    cout << pass1_msg << endl;
+
     /// First Pass
     Pass1Visitor *pass1 = new Pass1Visitor(true);
     pass1->visit(tree);
 
-    /**
-     *  Pass2Visitor => visit
-     *  AbstractParseTreeVisitor => visit
-     *   
-     */
+    // cout << pass2_msg << endl;
 
-    /// Second Pass
-    ostream& j_file = pass1->get_assembly_file();
-    Pass2Visitor *pass2 = new Pass2Visitor(j_file, true);
-    pass2->visit(tree);
+    // /// Output Stream
+    // ofstream& j_file = pass1->get_assembly_file();
+
+    // /// Second Pass
+    // Pass2Visitor *pass2 = new Pass2Visitor(j_file, true);
+    // pass2->visit(tree);
 
     delete tree;
     return 0;

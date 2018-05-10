@@ -380,11 +380,6 @@ void Pass2Visitor::print_debug_context(const std::string & msg) const
         print_debug_context("[PASS2] visitForExpression: " + context->getText());
         return visitChildren(context);
     }
-    antlrcpp::Any Pass2Visitor::visitInitializer(Pcl2Parser::InitializerContext * context)
-    {
-        print_debug_context("[PASS2] visitInitializer: " + context->getText());
-        return visitChildren(context);
-    }
     antlrcpp::Any Pass2Visitor::visitExpressionStatement(Pcl2Parser::ExpressionStatementContext * context)
     {
         print_debug_context("[PASS2] visitExpressionStatement: " + context->getText());

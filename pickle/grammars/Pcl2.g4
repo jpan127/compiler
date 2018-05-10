@@ -26,7 +26,7 @@ externalDeclaration
     |   ';' // stray ;
     ;
 
-functionDefinition
+functionDefinition locals [ TypeSpec *type = nullptr ]
     :   declarationSpecifiers? declarator compoundStatement
     ;
 
@@ -53,6 +53,9 @@ initDeclarator
     |   declarator '=' initializer
     ;
 
+initializer
+    :   assignmentExpression;
+
 typeSpecifier locals [ TypeSpec *type = nullptr ]
     :   'void'      # voidType
     |   'bool'      # boolType
@@ -74,8 +77,13 @@ declarator
 
 directDeclarator
     :   Identifier
-    |   directDeclarator '(' parameterTypeList ')'
-    |   directDeclarator '(' identifierList? ')'
+    |   Identifier '(' parameterTypeList ')'
+    |   Identifier '(' identifierList?   ')'
+    ;
+
+identifierList
+    :   Identifier
+    |   identifierList ',' Identifier
     ;
 
 parameterTypeList
@@ -93,18 +101,33 @@ parameterDeclaration
     |   declarationSpecifiers
     ;
 
-primaryExpression
-    :   Identifier
-    |   Constant
-    |   StringLiteral+
-    |   '(' expression ')'
+/***************************************************
+ *                                                 *
+ *                  Expressions                    *
+ *                                                 *
+ **************************************************/
+
+unaryOperator
+    :   '&' | '*' | '+' | '-' | '~' | '!'
     ;
 
-postfixExpression
-    :   primaryExpression
-    |   postfixExpression '(' argumentExpressionList? ')'
-    |   postfixExpression '++'
-    |   postfixExpression '--'
+assignmentOperator
+    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' | NegateAssign
+    ;
+
+expression
+    :   assignmentExpression
+    |   expression ',' assignmentExpression
+    ;
+
+assignmentExpression locals [ TypeSpec *type = nullptr ]
+    :   conditionalExpression
+    |   unaryExpression assignmentOperator assignmentExpression
+    |   DigitSequence // for
+    ;
+
+conditionalExpression
+    :   logicalOrExpression ('?' expression ':' conditionalExpression)?
     ;
 
 argumentExpressionList
@@ -120,8 +143,18 @@ unaryExpression
     |   DigitSequence
     ;
 
-unaryOperator
-    :   '&' | '*' | '+' | '-' | '~' | '!'
+postfixExpression
+    :   primaryExpression
+    |   postfixExpression '(' argumentExpressionList? ')'
+    |   postfixExpression '++'
+    |   postfixExpression '--'
+    ;
+
+primaryExpression
+    :   Identifier
+    |   Constant
+    |   StringLiteral+
+    |   '(' expression ')'
     ;
 
 multiplicativeExpression
@@ -186,29 +219,11 @@ logicalOrExpression
     |   logicalOrExpression 'or' logicalAndExpression
     ;
 
-conditionalExpression
-    :   logicalOrExpression ('?' expression ':' conditionalExpression)?
-    ;
-
-assignmentExpression locals [ TypeSpec *type = nullptr ]
-    :   conditionalExpression
-    |   unaryExpression assignmentOperator assignmentExpression
-    |   DigitSequence // for
-    ;
-
-assignmentOperator
-    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' | NegateAssign
-    ;
-
-expression
-    :   assignmentExpression
-    |   expression ',' assignmentExpression
-    ;
-
-identifierList
-    :   Identifier
-    |   identifierList ',' Identifier
-    ;
+/***************************************************
+ *                                                 *
+ *                   Statements?                   *
+ *                                                 *
+ **************************************************/
 
 statement
     :   compoundStatement
@@ -216,10 +231,6 @@ statement
     |   selectionStatement
     |   iterationStatement
     ;
-//        |   expressionStatement
-//        |   selectionStatement
-//        |   iterationStatement
-//        |   jumpStatement
 
 compoundStatement
     :   '{' blockItemList? '}'
@@ -241,7 +252,7 @@ iterationStatement
 
 forCondition
     :   forDeclaration ';' forExpression? ';' forExpression?
-    |   expression? ';' forExpression? ';' forExpression?
+    |   expression?    ';' forExpression? ';' forExpression?
     ;
 
 forDeclaration
@@ -253,10 +264,6 @@ forExpression
     :   assignmentExpression
     |   forExpression ',' assignmentExpression
     ;
-
-initializer
-    :   assignmentExpression;
-
 
 expressionStatement
     :   expression? ';'

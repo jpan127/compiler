@@ -55,6 +55,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitInitializer(Pcl2Parser::InitializerContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitVoidType(Pcl2Parser::VoidTypeContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -111,6 +115,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitParameterTypeList(Pcl2Parser::ParameterTypeListContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -123,11 +131,23 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitUnaryOperator(Pcl2Parser::UnaryOperatorContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -139,7 +159,11 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitUnaryOperator(Pcl2Parser::UnaryOperatorContext *ctx) override {
+  virtual antlrcpp::Any visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -183,26 +207,6 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
   virtual antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -232,10 +236,6 @@ public:
   }
 
   virtual antlrcpp::Any visitForExpression(Pcl2Parser::ForExpressionContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitInitializer(Pcl2Parser::InitializerContext *ctx) override {
     return visitChildren(ctx);
   }
 

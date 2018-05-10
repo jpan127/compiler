@@ -47,6 +47,9 @@ public:
   virtual void enterInitDeclarator(Pcl2Parser::InitDeclaratorContext * /*ctx*/) override { }
   virtual void exitInitDeclarator(Pcl2Parser::InitDeclaratorContext * /*ctx*/) override { }
 
+  virtual void enterInitializer(Pcl2Parser::InitializerContext * /*ctx*/) override { }
+  virtual void exitInitializer(Pcl2Parser::InitializerContext * /*ctx*/) override { }
+
   virtual void enterVoidType(Pcl2Parser::VoidTypeContext * /*ctx*/) override { }
   virtual void exitVoidType(Pcl2Parser::VoidTypeContext * /*ctx*/) override { }
 
@@ -89,6 +92,9 @@ public:
   virtual void enterDirectDeclarator(Pcl2Parser::DirectDeclaratorContext * /*ctx*/) override { }
   virtual void exitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext * /*ctx*/) override { }
 
+  virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
+  virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
+
   virtual void enterParameterTypeList(Pcl2Parser::ParameterTypeListContext * /*ctx*/) override { }
   virtual void exitParameterTypeList(Pcl2Parser::ParameterTypeListContext * /*ctx*/) override { }
 
@@ -98,11 +104,20 @@ public:
   virtual void enterParameterDeclaration(Pcl2Parser::ParameterDeclarationContext * /*ctx*/) override { }
   virtual void exitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext * /*ctx*/) override { }
 
-  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
-  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
+  virtual void enterUnaryOperator(Pcl2Parser::UnaryOperatorContext * /*ctx*/) override { }
+  virtual void exitUnaryOperator(Pcl2Parser::UnaryOperatorContext * /*ctx*/) override { }
 
-  virtual void enterPostfixExpression(Pcl2Parser::PostfixExpressionContext * /*ctx*/) override { }
-  virtual void exitPostfixExpression(Pcl2Parser::PostfixExpressionContext * /*ctx*/) override { }
+  virtual void enterAssignmentOperator(Pcl2Parser::AssignmentOperatorContext * /*ctx*/) override { }
+  virtual void exitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext * /*ctx*/) override { }
+
+  virtual void enterExpression(Pcl2Parser::ExpressionContext * /*ctx*/) override { }
+  virtual void exitExpression(Pcl2Parser::ExpressionContext * /*ctx*/) override { }
+
+  virtual void enterAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * /*ctx*/) override { }
+  virtual void exitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * /*ctx*/) override { }
+
+  virtual void enterConditionalExpression(Pcl2Parser::ConditionalExpressionContext * /*ctx*/) override { }
+  virtual void exitConditionalExpression(Pcl2Parser::ConditionalExpressionContext * /*ctx*/) override { }
 
   virtual void enterArgumentExpressionList(Pcl2Parser::ArgumentExpressionListContext * /*ctx*/) override { }
   virtual void exitArgumentExpressionList(Pcl2Parser::ArgumentExpressionListContext * /*ctx*/) override { }
@@ -110,8 +125,11 @@ public:
   virtual void enterUnaryExpression(Pcl2Parser::UnaryExpressionContext * /*ctx*/) override { }
   virtual void exitUnaryExpression(Pcl2Parser::UnaryExpressionContext * /*ctx*/) override { }
 
-  virtual void enterUnaryOperator(Pcl2Parser::UnaryOperatorContext * /*ctx*/) override { }
-  virtual void exitUnaryOperator(Pcl2Parser::UnaryOperatorContext * /*ctx*/) override { }
+  virtual void enterPostfixExpression(Pcl2Parser::PostfixExpressionContext * /*ctx*/) override { }
+  virtual void exitPostfixExpression(Pcl2Parser::PostfixExpressionContext * /*ctx*/) override { }
+
+  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
+  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
 
   virtual void enterMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext * /*ctx*/) override { }
   virtual void exitMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext * /*ctx*/) override { }
@@ -143,21 +161,6 @@ public:
   virtual void enterLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext * /*ctx*/) override { }
   virtual void exitLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext * /*ctx*/) override { }
 
-  virtual void enterConditionalExpression(Pcl2Parser::ConditionalExpressionContext * /*ctx*/) override { }
-  virtual void exitConditionalExpression(Pcl2Parser::ConditionalExpressionContext * /*ctx*/) override { }
-
-  virtual void enterAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * /*ctx*/) override { }
-  virtual void exitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * /*ctx*/) override { }
-
-  virtual void enterAssignmentOperator(Pcl2Parser::AssignmentOperatorContext * /*ctx*/) override { }
-  virtual void exitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext * /*ctx*/) override { }
-
-  virtual void enterExpression(Pcl2Parser::ExpressionContext * /*ctx*/) override { }
-  virtual void exitExpression(Pcl2Parser::ExpressionContext * /*ctx*/) override { }
-
-  virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
-  virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
-
   virtual void enterStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
   virtual void exitStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
 
@@ -181,9 +184,6 @@ public:
 
   virtual void enterForExpression(Pcl2Parser::ForExpressionContext * /*ctx*/) override { }
   virtual void exitForExpression(Pcl2Parser::ForExpressionContext * /*ctx*/) override { }
-
-  virtual void enterInitializer(Pcl2Parser::InitializerContext * /*ctx*/) override { }
-  virtual void exitInitializer(Pcl2Parser::InitializerContext * /*ctx*/) override { }
 
   virtual void enterExpressionStatement(Pcl2Parser::ExpressionStatementContext * /*ctx*/) override { }
   virtual void exitExpressionStatement(Pcl2Parser::ExpressionStatementContext * /*ctx*/) override { }

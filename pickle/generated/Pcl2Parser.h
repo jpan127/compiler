@@ -40,18 +40,18 @@ public:
     RuleCompilationUnit = 0, RuleTranslationUnit = 1, RuleExternalDeclaration = 2, 
     RuleFunctionDefinition = 3, RuleDeclaration = 4, RuleDeclarationSpecifiers = 5, 
     RuleDeclarationSpecifier = 6, RuleInitDeclaratorList = 7, RuleInitDeclarator = 8, 
-    RuleTypeSpecifier = 9, RuleDeclarator = 10, RuleDirectDeclarator = 11, 
-    RuleParameterTypeList = 12, RuleParameterList = 13, RuleParameterDeclaration = 14, 
-    RulePrimaryExpression = 15, RulePostfixExpression = 16, RuleArgumentExpressionList = 17, 
-    RuleUnaryExpression = 18, RuleUnaryOperator = 19, RuleMultiplicativeExpression = 20, 
-    RuleAdditiveExpression = 21, RuleShiftExpression = 22, RuleRelationalExpression = 23, 
-    RuleEqualityExpression = 24, RuleAndExpression = 25, RuleExclusiveOrExpression = 26, 
-    RuleInclusiveOrExpression = 27, RuleLogicalAndExpression = 28, RuleLogicalOrExpression = 29, 
-    RuleConditionalExpression = 30, RuleAssignmentExpression = 31, RuleAssignmentOperator = 32, 
-    RuleExpression = 33, RuleIdentifierList = 34, RuleStatement = 35, RuleCompoundStatement = 36, 
-    RuleBlockItemList = 37, RuleBlockItem = 38, RuleIterationStatement = 39, 
-    RuleForCondition = 40, RuleForDeclaration = 41, RuleForExpression = 42, 
-    RuleInitializer = 43, RuleExpressionStatement = 44, RuleSelectionStatement = 45
+    RuleInitializer = 9, RuleTypeSpecifier = 10, RuleDeclarator = 11, RuleDirectDeclarator = 12, 
+    RuleIdentifierList = 13, RuleParameterTypeList = 14, RuleParameterList = 15, 
+    RuleParameterDeclaration = 16, RuleUnaryOperator = 17, RuleAssignmentOperator = 18, 
+    RuleExpression = 19, RuleAssignmentExpression = 20, RuleConditionalExpression = 21, 
+    RuleArgumentExpressionList = 22, RuleUnaryExpression = 23, RulePostfixExpression = 24, 
+    RulePrimaryExpression = 25, RuleMultiplicativeExpression = 26, RuleAdditiveExpression = 27, 
+    RuleShiftExpression = 28, RuleRelationalExpression = 29, RuleEqualityExpression = 30, 
+    RuleAndExpression = 31, RuleExclusiveOrExpression = 32, RuleInclusiveOrExpression = 33, 
+    RuleLogicalAndExpression = 34, RuleLogicalOrExpression = 35, RuleStatement = 36, 
+    RuleCompoundStatement = 37, RuleBlockItemList = 38, RuleBlockItem = 39, 
+    RuleIterationStatement = 40, RuleForCondition = 41, RuleForDeclaration = 42, 
+    RuleForExpression = 43, RuleExpressionStatement = 44, RuleSelectionStatement = 45
   };
 
   Pcl2Parser(antlr4::TokenStream *input);
@@ -73,17 +73,23 @@ public:
   class DeclarationSpecifierContext;
   class InitDeclaratorListContext;
   class InitDeclaratorContext;
+  class InitializerContext;
   class TypeSpecifierContext;
   class DeclaratorContext;
   class DirectDeclaratorContext;
+  class IdentifierListContext;
   class ParameterTypeListContext;
   class ParameterListContext;
   class ParameterDeclarationContext;
-  class PrimaryExpressionContext;
-  class PostfixExpressionContext;
+  class UnaryOperatorContext;
+  class AssignmentOperatorContext;
+  class ExpressionContext;
+  class AssignmentExpressionContext;
+  class ConditionalExpressionContext;
   class ArgumentExpressionListContext;
   class UnaryExpressionContext;
-  class UnaryOperatorContext;
+  class PostfixExpressionContext;
+  class PrimaryExpressionContext;
   class MultiplicativeExpressionContext;
   class AdditiveExpressionContext;
   class ShiftExpressionContext;
@@ -94,11 +100,6 @@ public:
   class InclusiveOrExpressionContext;
   class LogicalAndExpressionContext;
   class LogicalOrExpressionContext;
-  class ConditionalExpressionContext;
-  class AssignmentExpressionContext;
-  class AssignmentOperatorContext;
-  class ExpressionContext;
-  class IdentifierListContext;
   class StatementContext;
   class CompoundStatementContext;
   class BlockItemListContext;
@@ -107,7 +108,6 @@ public:
   class ForConditionContext;
   class ForDeclarationContext;
   class ForExpressionContext;
-  class InitializerContext;
   class ExpressionStatementContext;
   class SelectionStatementContext; 
 
@@ -161,6 +161,7 @@ public:
 
   class  FunctionDefinitionContext : public antlr4::ParserRuleContext {
   public:
+    TypeSpec * type = nullptr;
     FunctionDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     DeclaratorContext *declarator();
@@ -257,6 +258,21 @@ public:
   };
 
   InitDeclaratorContext* initDeclarator();
+
+  class  InitializerContext : public antlr4::ParserRuleContext {
+  public:
+    InitializerContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    AssignmentExpressionContext *assignmentExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  InitializerContext* initializer();
 
   class  TypeSpecifierContext : public antlr4::ParserRuleContext {
   public:
@@ -414,7 +430,6 @@ public:
     DirectDeclaratorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Identifier();
-    DirectDeclaratorContext *directDeclarator();
     ParameterTypeListContext *parameterTypeList();
     IdentifierListContext *identifierList();
 
@@ -426,7 +441,23 @@ public:
   };
 
   DirectDeclaratorContext* directDeclarator();
-  DirectDeclaratorContext* directDeclarator(int precedence);
+
+  class  IdentifierListContext : public antlr4::ParserRuleContext {
+  public:
+    IdentifierListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Identifier();
+    IdentifierListContext *identifierList();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  IdentifierListContext* identifierList();
+  IdentifierListContext* identifierList(int precedence);
   class  ParameterTypeListContext : public antlr4::ParserRuleContext {
   public:
     ParameterTypeListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -474,14 +505,40 @@ public:
 
   ParameterDeclarationContext* parameterDeclaration();
 
-  class  PrimaryExpressionContext : public antlr4::ParserRuleContext {
+  class  UnaryOperatorContext : public antlr4::ParserRuleContext {
   public:
-    PrimaryExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    UnaryOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Identifier();
-    antlr4::tree::TerminalNode *Constant();
-    std::vector<antlr4::tree::TerminalNode *> StringLiteral();
-    antlr4::tree::TerminalNode* StringLiteral(size_t i);
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  UnaryOperatorContext* unaryOperator();
+
+  class  AssignmentOperatorContext : public antlr4::ParserRuleContext {
+  public:
+    AssignmentOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *NegateAssign();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  AssignmentOperatorContext* assignmentOperator();
+
+  class  ExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    AssignmentExpressionContext *assignmentExpression();
     ExpressionContext *expression();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -491,15 +548,18 @@ public:
    
   };
 
-  PrimaryExpressionContext* primaryExpression();
-
-  class  PostfixExpressionContext : public antlr4::ParserRuleContext {
+  ExpressionContext* expression();
+  ExpressionContext* expression(int precedence);
+  class  AssignmentExpressionContext : public antlr4::ParserRuleContext {
   public:
-    PostfixExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    TypeSpec * type = nullptr;
+    AssignmentExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    PrimaryExpressionContext *primaryExpression();
-    PostfixExpressionContext *postfixExpression();
-    ArgumentExpressionListContext *argumentExpressionList();
+    ConditionalExpressionContext *conditionalExpression();
+    UnaryExpressionContext *unaryExpression();
+    AssignmentOperatorContext *assignmentOperator();
+    AssignmentExpressionContext *assignmentExpression();
+    antlr4::tree::TerminalNode *DigitSequence();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -508,8 +568,25 @@ public:
    
   };
 
-  PostfixExpressionContext* postfixExpression();
-  PostfixExpressionContext* postfixExpression(int precedence);
+  AssignmentExpressionContext* assignmentExpression();
+
+  class  ConditionalExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    ConditionalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    LogicalOrExpressionContext *logicalOrExpression();
+    ExpressionContext *expression();
+    ConditionalExpressionContext *conditionalExpression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  ConditionalExpressionContext* conditionalExpression();
+
   class  ArgumentExpressionListContext : public antlr4::ParserRuleContext {
   public:
     ArgumentExpressionListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -544,10 +621,13 @@ public:
 
   UnaryExpressionContext* unaryExpression();
 
-  class  UnaryOperatorContext : public antlr4::ParserRuleContext {
+  class  PostfixExpressionContext : public antlr4::ParserRuleContext {
   public:
-    UnaryOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    PostfixExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
+    PrimaryExpressionContext *primaryExpression();
+    PostfixExpressionContext *postfixExpression();
+    ArgumentExpressionListContext *argumentExpressionList();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -556,7 +636,26 @@ public:
    
   };
 
-  UnaryOperatorContext* unaryOperator();
+  PostfixExpressionContext* postfixExpression();
+  PostfixExpressionContext* postfixExpression(int precedence);
+  class  PrimaryExpressionContext : public antlr4::ParserRuleContext {
+  public:
+    PrimaryExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Constant();
+    std::vector<antlr4::tree::TerminalNode *> StringLiteral();
+    antlr4::tree::TerminalNode* StringLiteral(size_t i);
+    ExpressionContext *expression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  PrimaryExpressionContext* primaryExpression();
 
   class  MultiplicativeExpressionContext : public antlr4::ParserRuleContext {
   public:
@@ -718,90 +817,6 @@ public:
 
   LogicalOrExpressionContext* logicalOrExpression();
   LogicalOrExpressionContext* logicalOrExpression(int precedence);
-  class  ConditionalExpressionContext : public antlr4::ParserRuleContext {
-  public:
-    ConditionalExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    LogicalOrExpressionContext *logicalOrExpression();
-    ExpressionContext *expression();
-    ConditionalExpressionContext *conditionalExpression();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  ConditionalExpressionContext* conditionalExpression();
-
-  class  AssignmentExpressionContext : public antlr4::ParserRuleContext {
-  public:
-    TypeSpec * type = nullptr;
-    AssignmentExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    ConditionalExpressionContext *conditionalExpression();
-    UnaryExpressionContext *unaryExpression();
-    AssignmentOperatorContext *assignmentOperator();
-    AssignmentExpressionContext *assignmentExpression();
-    antlr4::tree::TerminalNode *DigitSequence();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  AssignmentExpressionContext* assignmentExpression();
-
-  class  AssignmentOperatorContext : public antlr4::ParserRuleContext {
-  public:
-    AssignmentOperatorContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *NegateAssign();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  AssignmentOperatorContext* assignmentOperator();
-
-  class  ExpressionContext : public antlr4::ParserRuleContext {
-  public:
-    ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    AssignmentExpressionContext *assignmentExpression();
-    ExpressionContext *expression();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  ExpressionContext* expression();
-  ExpressionContext* expression(int precedence);
-  class  IdentifierListContext : public antlr4::ParserRuleContext {
-  public:
-    IdentifierListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *Identifier();
-    IdentifierListContext *identifierList();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  IdentifierListContext* identifierList();
-  IdentifierListContext* identifierList(int precedence);
   class  StatementContext : public antlr4::ParserRuleContext {
   public:
     StatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -934,21 +949,6 @@ public:
 
   ForExpressionContext* forExpression();
   ForExpressionContext* forExpression(int precedence);
-  class  InitializerContext : public antlr4::ParserRuleContext {
-  public:
-    InitializerContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    AssignmentExpressionContext *assignmentExpression();
-
-    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
-    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
-
-    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
-  };
-
-  InitializerContext* initializer();
-
   class  ExpressionStatementContext : public antlr4::ParserRuleContext {
   public:
     ExpressionStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -985,10 +985,11 @@ public:
   virtual bool sempred(antlr4::RuleContext *_localctx, size_t ruleIndex, size_t predicateIndex) override;
   bool translationUnitSempred(TranslationUnitContext *_localctx, size_t predicateIndex);
   bool initDeclaratorListSempred(InitDeclaratorListContext *_localctx, size_t predicateIndex);
-  bool directDeclaratorSempred(DirectDeclaratorContext *_localctx, size_t predicateIndex);
+  bool identifierListSempred(IdentifierListContext *_localctx, size_t predicateIndex);
   bool parameterListSempred(ParameterListContext *_localctx, size_t predicateIndex);
-  bool postfixExpressionSempred(PostfixExpressionContext *_localctx, size_t predicateIndex);
+  bool expressionSempred(ExpressionContext *_localctx, size_t predicateIndex);
   bool argumentExpressionListSempred(ArgumentExpressionListContext *_localctx, size_t predicateIndex);
+  bool postfixExpressionSempred(PostfixExpressionContext *_localctx, size_t predicateIndex);
   bool multiplicativeExpressionSempred(MultiplicativeExpressionContext *_localctx, size_t predicateIndex);
   bool additiveExpressionSempred(AdditiveExpressionContext *_localctx, size_t predicateIndex);
   bool shiftExpressionSempred(ShiftExpressionContext *_localctx, size_t predicateIndex);
@@ -999,8 +1000,6 @@ public:
   bool inclusiveOrExpressionSempred(InclusiveOrExpressionContext *_localctx, size_t predicateIndex);
   bool logicalAndExpressionSempred(LogicalAndExpressionContext *_localctx, size_t predicateIndex);
   bool logicalOrExpressionSempred(LogicalOrExpressionContext *_localctx, size_t predicateIndex);
-  bool expressionSempred(ExpressionContext *_localctx, size_t predicateIndex);
-  bool identifierListSempred(IdentifierListContext *_localctx, size_t predicateIndex);
   bool blockItemListSempred(BlockItemListContext *_localctx, size_t predicateIndex);
   bool forExpressionSempred(ForExpressionContext *_localctx, size_t predicateIndex);
 

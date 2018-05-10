@@ -45,6 +45,9 @@ public:
   virtual void enterInitDeclarator(Pcl2Parser::InitDeclaratorContext *ctx) = 0;
   virtual void exitInitDeclarator(Pcl2Parser::InitDeclaratorContext *ctx) = 0;
 
+  virtual void enterInitializer(Pcl2Parser::InitializerContext *ctx) = 0;
+  virtual void exitInitializer(Pcl2Parser::InitializerContext *ctx) = 0;
+
   virtual void enterVoidType(Pcl2Parser::VoidTypeContext *ctx) = 0;
   virtual void exitVoidType(Pcl2Parser::VoidTypeContext *ctx) = 0;
 
@@ -87,6 +90,9 @@ public:
   virtual void enterDirectDeclarator(Pcl2Parser::DirectDeclaratorContext *ctx) = 0;
   virtual void exitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext *ctx) = 0;
 
+  virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext *ctx) = 0;
+  virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext *ctx) = 0;
+
   virtual void enterParameterTypeList(Pcl2Parser::ParameterTypeListContext *ctx) = 0;
   virtual void exitParameterTypeList(Pcl2Parser::ParameterTypeListContext *ctx) = 0;
 
@@ -96,11 +102,20 @@ public:
   virtual void enterParameterDeclaration(Pcl2Parser::ParameterDeclarationContext *ctx) = 0;
   virtual void exitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext *ctx) = 0;
 
-  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
-  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
+  virtual void enterUnaryOperator(Pcl2Parser::UnaryOperatorContext *ctx) = 0;
+  virtual void exitUnaryOperator(Pcl2Parser::UnaryOperatorContext *ctx) = 0;
 
-  virtual void enterPostfixExpression(Pcl2Parser::PostfixExpressionContext *ctx) = 0;
-  virtual void exitPostfixExpression(Pcl2Parser::PostfixExpressionContext *ctx) = 0;
+  virtual void enterAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *ctx) = 0;
+  virtual void exitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *ctx) = 0;
+
+  virtual void enterExpression(Pcl2Parser::ExpressionContext *ctx) = 0;
+  virtual void exitExpression(Pcl2Parser::ExpressionContext *ctx) = 0;
+
+  virtual void enterAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) = 0;
+  virtual void exitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) = 0;
+
+  virtual void enterConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) = 0;
+  virtual void exitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) = 0;
 
   virtual void enterArgumentExpressionList(Pcl2Parser::ArgumentExpressionListContext *ctx) = 0;
   virtual void exitArgumentExpressionList(Pcl2Parser::ArgumentExpressionListContext *ctx) = 0;
@@ -108,8 +123,11 @@ public:
   virtual void enterUnaryExpression(Pcl2Parser::UnaryExpressionContext *ctx) = 0;
   virtual void exitUnaryExpression(Pcl2Parser::UnaryExpressionContext *ctx) = 0;
 
-  virtual void enterUnaryOperator(Pcl2Parser::UnaryOperatorContext *ctx) = 0;
-  virtual void exitUnaryOperator(Pcl2Parser::UnaryOperatorContext *ctx) = 0;
+  virtual void enterPostfixExpression(Pcl2Parser::PostfixExpressionContext *ctx) = 0;
+  virtual void exitPostfixExpression(Pcl2Parser::PostfixExpressionContext *ctx) = 0;
+
+  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
+  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
 
   virtual void enterMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext *ctx) = 0;
   virtual void exitMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext *ctx) = 0;
@@ -141,21 +159,6 @@ public:
   virtual void enterLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext *ctx) = 0;
   virtual void exitLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext *ctx) = 0;
 
-  virtual void enterConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) = 0;
-  virtual void exitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) = 0;
-
-  virtual void enterAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) = 0;
-  virtual void exitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) = 0;
-
-  virtual void enterAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *ctx) = 0;
-  virtual void exitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *ctx) = 0;
-
-  virtual void enterExpression(Pcl2Parser::ExpressionContext *ctx) = 0;
-  virtual void exitExpression(Pcl2Parser::ExpressionContext *ctx) = 0;
-
-  virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext *ctx) = 0;
-  virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext *ctx) = 0;
-
   virtual void enterStatement(Pcl2Parser::StatementContext *ctx) = 0;
   virtual void exitStatement(Pcl2Parser::StatementContext *ctx) = 0;
 
@@ -179,9 +182,6 @@ public:
 
   virtual void enterForExpression(Pcl2Parser::ForExpressionContext *ctx) = 0;
   virtual void exitForExpression(Pcl2Parser::ForExpressionContext *ctx) = 0;
-
-  virtual void enterInitializer(Pcl2Parser::InitializerContext *ctx) = 0;
-  virtual void exitInitializer(Pcl2Parser::InitializerContext *ctx) = 0;
 
   virtual void enterExpressionStatement(Pcl2Parser::ExpressionStatementContext *ctx) = 0;
   virtual void exitExpressionStatement(Pcl2Parser::ExpressionStatementContext *ctx) = 0;

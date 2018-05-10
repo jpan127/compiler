@@ -51,24 +51,26 @@ void CrossReferencer::print(const SymTabStack *symtab_stack) const
 void CrossReferencer::print_routine(SymTabEntry *routine_id) const
 {
     Definition defn = routine_id->get_definition();
+    cout << "---------------------------------------------------------------------" << endl;
     cout << endl << "*** "
          << SymTabEntryImpl::DEFINITION_WORDS[(DefinitionImpl) defn]
          << " " << routine_id->get_name() << " ***" << endl;
     print_column_headings();
 
     // Print the entries in the routine's symbol table.
-    EntryValue *entry_value =
-        routine_id->get_attribute((SymTabKey) ROUTINE_SYMTAB);
+    EntryValue *entry_value = routine_id->get_attribute((SymTabKey) ROUTINE_SYMTAB);
     SymTab *symtab = entry_value->symtab;
     vector<TypeSpec *> new_record_types;
     print_symtab(symtab, new_record_types);
 
     // Print cross-reference tables for any records defined in the routine.
-    if (new_record_types.size() > 0) print_records(new_record_types);
+    if (new_record_types.size() > 0)
+    {
+        print_records(new_record_types);
+    }
 
     // Print any procedures and functions defined in the routine.
-    entry_value =
-        routine_id->get_attribute((SymTabKey) ROUTINE_ROUTINES);
+    entry_value = routine_id->get_attribute((SymTabKey) ROUTINE_ROUTINES);
     if ((entry_value != nullptr) && (entry_value->v.size() > 0))
     {
         for (SymTabEntry *routine_id : entry_value->v)
@@ -87,8 +89,7 @@ void CrossReferencer::print_column_headings() const
     cout << NUMBERS_UNDERLINE << "------------------" << endl;
 }
 
-void CrossReferencer::print_symtab(SymTab *symtab,
-                                   vector<TypeSpec *>& record_types) const
+void CrossReferencer::print_symtab(SymTab *symtab, vector<TypeSpec *>& record_types) const
 {
     // Loop over the sorted list of symbol table entries.
     vector<SymTabEntry *> sorted = symtab->sorted_entries();
@@ -213,6 +214,7 @@ void CrossReferencer::print_type(TypeSpec *typespec) const
              << TypeSpecImpl::TYPE_FORM_NAMES[(TypeFormImpl) form]
              << ", Type id = " << type_name << endl;
     }
+    cout << "---------------------------------------------------------------------" << endl;
 }
 
 void CrossReferencer::print_type_detail(TypeSpec *typespec,

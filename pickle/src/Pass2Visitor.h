@@ -63,7 +63,6 @@ public:
     antlrcpp::Any visitForCondition(Pcl2Parser::ForConditionContext *context) override;
     antlrcpp::Any visitForDeclaration(Pcl2Parser::ForDeclarationContext *context) override;
     antlrcpp::Any visitForExpression(Pcl2Parser::ForExpressionContext *context) override;
-    antlrcpp::Any visitInitializer(Pcl2Parser::InitializerContext *context) override;
     antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context) override;
     antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) override;
     /// @ }

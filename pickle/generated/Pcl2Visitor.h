@@ -41,6 +41,8 @@ public:
 
     virtual antlrcpp::Any visitInitDeclarator(Pcl2Parser::InitDeclaratorContext *context) = 0;
 
+    virtual antlrcpp::Any visitInitializer(Pcl2Parser::InitializerContext *context) = 0;
+
     virtual antlrcpp::Any visitVoidType(Pcl2Parser::VoidTypeContext *context) = 0;
 
     virtual antlrcpp::Any visitBoolType(Pcl2Parser::BoolTypeContext *context) = 0;
@@ -69,21 +71,31 @@ public:
 
     virtual antlrcpp::Any visitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext *context) = 0;
 
+    virtual antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context) = 0;
+
     virtual antlrcpp::Any visitParameterTypeList(Pcl2Parser::ParameterTypeListContext *context) = 0;
 
     virtual antlrcpp::Any visitParameterList(Pcl2Parser::ParameterListContext *context) = 0;
 
     virtual antlrcpp::Any visitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext *context) = 0;
 
-    virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context) = 0;
+    virtual antlrcpp::Any visitUnaryOperator(Pcl2Parser::UnaryOperatorContext *context) = 0;
 
-    virtual antlrcpp::Any visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *context) = 0;
+    virtual antlrcpp::Any visitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *context) = 0;
+
+    virtual antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *context) = 0;
+
+    virtual antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) = 0;
+
+    virtual antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context) = 0;
 
     virtual antlrcpp::Any visitArgumentExpressionList(Pcl2Parser::ArgumentExpressionListContext *context) = 0;
 
     virtual antlrcpp::Any visitUnaryExpression(Pcl2Parser::UnaryExpressionContext *context) = 0;
 
-    virtual antlrcpp::Any visitUnaryOperator(Pcl2Parser::UnaryOperatorContext *context) = 0;
+    virtual antlrcpp::Any visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *context) = 0;
+
+    virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context) = 0;
 
     virtual antlrcpp::Any visitMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext *context) = 0;
 
@@ -105,16 +117,6 @@ public:
 
     virtual antlrcpp::Any visitLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext *context) = 0;
 
-    virtual antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context) = 0;
-
-    virtual antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) = 0;
-
-    virtual antlrcpp::Any visitAssignmentOperator(Pcl2Parser::AssignmentOperatorContext *context) = 0;
-
-    virtual antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *context) = 0;
-
-    virtual antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context) = 0;
-
     virtual antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context) = 0;
 
     virtual antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context) = 0;
@@ -130,8 +132,6 @@ public:
     virtual antlrcpp::Any visitForDeclaration(Pcl2Parser::ForDeclarationContext *context) = 0;
 
     virtual antlrcpp::Any visitForExpression(Pcl2Parser::ForExpressionContext *context) = 0;
-
-    virtual antlrcpp::Any visitInitializer(Pcl2Parser::InitializerContext *context) = 0;
 
     virtual antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context) = 0;
 
