@@ -18,14 +18,25 @@ using namespace wci::intermediate;
 class Pass2Visitor : public Pcl2BaseVisitor
 {
 private:
+
 	string program_name;
-	ostream& j_file;
+
+	ostream & j_file;
+
     const bool debug_flag;
 
-    void print_debug_context(const std::string & msg) const;
+    void print_debug_context(antlr4::ParserRuleContext * context, const std::string & msg) const;
+
+    string opcode_to_instruction(const string opcode, const bool is_fpoint);
+
+    string determine_type(TypeSpec * lhs);
 
 public:
-	Pass2Visitor(ostream& j_file, const bool debug=false);
+
+    /// Constructor
+	Pass2Visitor(const string fname, ostream& j_file, const bool debug=false);
+
+    /// Destructor
     virtual ~Pass2Visitor();
 
     /// @ { Compilation Unit

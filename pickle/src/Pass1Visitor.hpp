@@ -18,28 +18,52 @@ class Pass1Visitor : public Pcl2BaseVisitor
 {
 private:
 
+    /// Symbol Table Stack
     SymTabStack *symtab_stack;
+
+    /// Program ID
     SymTabEntry *program_id;
-    vector <SymTabEntry *> variable_id_list;
+
+    /// Output file    
     ofstream j_file;
+
+    /// Flag to print debug messages or not
     const bool debug_flag;
+
+    /// Type of last declaration node
     TypeSpec * current_type;
 
-    string variable_declaration;
+    /// Name of current program
+    const string program_name;
 
+    /// Current declaration has initial value or not
     bool has_initializer;
 
+    /// Next node is a function
     bool next_declaration_is_function;
 
-    /// Prints the current visit context information if [debug_flag] is true
-    void print_debug_context(const std::string & msg) const;
+    /// @TODO : Maybe delete
+    const std::vector<std::string> & rule_names;
 
+    /**
+     *  Prints the current visit context information if [debug_flag] is true
+     *  @param context   : Current context or parser rule
+     *  @param rule_name : Name of current rule
+     */
+    void print_debug_context(antlr4::ParserRuleContext * context, const std::string & rule_name) const;
+
+    /**
+     *
+     *
+     */
     TypeSpec * set_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type);
+
+    static const char TAB = '\t';
 
 public:
 
     /// Constructor
-    Pass1Visitor(const bool debug=false);
+    Pass1Visitor(const string fname, const std::vector<std::string> & rule_names, const bool debug=false);
     
     /// Destructor
     virtual ~Pass1Visitor();
@@ -90,6 +114,10 @@ public:
     /// @ }
 
     /// @ { Expressions
+    antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context) override;
+    antlrcpp::Any visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *context) override;
+    antlrcpp::Any visitUnaryExpression(Pcl2Parser::UnaryExpressionContext *context) override;
+    antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *context) override;
     antlrcpp::Any visitMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext *context) override;
     antlrcpp::Any visitAdditiveExpression(Pcl2Parser::AdditiveExpressionContext *context) override;
     antlrcpp::Any visitShiftExpression(Pcl2Parser::ShiftExpressionContext *context) override;
@@ -102,7 +130,6 @@ public:
     antlrcpp::Any visitLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext *context) override;
     antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context) override;
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
-    antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *context) override;
     antlrcpp::Any visitForExpression(Pcl2Parser::ForExpressionContext *context) override;
     /// @ }
 };

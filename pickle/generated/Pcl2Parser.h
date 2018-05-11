@@ -555,7 +555,8 @@ public:
     TypeSpec * type = nullptr;
     AssignmentExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    ConditionalExpressionContext *conditionalExpression();
+    MultiplicativeExpressionContext *multiplicativeExpression();
+    AdditiveExpressionContext *additiveExpression();
     UnaryExpressionContext *unaryExpression();
     AssignmentOperatorContext *assignmentOperator();
     AssignmentExpressionContext *assignmentExpression();
@@ -608,8 +609,8 @@ public:
     UnaryExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     PostfixExpressionContext *postfixExpression();
-    UnaryExpressionContext *unaryExpression();
     UnaryOperatorContext *unaryOperator();
+    UnaryExpressionContext *unaryExpression();
     antlr4::tree::TerminalNode *DigitSequence();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -659,6 +660,7 @@ public:
 
   class  MultiplicativeExpressionContext : public antlr4::ParserRuleContext {
   public:
+    TypeSpec * type = nullptr;
     MultiplicativeExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     UnaryExpressionContext *unaryExpression();
@@ -675,6 +677,7 @@ public:
   MultiplicativeExpressionContext* multiplicativeExpression(int precedence);
   class  AdditiveExpressionContext : public antlr4::ParserRuleContext {
   public:
+    TypeSpec * type = nullptr;
     AdditiveExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     MultiplicativeExpressionContext *multiplicativeExpression();

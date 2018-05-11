@@ -50,23 +50,27 @@ int main(int argc, const char *args[])
     /// Parser
     Pcl2Parser parser(&tokens);
 
+    const std::vector<std::string> & rule_names = parser.getRuleNames();
+
     /// Parse Tree
     tree::ParseTree *tree = parser.compilationUnit();
 
     cout << pass1_msg << endl;
 
+    const string program_name = "HELLOOOOOOO_WORRRRRLD";
+
     /// First Pass
-    Pass1Visitor *pass1 = new Pass1Visitor(true);
+    Pass1Visitor *pass1 = new Pass1Visitor(program_name, rule_names, true);
     pass1->visit(tree);
 
-    // cout << pass2_msg << endl;
+    cout << pass2_msg << endl;
 
-    // /// Output Stream
-    // ofstream& j_file = pass1->get_assembly_file();
+    /// Output Stream
+    ofstream& j_file = pass1->get_assembly_file();
 
-    // /// Second Pass
-    // Pass2Visitor *pass2 = new Pass2Visitor(j_file, true);
-    // pass2->visit(tree);
+    /// Second Pass
+    Pass2Visitor *pass2 = new Pass2Visitor(program_name, j_file, true);
+    pass2->visit(tree);
 
     delete tree;
     return 0;

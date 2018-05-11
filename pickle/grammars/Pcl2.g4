@@ -121,7 +121,9 @@ expression
     ;
 
 assignmentExpression locals [ TypeSpec *type = nullptr ]
-    :   conditionalExpression
+    //:   conditionalExpression
+    :   multiplicativeExpression
+    |   additiveExpression
     |   unaryExpression assignmentOperator assignmentExpression
     |   DigitSequence // for
     ;
@@ -137,8 +139,8 @@ argumentExpressionList
 
 unaryExpression
     :   postfixExpression
-    |   '++' unaryExpression
-    |   '--' unaryExpression
+//    |   '++' unaryExpression
+//    |   '--' unaryExpression
     |   unaryOperator unaryExpression
     |   DigitSequence
     ;
@@ -146,8 +148,8 @@ unaryExpression
 postfixExpression
     :   primaryExpression
     |   postfixExpression '(' argumentExpressionList? ')'
-    |   postfixExpression '++'
-    |   postfixExpression '--'
+//    |   postfixExpression '++'
+//    |   postfixExpression '--'
     ;
 
 primaryExpression
@@ -157,14 +159,14 @@ primaryExpression
     |   '(' expression ')'
     ;
 
-multiplicativeExpression
+multiplicativeExpression locals [ TypeSpec *type = nullptr ]
     :   unaryExpression
     |   multiplicativeExpression '*' unaryExpression
     |   multiplicativeExpression '/' unaryExpression
     |   multiplicativeExpression '%' unaryExpression
     ;
 
-additiveExpression
+additiveExpression locals [ TypeSpec *type = nullptr ]
     :   multiplicativeExpression
     |   additiveExpression '+' multiplicativeExpression
     |   additiveExpression '-' multiplicativeExpression
