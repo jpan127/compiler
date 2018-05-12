@@ -5,14 +5,8 @@ grammar Pcl2;
 using namespace wci::intermediate;
 }
 
-/***************************************************
- *                                                 *
- *                     Parser                      *
- *                                                 *
- **************************************************/
-
 compilationUnit
-    :   translationUnit? EOF
+    :translationUnit? EOF
     ;
 
 translationUnit
@@ -23,219 +17,33 @@ translationUnit
 externalDeclaration
     :   functionDefinition
     |   declaration
-    |   ';' // stray ;
-    ;
-
-functionDefinition locals [ TypeSpec *type = nullptr ]
-    :   declarationSpecifiers? declarator compoundStatement
-    ;
-
-declaration locals [ TypeSpec *type = nullptr ]
-    :   declarationSpecifiers initDeclaratorList ';'
-    |   declarationSpecifier ';'
-    ;
-
-declarationSpecifiers
-    :   declarationSpecifier+
-    ;
-
-declarationSpecifier
-    :   typeSpecifier
-    ;
-
-initDeclaratorList
-    :   initDeclarator (',' initDeclarator)*
-    |   initDeclaratorList ',' initDeclarator
-    ;
-
-initDeclarator
-    :   declarator
-    |   declarator '=' initializer
-    ;
-
-initializer
-    :   assignmentExpression;
-
-typeSpecifier locals [ TypeSpec *type = nullptr ]
-    :   'void'      # voidType
-    |   'bool'      # boolType
-    |   'char'      # charType
-    |   'short'     # shortType
-    |   'int'       # intType
-    |   'long'      # longType
-    |   'float'     # floatType
-    |   'double'    # doubleType
-    |   'signed'    # signedType
-    |   'unsigned'  # unsignedType
-    |   'uint32_t'  # uint32_tType
-    |   'int32_t'   # int32_tType
-    ;
-
-declarator
-    :   '*'? directDeclarator
-    ;
-
-directDeclarator
-    :   Identifier
-    |   Identifier '(' parameterTypeList ')'
-    |   Identifier '(' identifierList?   ')'
-    ;
-
-identifierList
-    :   Identifier
-    |   identifierList ',' Identifier
-    ;
-
-parameterTypeList
-    :   parameterList
-    |   parameterList ',' '...'
-    ;
-
-parameterList
-    :   parameterDeclaration
-    |   parameterList ',' parameterDeclaration
-    ;
-
-parameterDeclaration
-    :   declarationSpecifiers declarator
-    |   declarationSpecifiers
-    ;
-
-/***************************************************
- *                                                 *
- *                  Expressions                    *
- *                                                 *
- **************************************************/
-
-unaryOperator
-    :   '&' | '*' | '+' | '-' | '~' | '!'
-    ;
-
-assignmentOperator
-    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' | NegateAssign
-    ;
-
-expression
-    :   assignmentExpression
-    |   expression ',' assignmentExpression
-    ;
-
-assignmentExpression locals [ TypeSpec *type = nullptr ]
-    //:   conditionalExpression
-    :   multiplicativeExpression
-    |   additiveExpression
-    |   unaryExpression assignmentOperator assignmentExpression
-    |   DigitSequence // for
-    ;
-
-conditionalExpression
-    :   logicalOrExpression ('?' expression ':' conditionalExpression)?
-    ;
-
-argumentExpressionList
-    :   assignmentExpression
-    |   argumentExpressionList ',' assignmentExpression
-    ;
-
-unaryExpression
-    :   postfixExpression
-//    |   '++' unaryExpression
-//    |   '--' unaryExpression
-    |   unaryOperator unaryExpression
-    |   DigitSequence
-    ;
-
-postfixExpression
-    :   primaryExpression
-    |   postfixExpression '(' argumentExpressionList? ')'
-//    |   postfixExpression '++'
-//    |   postfixExpression '--'
+    |   Semi
     ;
 
 primaryExpression
     :   Identifier
-    |   Constant
-    |   StringLiteral+
-    |   '(' expression ')'
+    |   IntegerConstant
+    |   FloatConstant
+    |   LeftParen expression RightParen
     ;
 
-multiplicativeExpression locals [ TypeSpec *type = nullptr ]
-    :   unaryExpression
-    |   multiplicativeExpression '*' unaryExpression
-    |   multiplicativeExpression '/' unaryExpression
-    |   multiplicativeExpression '%' unaryExpression
+functionDefinition
+    : typeSpecifier Identifier paramaterTypeList compoundStatement;
+
+functionCall
+    : Identifier LeftParen identifierList? RightParen Semi
     ;
 
-additiveExpression locals [ TypeSpec *type = nullptr ]
-    :   multiplicativeExpression
-    |   additiveExpression '+' multiplicativeExpression
-    |   additiveExpression '-' multiplicativeExpression
+functionReturn
+    : Identifier LeftParen identifierList? RightParen
     ;
 
-shiftExpression
-    :   additiveExpression
-    |   shiftExpression '<<' additiveExpression
-    |   shiftExpression '>>' additiveExpression
-    ;
-
-relationalExpression
-    :   shiftExpression
-    |   relationalExpression '<' shiftExpression
-    |   relationalExpression '>' shiftExpression
-    |   relationalExpression '<=' shiftExpression
-    |   relationalExpression '>=' shiftExpression
-    ;
-
-equalityExpression
-    :   relationalExpression
-    |   equalityExpression 'is' relationalExpression
-    |   equalityExpression 'is not' relationalExpression
-    |   equalityExpression '==' relationalExpression
-    |   equalityExpression '!=' relationalExpression
-    ;
-
-andExpression
-    :   equalityExpression
-    |   andExpression '&' equalityExpression
-    ;
-
-exclusiveOrExpression
-    :   andExpression
-    |   exclusiveOrExpression '^' andExpression
-    ;
-
-inclusiveOrExpression
-    :   exclusiveOrExpression
-    |   inclusiveOrExpression '|' exclusiveOrExpression
-    ;
-
-logicalAndExpression
-    :   inclusiveOrExpression
-    |   logicalAndExpression '&&' inclusiveOrExpression
-    |   logicalAndExpression 'and' inclusiveOrExpression
-    ;
-
-logicalOrExpression
-    :   logicalAndExpression
-    |   logicalOrExpression '||' logicalAndExpression
-    |   logicalOrExpression 'or' logicalAndExpression
-    ;
-
-/***************************************************
- *                                                 *
- *                   Statements?                   *
- *                                                 *
- **************************************************/
-
-statement
-    :   compoundStatement
-    |   expressionStatement
-    |   selectionStatement
-    |   iterationStatement
+identifierList
+    : Identifier (Comma Identifier)*
     ;
 
 compoundStatement
-    :   '{' blockItemList? '}'
+    :   LeftBrace blockItemList? RightBrace
     ;
 
 blockItemList
@@ -248,44 +56,71 @@ blockItem
     |   declaration
     ;
 
-iterationStatement
-    :   For '(' forCondition ')' statement
+statement
+    :   compoundStatement
+    |   expressionStatement
+    |   selectionStatement
+    |   iterationStatement
+    |   assignmentStatement
     ;
 
-forCondition
-    :   forDeclaration ';' forExpression? ';' forExpression?
-    |   expression?    ';' forExpression? ';' forExpression?
-    ;
-
-forDeclaration
-    :   declarationSpecifiers initDeclaratorList
-    |   declarationSpecifiers
-    ;
-
-forExpression
-    :   assignmentExpression
-    |   forExpression ',' assignmentExpression
+assignmentStatement
+    :   assignmentExpression Semi
     ;
 
 expressionStatement
-    :   expression? ';'
+    :   expression? Semi
     ;
 
 selectionStatement
-    :   'if' '(' expression ')' statement ('else' statement)?
+    : If LeftParen conditionalExpression RightParen statement
+    ;
+
+iterationStatement
+    :   While LeftParen conditionalExpression RightParen statement
+    ;
+
+expression locals [TypeSpec * type = nullptr ]
+    :   expression opr=('*'|'/'|'%') expression # mulDivExpr
+    |   expression opr=('+'|'-') expression     # addminExpr
+    |   primaryExpression                       # primExpr
+    ;
+
+conditionalExpression
+    :   expression ConditionalOperator expression
+    |   conditionalExpression ConditionalConnectOperator conditionalExpression
+    |   Not LeftParen conditionalExpression RightParen
+    ;
+
+assignmentExpression
+    :   Identifier Assign expression
+    |   Identifier Assign functionReturn
+    ;
+
+typeSpecifier
+    :   (Void
+    |   Bool
+    |   Char
+    |   Int
+    |   Float
+    |   Double
+    )
+    ;
+
+paramaterTypeList
+    :   LeftParen (declaration)* RightParen;
+
+declaration locals [TypeSpec * type = nullptr ]
+    :   typeSpecifier Identifier (Comma Identifier)* Semi
+    |   typeSpecifier assignmentExpression (Comma assignmentExpression)* Semi
     ;
 
 
-/***************************************************
- *                                                 *
- *                   Fragments                     *
- *                                                 *
- **************************************************/
 
 fragment
 IdentifierNondigit
     :   Nondigit
-    |   UniversalCharacterName
+    //|   // other implementation-defined characters...
     ;
 
 fragment
@@ -294,59 +129,13 @@ Nondigit
     ;
 
 fragment
+DigitSequence
+    :   Digit+
+    ;
+
+fragment
 Digit
     :   [0-9]
-    ;
-
-fragment
-UniversalCharacterName
-    :   '\\u' HexQuad
-    |   '\\U' HexQuad HexQuad
-    ;
-
-fragment
-HexQuad
-    :   HexadecimalDigit HexadecimalDigit HexadecimalDigit HexadecimalDigit
-    ;
-
-Constant
-    :   IntegerConstant
-    |   FloatingConstant
-    //|   EnumerationConstant
-    |   CharacterConstant
-    ;
-
-fragment
-IntegerConstant
-    :   DecimalConstant IntegerSuffix?
-    |   OctalConstant IntegerSuffix?
-    |   HexadecimalConstant IntegerSuffix?
-    |   BinaryConstant
-    ;
-
-fragment
-BinaryConstant
-    :   '0' [bB] [0-1]+
-    ;
-
-fragment
-DecimalConstant
-    :   NonzeroDigit Digit*
-    ;
-
-fragment
-OctalConstant
-    :   '0' OctalDigit*
-    ;
-
-fragment
-HexadecimalConstant
-    :   HexadecimalPrefix HexadecimalDigit+
-    ;
-
-fragment
-HexadecimalPrefix
-    :   '0' [xX]
     ;
 
 fragment
@@ -355,167 +144,25 @@ NonzeroDigit
     ;
 
 fragment
-OctalDigit
-    :   [0-7]
+Constant
+    :   IntegerConstant
+    |   FloatConstant
     ;
 
-fragment
-HexadecimalDigit
-    :   [0-9a-fA-F]
+ConditionalConnectOperator
+    :   OrOr
+    |   AndAnd
     ;
 
-fragment
-IntegerSuffix
-    :   UnsignedSuffix LongSuffix?
-    |   UnsignedSuffix LongLongSuffix
-    |   LongSuffix UnsignedSuffix?
-    |   LongLongSuffix UnsignedSuffix?
+ConditionalOperator
+    :   Less
+    |   LessEqual
+    |   Greater
+    |   GreaterEqual
+    |   Equal
+    |   NotEqual
     ;
 
-fragment
-UnsignedSuffix
-    :   [uU]
-    ;
-
-fragment
-LongSuffix
-    :   [lL]
-    ;
-
-fragment
-LongLongSuffix
-    :   'll' | 'LL'
-    ;
-
-fragment
-FloatingConstant
-    :   DecimalFloatingConstant
-    |   HexadecimalFloatingConstant
-    ;
-
-fragment
-DecimalFloatingConstant
-    :   FractionalConstant ExponentPart? FloatingSuffix?
-    |   DigitSequence ExponentPart FloatingSuffix?
-    ;
-
-fragment
-HexadecimalFloatingConstant
-    :   HexadecimalPrefix HexadecimalFractionalConstant BinaryExponentPart FloatingSuffix?
-    |   HexadecimalPrefix HexadecimalDigitSequence BinaryExponentPart FloatingSuffix?
-    ;
-
-fragment
-FractionalConstant
-    :   DigitSequence? '.' DigitSequence
-    |   DigitSequence '.'
-    ;
-
-fragment
-ExponentPart
-    :   'e' Sign? DigitSequence
-    |   'E' Sign? DigitSequence
-    ;
-
-fragment
-Sign
-    :   '+' | '-'
-    ;
-
-DigitSequence
-    :   Digit+
-    ;
-
-fragment
-HexadecimalFractionalConstant
-    :   HexadecimalDigitSequence? '.' HexadecimalDigitSequence
-    |   HexadecimalDigitSequence '.'
-    ;
-
-fragment
-BinaryExponentPart
-    :   'p' Sign? DigitSequence
-    |   'P' Sign? DigitSequence
-    ;
-
-fragment
-HexadecimalDigitSequence
-    :   HexadecimalDigit+
-    ;
-
-fragment
-FloatingSuffix
-    :   'f' | 'l' | 'F' | 'L'
-    ;
-
-fragment
-CharacterConstant
-    :   '\'' CCharSequence '\''
-    |   'L\'' CCharSequence '\''
-    |   'u\'' CCharSequence '\''
-    |   'U\'' CCharSequence '\''
-    ;
-
-fragment
-CCharSequence
-    :   CChar+
-    ;
-
-fragment
-CChar
-    :   ~['\\\r\n]
-    |   EscapeSequence
-    ;
-
-fragment
-EscapeSequence
-    :   SimpleEscapeSequence
-    |   OctalEscapeSequence
-    |   HexadecimalEscapeSequence
-    |   UniversalCharacterName
-    ;
-
-fragment
-SimpleEscapeSequence
-    :   '\\' ['"?abfnrtv\\]
-    ;
-
-fragment
-OctalEscapeSequence
-    :   '\\' OctalDigit
-    |   '\\' OctalDigit OctalDigit
-    |   '\\' OctalDigit OctalDigit OctalDigit
-    ;
-
-fragment
-HexadecimalEscapeSequence
-    :   '\\x' HexadecimalDigit+
-    ;
-
-StringLiteral
-    :   EncodingPrefix? '"' SCharSequence? '"'
-    ;
-
-fragment
-EncodingPrefix
-    :   'u8'
-    |   'u'
-    |   'U'
-    |   'L'
-    ;
-
-fragment
-SCharSequence
-    :   SChar+
-    ;
-
-fragment
-SChar
-    :   ~["\\\r\n]
-    |   EscapeSequence
-    |   '\\\n'   // Added line
-    |   '\\\r\n' // Added line
-    ;
 /***************************************************
  *                                                 *
  *                      Lexer                      *
@@ -601,6 +248,15 @@ Arrow            : '->';
 Dot              : '.';
 Ellipsis         : '...';
 
+IntegerConstant
+    :   Digit+
+    ;
+
+FloatConstant
+    :   DigitSequence? '.' DigitSequence
+    |   DigitSequence '.'
+    ;
+
 AndAnd
     : '&&'
     | 'and'
@@ -631,6 +287,7 @@ Identifier
         |   Digit
         )*
     ;
+
 Whitespace
     :   [ \t]+
         -> skip

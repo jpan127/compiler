@@ -63,14 +63,14 @@ int main(int argc, const char *args[])
     Pass1Visitor *pass1 = new Pass1Visitor(program_name, rule_names, true);
     pass1->visit(tree);
 
-    cout << pass2_msg << endl;
+    // cout << pass2_msg << endl;
 
-    /// Output Stream
-    ofstream& j_file = pass1->get_assembly_file();
+    // /// Output Stream
+    // ofstream& j_file = pass1->get_assembly_file();
 
-    /// Second Pass
-    Pass2Visitor *pass2 = new Pass2Visitor(program_name, j_file, true);
-    pass2->visit(tree);
+    // /// Second Pass
+    // Pass2Visitor *pass2 = new Pass2Visitor(program_name, j_file, true);
+    // pass2->visit(tree);
 
     delete tree;
     return 0;

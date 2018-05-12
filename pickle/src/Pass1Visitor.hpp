@@ -14,6 +14,8 @@
 using namespace wci;
 using namespace wci::intermediate;
 
+#define TESTING
+
 class Pass1Visitor : public Pcl2BaseVisitor
 {
 private:
@@ -45,6 +47,8 @@ private:
     /// @TODO : Maybe delete
     const std::vector<std::string> & rule_names;
 
+    static const map <string, TypeSpec **> type_map;
+
     /**
      *  Prints the current visit context information if [debug_flag] is true
      *  @param context   : Current context or parser rule
@@ -71,67 +75,34 @@ public:
     /// Returns the output file
     ofstream & get_assembly_file();
 
-    /// @ { Compilation Unit
-    antlrcpp::Any visitCompilationUnit(Pcl2Parser::CompilationUnitContext * context) override;
-    antlrcpp::Any visitTranslationUnit(Pcl2Parser::TranslationUnitContext * context) override;
-    /// @ }
+    antlrcpp::Any visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context);
+    antlrcpp::Any visitTranslationUnit(Pcl2Parser::TranslationUnitContext *context);
 
-    /// @ { Type Specifiers
-    antlrcpp::Any visitVoidType(Pcl2Parser::VoidTypeContext * context) override;
-    antlrcpp::Any visitBoolType(Pcl2Parser::BoolTypeContext * context) override;
-    antlrcpp::Any visitCharType(Pcl2Parser::CharTypeContext * context) override;
-    antlrcpp::Any visitShortType(Pcl2Parser::ShortTypeContext * context) override;
-    antlrcpp::Any visitIntType(Pcl2Parser::IntTypeContext * context) override;
-    antlrcpp::Any visitLongType(Pcl2Parser::LongTypeContext * context) override;
-    antlrcpp::Any visitFloatType(Pcl2Parser::FloatTypeContext * context) override;
-    antlrcpp::Any visitDoubleType(Pcl2Parser::DoubleTypeContext * context) override;
-    antlrcpp::Any visitSignedType(Pcl2Parser::SignedTypeContext * context) override;
-    antlrcpp::Any visitUnsignedType(Pcl2Parser::UnsignedTypeContext * context) override;
-    antlrcpp::Any visitUint32_tType(Pcl2Parser::Uint32_tTypeContext * context) override;
-    antlrcpp::Any visitInt32_tType(Pcl2Parser::Int32_tTypeContext * context) override;
-    /// @ }
+    antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context);
+    antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context);
+    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context);
 
-    /// @ { Declarations
-    antlrcpp::Any visitInitializer(Pcl2Parser::InitializerContext *context) override;
-    antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext * context) override;
-    antlrcpp::Any visitDeclarationSpecifiers(Pcl2Parser::DeclarationSpecifiersContext * context) override;
-    antlrcpp::Any visitDeclarationSpecifier(Pcl2Parser::DeclarationSpecifierContext * context) override;
-    antlrcpp::Any visitInitDeclaratorList(Pcl2Parser::InitDeclaratorListContext * context) override;
-    antlrcpp::Any visitInitDeclarator(Pcl2Parser::InitDeclaratorContext * context) override;
-    antlrcpp::Any visitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext * context) override;
-    antlrcpp::Any visitDeclarator(Pcl2Parser::DeclaratorContext * context) override;
-    antlrcpp::Any visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext * context) override;
-    antlrcpp::Any visitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext * context) override;
-    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context) override;
-    /// @ }
+    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context);
+    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context);
+    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context);
 
-    /// @ { Lists
-    antlrcpp::Any visitParameterTypeList(Pcl2Parser::ParameterTypeListContext * context) override;
-    antlrcpp::Any visitParameterList(Pcl2Parser::ParameterListContext * context) override;
-    antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext * context) override;
-    antlrcpp::Any visitBlockItemList(Pcl2Parser::BlockItemListContext * context) override;
-    antlrcpp::Any visitBlockItem(Pcl2Parser::BlockItemContext * context) override;
-    /// @ }
+    // antlrcpp::Any visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context);
+    // antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context);
+    // antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context);
+    // antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context);
+    // antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context);
+    // antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context);
+    // antlrcpp::Any visitBlockItemList(Pcl2Parser::BlockItemListContext *context);
+    // antlrcpp::Any visitBlockItem(Pcl2Parser::BlockItemContext *context);
+    // antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context);
+    // antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context);
+    // antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context);
+    // antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
+    // antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context);
+    // antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
+    // antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context);
+    // antlrcpp::Any visitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *context);
 
-    /// @ { Expressions
-    antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context) override;
-    antlrcpp::Any visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *context) override;
-    antlrcpp::Any visitUnaryExpression(Pcl2Parser::UnaryExpressionContext *context) override;
-    antlrcpp::Any visitExpression(Pcl2Parser::ExpressionContext *context) override;
-    antlrcpp::Any visitMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext *context) override;
-    antlrcpp::Any visitAdditiveExpression(Pcl2Parser::AdditiveExpressionContext *context) override;
-    antlrcpp::Any visitShiftExpression(Pcl2Parser::ShiftExpressionContext *context) override;
-    antlrcpp::Any visitRelationalExpression(Pcl2Parser::RelationalExpressionContext *context) override;
-    antlrcpp::Any visitEqualityExpression(Pcl2Parser::EqualityExpressionContext *context) override;
-    antlrcpp::Any visitAndExpression(Pcl2Parser::AndExpressionContext *context) override;
-    antlrcpp::Any visitExclusiveOrExpression(Pcl2Parser::ExclusiveOrExpressionContext *context) override;
-    antlrcpp::Any visitInclusiveOrExpression(Pcl2Parser::InclusiveOrExpressionContext *context) override;
-    antlrcpp::Any visitLogicalAndExpression(Pcl2Parser::LogicalAndExpressionContext *context) override;
-    antlrcpp::Any visitLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext *context) override;
-    antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context) override;
-    antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
-    antlrcpp::Any visitForExpression(Pcl2Parser::ForExpressionContext *context) override;
-    /// @ }
 };
 
 #endif /* PASS1VISITOR_H_ */

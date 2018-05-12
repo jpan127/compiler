@@ -1,11 +1,9 @@
 void main()
 {
-    void     a = 0;
+    void     a;
     bool     b = 0;
     double   c = 0;
-    short    d = 0;
     int      e = a * b;
-    long     f = c + d;
     // float    g = 0;
     // char     h = 0;
     // signed   i = 0;

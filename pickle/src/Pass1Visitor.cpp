@@ -13,23 +13,37 @@ using namespace wci::intermediate;
 using namespace wci::intermediate::symtabimpl;
 using namespace wci::util;
 
-/**
- *  Pass1Visitor << Pcl2BaseVisitor << Pcl2Visitor << AbstractParseTreeVisitor << ParseTreeVisitor
- *  Pass1Visitor:
- *      - Overrides all visit functions
- *  Pcl2BaseVisitor:
- *      - Virtual visit functions
- *  Pcl2Visitor:
- *      - Abstract visit functions
- *  AbstractParseTreeVisitor:
- *      - visitChildren()
- *      - visit()
- *      - visitTerminal()
- *      - visitErrorNode()
- *      - Some useless default functions that are never overridden
- *  ParseTreeVisitor:
- *      - Abstract visit functions
- */
+
+
+const map <string, TypeSpec **> Pass1Visitor::type_map =
+{
+    { "void"    , &Predefined::void_type   },
+    { "bool"    , &Predefined::bool_type   },
+    { "char"    , &Predefined::char_type   },
+    { "int"     , &Predefined::int_type    },
+    { "float"   , &Predefined::float_type  },
+    { "double"  , &Predefined::double_type },
+};
+
+Pass1Visitor::~Pass1Visitor() 
+{
+    j_file.flush();
+    j_file.close();
+}
+
+Pass1Visitor::Pass1Visitor(const string fname, const std::vector<std::string> & rule_names, const bool debug) : program_name(fname), rule_names(rule_names), program_id(nullptr), j_file(nullptr), debug_flag(debug)
+{
+    // Create and initialize the symbol table stack.
+    symtab_stack = SymTabFactory::create_symtab_stack();
+    Predefined::initialize(symtab_stack);
+
+    program_id = symtab_stack->enter_local(program_name);
+    program_id->set_definition((Definition)DF_PROGRAM);
+    program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB, new EntryValue(symtab_stack->push()));
+    symtab_stack->set_program_id(program_id);
+
+    cout << "Pass1Visitor: symtab stack initialized" << endl;
+}
 
 void Pass1Visitor::print_debug_context(antlr4::ParserRuleContext * context, const std::string & rule_name) const
 {
@@ -49,24 +63,23 @@ void Pass1Visitor::print_debug_context(antlr4::ParserRuleContext * context, cons
     }
 }
 
-Pass1Visitor::Pass1Visitor(const string fname, const std::vector<std::string> & rule_names, const bool debug) : program_name(fname), rule_names(rule_names), program_id(nullptr), j_file(nullptr), debug_flag(debug)
+TypeSpec * Pass1Visitor::set_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
 {
-    // Create and initialize the symbol table stack.
-    symtab_stack = SymTabFactory::create_symtab_stack();
-    Predefined::initialize(symtab_stack);
-
-    program_id = symtab_stack->enter_local(program_name);
-    program_id->set_definition((Definition)DF_PROGRAM);
-    program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB, new EntryValue(symtab_stack->push()));
-    symtab_stack->set_program_id(program_id);
-
-    cout << "Pass1Visitor: symtab stack initialized" << endl;
-}
-
-Pass1Visitor::~Pass1Visitor() 
-{
-    j_file.flush();
-    j_file.close();
+    // If any are double then result is double
+    if (Predefined::double_type == lhs_type || Predefined::double_type == rhs_type)
+    {
+        return Predefined::double_type;
+    }
+    // If any are not real and neither are double then result is real
+    else if (Predefined::real_type == lhs_type || Predefined::real_type == rhs_type)
+    {
+        return Predefined::real_type;
+    }
+    // Otherwise integer
+    else
+    {
+        return Predefined::int_type;
+    }
 }
 
 ofstream & Pass1Visitor::get_assembly_file()
@@ -91,6 +104,7 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
     
     return value;
 }
+
 antlrcpp::Any Pass1Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitContext *context)
 {
     print_debug_context(context, "visitTranslationUnit");
@@ -141,83 +155,18 @@ antlrcpp::Any Pass1Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-/// @ { Stores type in context
-antlrcpp::Any Pass1Visitor::visitVoidType(Pcl2Parser::VoidTypeContext *context)         { print_debug_context(context, "visitVoidType");     current_type = Predefined::void_type;       context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitBoolType(Pcl2Parser::BoolTypeContext *context)         { print_debug_context(context, "visitBoolType");     current_type = Predefined::bool_type;       context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitCharType(Pcl2Parser::CharTypeContext *context)         { print_debug_context(context, "visitCharType");     current_type = Predefined::char_type;       context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitShortType(Pcl2Parser::ShortTypeContext *context)       { print_debug_context(context, "visitShortType");    current_type = Predefined::short_type;      context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitIntType(Pcl2Parser::IntTypeContext *context)           { print_debug_context(context, "visitIntType");      current_type = Predefined::int_type;        context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitLongType(Pcl2Parser::LongTypeContext *context)         { print_debug_context(context, "visitLongType");     current_type = Predefined::long_type;       context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitFloatType(Pcl2Parser::FloatTypeContext *context)       { print_debug_context(context, "visitFloatType");    current_type = Predefined::float_type;      context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitDoubleType(Pcl2Parser::DoubleTypeContext *context)     { print_debug_context(context, "visitDoubleType");   current_type = Predefined::double_type;     context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitSignedType(Pcl2Parser::SignedTypeContext *context)     { print_debug_context(context, "visitSignedType");   current_type = Predefined::signed_type;     context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitUnsignedType(Pcl2Parser::UnsignedTypeContext *context) { print_debug_context(context, "visitUnsignedType"); current_type = Predefined::unsigned_type;   context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitUint32_tType(Pcl2Parser::Uint32_tTypeContext *context) { print_debug_context(context, "visitUint32_tType"); current_type = Predefined::uint32_t_type;   context->type = current_type;   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitInt32_tType(Pcl2Parser::Int32_tTypeContext *context)   { print_debug_context(context, "visitInt32_tType");  current_type = Predefined::int32_t_type;    context->type = current_type;   return visitChildren(context); }
-/// @ }
+antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context)
+{
+    print_debug_context(context, "visitTypeSpecifier");
+
+    return visitChildren(context);
+}
 
 /*////////////////////////////////////////////////////////////
  *                                                           *
  *                   D E C L A R A T I O N S                 *
  *                                                           *
  */////////////////////////////////////////////////////////////
-
-/**
- *  Typical Order:
- *      - BlockItem
- *      - Declaration
- *      - DeclarationSpecifiers
- *      - DeclarationSpecifier
- *      - CharType
- *      - InitDeclaratorList
- *      - InitDeclarator
- *      - Declarator
- *      - DirectDeclarator
- *      - Initializer
- */
-
-antlrcpp::Any Pass1Visitor::visitDirectDeclarator(Pcl2Parser::DirectDeclaratorContext *context)
-{
-    print_debug_context(context, "visitDirectDeclarator");
-
-    // Create a symbol table for a new declaration
-    const string variable_name = context->Identifier()->getText();
-    SymTabEntry * variable_id = symtab_stack->enter_local(variable_name);
-    variable_id->set_definition((Definition) DF_VARIABLE);
-    variable_id->set_typespec(current_type);
-    cout << "\tSymbol table created for : " << variable_name << endl;
-
-    string current_type_indicator = "?";
-
-         if (current_type == (symtabimpl::Predefined::void_type)     ) { current_type_indicator = "V"; }
-    else if (current_type == (symtabimpl::Predefined::bool_type)     ) { current_type_indicator = "B"; }
-    else if (current_type == (symtabimpl::Predefined::char_type)     ) { current_type_indicator = "C"; }
-    else if (current_type == (symtabimpl::Predefined::short_type)    ) { current_type_indicator = "S"; }
-    else if (current_type == (symtabimpl::Predefined::int_type)      ) { current_type_indicator = "I"; }
-    else if (current_type == (symtabimpl::Predefined::long_type)     ) { current_type_indicator = "L"; }
-    else if (current_type == (symtabimpl::Predefined::float_type)    ) { current_type_indicator = "F"; }
-    else if (current_type == (symtabimpl::Predefined::double_type)   ) { current_type_indicator = "D"; }
-    else if (current_type == (symtabimpl::Predefined::signed_type)   ) { current_type_indicator = "I"; }
-    else if (current_type == (symtabimpl::Predefined::unsigned_type) ) { current_type_indicator = "I"; }
-    else if (current_type == (symtabimpl::Predefined::uint32_t_type) ) { current_type_indicator = "I"; }
-    else if (current_type == (symtabimpl::Predefined::int32_t_type)  ) { current_type_indicator = "I"; }
-
-    // Output the variable declaration leaving room for the initial value if there is one
-    j_file << ".field private static "
-           << variable_id->get_name() 
-           << " " 
-           << current_type_indicator
-           << " ";
-
-    // If there is not an initial value, then don't leave room and just print a new line
-    if (!has_initializer)
-    {
-        j_file << endl;
-    }
-
-    return visitChildren(context);
-}
-
 
 antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *context)
 {
@@ -226,55 +175,74 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     // Make a comment as to what the declaration is
     j_file << "\n; " << context->getText() << "\n" << endl;
 
-    return visitChildren(context);
-}
+    TypeSpec * type = nullptr;
+    char type_letter = 0;
 
-antlrcpp::Any Pass1Visitor::visitInitializer(Pcl2Parser::InitializerContext * context)
-{
-    print_debug_context(context, "visitInitializer");
-    // Output initial value, then print the new line waived in DirectDeclarator
-    j_file << context->getText() << "\n" << endl;
+    try
+    { 
+        if (type_map.find(context->typeSpecifier()->getText()) != type_map.end())
+        {
+            cout << TAB << context->typeSpecifier()->getText() << endl;
+            type = *(type_map.at(context->typeSpecifier()->getText()));
+            type_letter = toupper(context->typeSpecifier()->getText()[0]);
+        }
+        else
+        {
+        #ifdef TESTING
+            throw "Type not supported : " + context->getText();
+        #else
+            cerr << "Type not supported : " << context->getText() << endl;
+        #endif
+        }
+    }
+    catch (const string msg)
+    {
+        cerr << msg << endl;
+        exit(-1);
+    }
 
-    return visitChildren(context);
-}
+    string variable_name;
+    string variable_initial_value;
+    
+    if (context->assignmentExpression(0))
+    {
+        cout << TAB << "Has assignment\n";
+        variable_name = context->assignmentExpression(0)->Identifier()->getText();
+    
+        if (context->assignmentExpression(0)->expression())
+        {
+            variable_initial_value = context->assignmentExpression(0)->expression()->getText();
+        }
+    }
+    else
+    {
+        cout << TAB << "No assignment\n";
+        variable_name = context->Identifier(0)->getText();
+    }
 
-antlrcpp::Any Pass1Visitor::visitInitDeclarator(Pcl2Parser::InitDeclaratorContext *context)
-{
-    print_debug_context(context, "visitInitDeclarator"); 
-    // Set flag whether there is an initial value or not
-    has_initializer = (NULL != context->initializer());
+    // Create a symbol table for a new declaration
+    SymTabEntry * variable_id = symtab_stack->enter_local(variable_name);
+    variable_id->set_definition((Definition) DF_VARIABLE);
+    variable_id->set_typespec(type);
+    cout << TAB << "Symbol table created for : " << variable_name << endl;
+
+    // Output the variable declaration leaving room for the initial value if there is one
+    j_file << ".field private static "
+           << variable_name
+           << " " 
+           << type_letter
+           << " "
+           << variable_initial_value
+           << endl;
+
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context)
 {
     print_debug_context(context, "visitFunctionDefinition");
-    next_declaration_is_function = true;
     return visitChildren(context);
 }
-
-/// @ { Currently don't care about these
-antlrcpp::Any Pass1Visitor::visitDeclarator(Pcl2Parser::DeclaratorContext *context)                        { print_debug_context(context, "visitDeclarator");            return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitDeclarationSpecifier(Pcl2Parser::DeclarationSpecifierContext *context)    { print_debug_context(context, "visitDeclarationSpecifier");  return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitDeclarationSpecifiers(Pcl2Parser::DeclarationSpecifiersContext *context)  { print_debug_context(context, "visitDeclarationSpecifiers"); return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitParameterDeclaration(Pcl2Parser::ParameterDeclarationContext *context)    { print_debug_context(context, "visitParameterDeclaration");  return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context)      { print_debug_context(context, "visitExternalDeclaration");   return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitInitDeclaratorList(Pcl2Parser::InitDeclaratorListContext *context)        { print_debug_context(context, "visitInitDeclaratorList");    return visitChildren(context); }
-/// @ }
-
-/*////////////////////////////////////////////////////////////
- *                                                           *
- *                          L I S T S                        *
- *                                                           *
- */////////////////////////////////////////////////////////////
-
-/// @ { Currently don't care about these
-antlrcpp::Any Pass1Visitor::visitParameterTypeList(Pcl2Parser::ParameterTypeListContext *context)   { print_debug_context(context, "visitParameterTypeList"); return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitParameterList(Pcl2Parser::ParameterListContext *context)           { print_debug_context(context, "visitParameterList");     return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitIdentifierList(Pcl2Parser::IdentifierListContext *context)         { print_debug_context(context, "visitIdentifierList");    return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitBlockItemList(Pcl2Parser::BlockItemListContext *context)           { print_debug_context(context, "visitBlockItemList");     return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitBlockItem(Pcl2Parser::BlockItemContext *context)                   { print_debug_context(context, "visitBlockItem");         return visitChildren(context); }
-/// @ }
 
 /*////////////////////////////////////////////////////////////
  *                                                           *
@@ -282,135 +250,105 @@ antlrcpp::Any Pass1Visitor::visitBlockItem(Pcl2Parser::BlockItemContext *context
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-/**
- *  Identifier
- *  primaryExpression
- *  postfixExpression
- *  unaryExpression
- *  multiplicativeExpression
- *  additiveExpression
- *  assignmentExpression
- *  expression
- */
-
-TypeSpec * Pass1Visitor::set_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
+antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 {
-    // If any are double then result is double
-    if (Predefined::double_type == lhs_type || Predefined::double_type == rhs_type)
-    {
-        return Predefined::double_type;
-    }
-    // If any are not real and neither are double then result is real
-    else if (Predefined::real_type == lhs_type || Predefined::real_type == rhs_type)
-    {
-        return Predefined::real_type;
-    }
-    // Otherwise integer
-    else
-    {
-        return Predefined::int32_t_type;
-    }
+    /// Do we need to even support this?
+    print_debug_context(context, "visitPrimExpr");
+    return visitChildren(context);   
 }
 
-antlrcpp::Any Pass1Visitor::visitExpression(Pcl2Parser::ExpressionContext *context)
+antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *context)
 {
-    print_debug_context(context, "visitExpression"); 
-    return visitChildren(context);
+    print_debug_context(context, "visitMulDivExpr");
+    
+    try
+    {
+        if (nullptr != context->opr)
+        {
+            switch (context->opr->getText()[0])
+            {
+                case '*': break; ///< Do nothing for now
+                case '/': break; ///< Do nothing for now
+                case '%': break; ///< Do nothing for now
+                default:
+                    throw "MulDivExpr received impossible operator : " + context->opr->getText()[0];
+                    break;
+            }
+        }
+        else
+        {
+            throw "MulDivExpr missing operator";
+        }
+    }
+    catch (const string msg)
+    {
+        cout << msg << endl;
+        exit(-1);
+    }
+
+    const string lhs_name = context->expression(0)->getText();
+    const string rhs_name = context->expression(1)->getText();
+
+    cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
+
+    return visitChildren(context);   
 }
 
-antlrcpp::Any Pass1Visitor::visitMultiplicativeExpression(Pcl2Parser::MultiplicativeExpressionContext *context)
+antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *context)
 {
-    print_debug_context(context, "visitMultiplicativeExpression");
+    print_debug_context(context, "visitAddminExpr");
 
-    // Only the first multiplicativeExpression has both left and right operands for some reason
-    if (nullptr != context->multiplicativeExpression())
+    try
     {
-        const string lhs_name = context->multiplicativeExpression()->getText();
-        const string rhs_name = context->unaryExpression()->postfixExpression()->getText();
-        
-        cout << TAB << lhs_name << " * " << rhs_name << endl;
-
-        try
+        if (nullptr != context->opr)
         {
-            auto lhs_id = symtab_stack->lookup(lhs_name);
-            auto rhs_id = symtab_stack->lookup(rhs_name);
-
-            if (!lhs_id)
+            switch (context->opr->getText()[0])
             {
-                throw "[ERROR] Could not find symbol : " + lhs_name;
+                case '+': break; ///< Do nothing for now
+                case '-': break; ///< Do nothing for now
+                default:
+                    throw "[visitAddminExpr] received impossible operator : " + context->opr->getText()[0];
+                    break;
             }
-
-            if (!rhs_id)
-            {
-                throw "[ERROR] Could not find symbol : " + rhs_name;
-            }
-
-            context->type = set_expression_type(lhs_id->get_typespec(), rhs_id->get_typespec());
-            cout << TAB << context->type << endl;
         }
-        catch (string msg)
+        else
         {
-            cout << msg << endl;
-            exit(-1);
+            throw "[visitAddminExpr] missing operator";
         }
     }
-
-    return visitChildren(context);
-}
-
-antlrcpp::Any Pass1Visitor::visitAdditiveExpression(Pcl2Parser::AdditiveExpressionContext *context)
-{ 
-    print_debug_context(context, "visitAdditiveExpression"); 
-
-    // Only the first additiveExpression has both left and right operands for some reason
-    if (nullptr != context->additiveExpression())
+    catch (const string msg)
     {
-        const string lhs_name = context->additiveExpression()->getText();
-        const string rhs_name = context->multiplicativeExpression()->unaryExpression()->postfixExpression()->getText();
-        
-        cout << TAB << lhs_name << " + " << rhs_name << endl;
-
-        try
-        {
-            auto lhs_id = symtab_stack->lookup(lhs_name);
-            auto rhs_id = symtab_stack->lookup(rhs_name);
-
-            if (!lhs_id)
-            {
-                throw "[ERROR] Could not find symbol : " + lhs_name;
-            }
-
-            if (!rhs_id)
-            {
-                throw "[ERROR] Could not find symbol : " + rhs_name;
-            }
-
-            context->type = set_expression_type(lhs_id->get_typespec(), rhs_id->get_typespec());
-            cout << TAB << context->type << endl;
-        }
-        catch (string msg)
-        {
-            cout << msg << endl;
-            exit(-1);
-        }
+        cout << msg << endl;
+        exit(-1);
     }
 
-    return visitChildren(context); 
-}
+    const string lhs_name = context->expression(0)->getText();
+    const string rhs_name = context->expression(1)->getText();
 
-/// @ { Currently don't care about these
-antlrcpp::Any Pass1Visitor::visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context)         { print_debug_context(context, "visitPrimaryExpression"); return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitPostfixExpression(Pcl2Parser::PostfixExpressionContext *context)         { print_debug_context(context, "visitPostfixExpression"); return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitUnaryExpression(Pcl2Parser::UnaryExpressionContext *context)             { print_debug_context(context, "visitUnaryExpression"); return visitChildren(context); }
-antlrcpp::Any Pass1Visitor::visitShiftExpression(Pcl2Parser::ShiftExpressionContext *context)             { print_debug_context(context, "visitShiftExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitRelationalExpression(Pcl2Parser::RelationalExpressionContext *context)   { print_debug_context(context, "visitRelationalExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitEqualityExpression(Pcl2Parser::EqualityExpressionContext *context)       { print_debug_context(context, "visitEqualityExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitAndExpression(Pcl2Parser::AndExpressionContext *context)                 { print_debug_context(context, "visitAndExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitExclusiveOrExpression(Pcl2Parser::ExclusiveOrExpressionContext *context) { print_debug_context(context, "visitExclusiveOrExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitInclusiveOrExpression(Pcl2Parser::InclusiveOrExpressionContext *context) { print_debug_context(context, "visitInclusiveOrExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitLogicalAndExpression(Pcl2Parser::LogicalAndExpressionContext *context)   { print_debug_context(context, "visitLogicalAndExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitLogicalOrExpression(Pcl2Parser::LogicalOrExpressionContext *context)     { print_debug_context(context, "visitLogicalOrExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context) { print_debug_context(context, "visitConditionalExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context)   { print_debug_context(context, "visitAssignmentExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-antlrcpp::Any Pass1Visitor::visitForExpression(Pcl2Parser::ForExpressionContext *context)                 { print_debug_context(context, "visitForExpression"); return visitChildren(context); } /// context->type = set_expression_type(context->) return visitChildren(context); };
-/// @ }
+    try
+    {
+        auto lhs_id = symtab_stack->lookup(lhs_name);
+        auto rhs_id = symtab_stack->lookup(rhs_name);
+
+        if (!lhs_id)
+        {
+            throw "[visitAddminExpr] Could not find symbol : " + lhs_name;
+        }
+
+        if (!rhs_id)
+        {
+            throw "[visitAddminExpr] Could not find symbol : " + rhs_name;
+        }
+
+        context->type = set_expression_type(lhs_id->get_typespec(), rhs_id->get_typespec());
+    }
+    catch (string msg)
+    {
+        cout << msg << endl;
+        exit(-1);
+    }
+
+    cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
+
+    return visitChildren(context);   
+}
