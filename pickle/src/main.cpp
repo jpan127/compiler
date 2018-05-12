@@ -5,7 +5,7 @@
 #include "Pcl2Lexer.h"
 #include "Pcl2Parser.h"
 #include "Pass1Visitor.hpp"
-#include "Pass2Visitor.h"
+#include "Pass2Visitor.hpp"
 
 using namespace std;
 using namespace antlrcpp;
@@ -50,8 +50,6 @@ int main(int argc, const char *args[])
     /// Parser
     Pcl2Parser parser(&tokens);
 
-    const std::vector<std::string> & rule_names = parser.getRuleNames();
-
     /// Parse Tree
     tree::ParseTree *tree = parser.compilationUnit();
 
@@ -60,18 +58,26 @@ int main(int argc, const char *args[])
     const string program_name = "HELLOOOOOOO_WORRRRRLD";
 
     /// First Pass
-    Pass1Visitor *pass1 = new Pass1Visitor(program_name, rule_names, true);
+    Pass1Visitor *pass1 = new Pass1Visitor(program_name, true);
     pass1->visit(tree);
 
-    // cout << pass2_msg << endl;
+    cout << pass2_msg << endl;
 
-    // /// Output Stream
-    // ofstream& j_file = pass1->get_assembly_file();
+    /// Output Stream
+    ofstream& j_file = pass1->get_assembly_file();
 
-    // /// Second Pass
-    // Pass2Visitor *pass2 = new Pass2Visitor(program_name, j_file, true);
-    // pass2->visit(tree);
+    /// Second Pass
+    Pass2Visitor *pass2 = new Pass2Visitor(program_name, j_file, true);
+    pass2->visit(tree);
+
+    /// Sanity clean up
+    if (j_file.is_open())
+    {
+        j_file.flush();
+        j_file.close();
+    }
 
     delete tree;
+
     return 0;
 }

@@ -27,11 +27,14 @@ public:
   virtual void enterExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *ctx) = 0;
   virtual void exitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *ctx) = 0;
 
-  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
-  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
-
   virtual void enterFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *ctx) = 0;
   virtual void exitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *ctx) = 0;
+
+  virtual void enterDeclaration(Pcl2Parser::DeclarationContext *ctx) = 0;
+  virtual void exitDeclaration(Pcl2Parser::DeclarationContext *ctx) = 0;
+
+  virtual void enterTypeSpecifier(Pcl2Parser::TypeSpecifierContext *ctx) = 0;
+  virtual void exitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *ctx) = 0;
 
   virtual void enterFunctionCall(Pcl2Parser::FunctionCallContext *ctx) = 0;
   virtual void exitFunctionCall(Pcl2Parser::FunctionCallContext *ctx) = 0;
@@ -66,6 +69,9 @@ public:
   virtual void enterIterationStatement(Pcl2Parser::IterationStatementContext *ctx) = 0;
   virtual void exitIterationStatement(Pcl2Parser::IterationStatementContext *ctx) = 0;
 
+  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
+  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
+
   virtual void enterPrimExpr(Pcl2Parser::PrimExprContext *ctx) = 0;
   virtual void exitPrimExpr(Pcl2Parser::PrimExprContext *ctx) = 0;
 
@@ -75,20 +81,23 @@ public:
   virtual void enterAddminExpr(Pcl2Parser::AddminExprContext *ctx) = 0;
   virtual void exitAddminExpr(Pcl2Parser::AddminExprContext *ctx) = 0;
 
-  virtual void enterConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) = 0;
-  virtual void exitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) = 0;
+  virtual void enterBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *ctx) = 0;
+  virtual void exitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *ctx) = 0;
+
+  virtual void enterNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *ctx) = 0;
+  virtual void exitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *ctx) = 0;
+
+  virtual void enterConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *ctx) = 0;
+  virtual void exitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *ctx) = 0;
+
+  virtual void enterParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *ctx) = 0;
+  virtual void exitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *ctx) = 0;
 
   virtual void enterAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) = 0;
   virtual void exitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *ctx) = 0;
 
-  virtual void enterTypeSpecifier(Pcl2Parser::TypeSpecifierContext *ctx) = 0;
-  virtual void exitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *ctx) = 0;
-
-  virtual void enterParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *ctx) = 0;
-  virtual void exitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *ctx) = 0;
-
-  virtual void enterDeclaration(Pcl2Parser::DeclarationContext *ctx) = 0;
-  virtual void exitDeclaration(Pcl2Parser::DeclarationContext *ctx) = 0;
+  virtual void enterParameterTypeList(Pcl2Parser::ParameterTypeListContext *ctx) = 0;
+  virtual void exitParameterTypeList(Pcl2Parser::ParameterTypeListContext *ctx) = 0;
 
 
 };

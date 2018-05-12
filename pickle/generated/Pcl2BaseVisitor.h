@@ -31,11 +31,15 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *ctx) override {
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *ctx) override {
+  virtual antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -83,6 +87,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *ctx) override {
     return visitChildren(ctx);
   }
@@ -95,7 +103,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *ctx) override {
+  virtual antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -103,15 +123,7 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *ctx) override {
-    return visitChildren(ctx);
-  }
-
-  virtual antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *ctx) override {
+  virtual antlrcpp::Any visitParameterTypeList(Pcl2Parser::ParameterTypeListContext *ctx) override {
     return visitChildren(ctx);
   }
 

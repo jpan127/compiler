@@ -20,15 +20,27 @@ externalDeclaration
     |   Semi
     ;
 
-primaryExpression
-    :   Identifier
-    |   IntegerConstant
-    |   FloatConstant
-    |   LeftParen expression RightParen
+functionDefinition
+    : typeSpecifier Identifier parameterTypeList compoundStatement;
+
+declaration 
+    locals [
+        TypeSpec * type = nullptr, 
+        char type_letter = 0
+    ]
+    :   typeSpecifier Identifier (Comma Identifier)* Semi
+    |   typeSpecifier assignmentExpression (Comma assignmentExpression)* Semi
     ;
 
-functionDefinition
-    : typeSpecifier Identifier paramaterTypeList compoundStatement;
+typeSpecifier
+    :   (Void
+    |   Bool
+    |   Char
+    |   Int
+    |   Float
+    |   Double
+    )
+    ;
 
 functionCall
     : Identifier LeftParen identifierList? RightParen Semi
@@ -42,7 +54,7 @@ identifierList
     : Identifier (Comma Identifier)*
     ;
 
-compoundStatement
+compoundStatement locals [ string scope_name = "Anonymous" ]
     :   LeftBrace blockItemList? RightBrace
     ;
 
@@ -80,16 +92,28 @@ iterationStatement
     :   While LeftParen conditionalExpression RightParen statement
     ;
 
-expression locals [TypeSpec * type = nullptr ]
+primaryExpression
+    :   Identifier
+    |   IntegerConstant
+    |   FloatConstant
+    |   LeftParen expression RightParen
+    ;
+
+expression 
+    locals [
+        TypeSpec * type = nullptr,
+        char expr_operator = 0,
+    ]
     :   expression opr=('*'|'/'|'%') expression # mulDivExpr
     |   expression opr=('+'|'-') expression     # addminExpr
     |   primaryExpression                       # primExpr
     ;
 
 conditionalExpression
-    :   expression ConditionalOperator expression
-    |   conditionalExpression ConditionalConnectOperator conditionalExpression
-    |   Not LeftParen conditionalExpression RightParen
+    :   expression ConditionalOperator expression                               # basicConditionalExpr
+    |   conditionalExpression ConditionalConnectOperator conditionalExpression  # connectedConditionalExpr
+    |   LeftParen conditionalExpression RightParen                              # parenthesizedConditionalExpr
+    |   Not LeftParen conditionalExpression RightParen                          # negatedConditionalExpr
     ;
 
 assignmentExpression
@@ -97,25 +121,14 @@ assignmentExpression
     |   Identifier Assign functionReturn
     ;
 
-typeSpecifier
-    :   (Void
-    |   Bool
-    |   Char
-    |   Int
-    |   Float
-    |   Double
-    )
-    ;
-
-paramaterTypeList
+parameterTypeList
     :   LeftParen (declaration)* RightParen;
 
-declaration locals [TypeSpec * type = nullptr ]
-    :   typeSpecifier Identifier (Comma Identifier)* Semi
-    |   typeSpecifier assignmentExpression (Comma assignmentExpression)* Semi
-    ;
-
-
+/***************************************************
+ *                                                 *
+ *                   Fragments                     *
+ *                                                 *
+ **************************************************/
 
 fragment
 IdentifierNondigit
@@ -249,7 +262,8 @@ Dot              : '.';
 Ellipsis         : '...';
 
 IntegerConstant
-    :   Digit+
+    :   NonzeroDigit Digit+
+    |   '0'
     ;
 
 FloatConstant

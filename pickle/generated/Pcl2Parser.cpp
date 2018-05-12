@@ -292,118 +292,6 @@ Pcl2Parser::ExternalDeclarationContext* Pcl2Parser::externalDeclaration() {
   return _localctx;
 }
 
-//----------------- PrimaryExpressionContext ------------------------------------------------------------------
-
-Pcl2Parser::PrimaryExpressionContext::PrimaryExpressionContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::Identifier() {
-  return getToken(Pcl2Parser::Identifier, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::IntegerConstant() {
-  return getToken(Pcl2Parser::IntegerConstant, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::FloatConstant() {
-  return getToken(Pcl2Parser::FloatConstant, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::LeftParen() {
-  return getToken(Pcl2Parser::LeftParen, 0);
-}
-
-Pcl2Parser::ExpressionContext* Pcl2Parser::PrimaryExpressionContext::expression() {
-  return getRuleContext<Pcl2Parser::ExpressionContext>(0);
-}
-
-tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::RightParen() {
-  return getToken(Pcl2Parser::RightParen, 0);
-}
-
-
-size_t Pcl2Parser::PrimaryExpressionContext::getRuleIndex() const {
-  return Pcl2Parser::RulePrimaryExpression;
-}
-
-void Pcl2Parser::PrimaryExpressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterPrimaryExpression(this);
-}
-
-void Pcl2Parser::PrimaryExpressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitPrimaryExpression(this);
-}
-
-
-antlrcpp::Any Pcl2Parser::PrimaryExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
-    return parserVisitor->visitPrimaryExpression(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-Pcl2Parser::PrimaryExpressionContext* Pcl2Parser::primaryExpression() {
-  PrimaryExpressionContext *_localctx = _tracker.createInstance<PrimaryExpressionContext>(_ctx, getState());
-  enterRule(_localctx, 6, Pcl2Parser::RulePrimaryExpression);
-
-  auto onExit = finally([=] {
-    exitRule();
-  });
-  try {
-    setState(71);
-    _errHandler->sync(this);
-    switch (_input->LA(1)) {
-      case Pcl2Parser::Identifier: {
-        enterOuterAlt(_localctx, 1);
-        setState(64);
-        match(Pcl2Parser::Identifier);
-        break;
-      }
-
-      case Pcl2Parser::IntegerConstant: {
-        enterOuterAlt(_localctx, 2);
-        setState(65);
-        match(Pcl2Parser::IntegerConstant);
-        break;
-      }
-
-      case Pcl2Parser::FloatConstant: {
-        enterOuterAlt(_localctx, 3);
-        setState(66);
-        match(Pcl2Parser::FloatConstant);
-        break;
-      }
-
-      case Pcl2Parser::LeftParen: {
-        enterOuterAlt(_localctx, 4);
-        setState(67);
-        match(Pcl2Parser::LeftParen);
-        setState(68);
-        expression(0);
-        setState(69);
-        match(Pcl2Parser::RightParen);
-        break;
-      }
-
-    default:
-      throw NoViableAltException(this);
-    }
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
 //----------------- FunctionDefinitionContext ------------------------------------------------------------------
 
 Pcl2Parser::FunctionDefinitionContext::FunctionDefinitionContext(ParserRuleContext *parent, size_t invokingState)
@@ -418,8 +306,8 @@ tree::TerminalNode* Pcl2Parser::FunctionDefinitionContext::Identifier() {
   return getToken(Pcl2Parser::Identifier, 0);
 }
 
-Pcl2Parser::ParamaterTypeListContext* Pcl2Parser::FunctionDefinitionContext::paramaterTypeList() {
-  return getRuleContext<Pcl2Parser::ParamaterTypeListContext>(0);
+Pcl2Parser::ParameterTypeListContext* Pcl2Parser::FunctionDefinitionContext::parameterTypeList() {
+  return getRuleContext<Pcl2Parser::ParameterTypeListContext>(0);
 }
 
 Pcl2Parser::CompoundStatementContext* Pcl2Parser::FunctionDefinitionContext::compoundStatement() {
@@ -453,21 +341,245 @@ antlrcpp::Any Pcl2Parser::FunctionDefinitionContext::accept(tree::ParseTreeVisit
 
 Pcl2Parser::FunctionDefinitionContext* Pcl2Parser::functionDefinition() {
   FunctionDefinitionContext *_localctx = _tracker.createInstance<FunctionDefinitionContext>(_ctx, getState());
-  enterRule(_localctx, 8, Pcl2Parser::RuleFunctionDefinition);
+  enterRule(_localctx, 6, Pcl2Parser::RuleFunctionDefinition);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(73);
+    setState(64);
     typeSpecifier();
-    setState(74);
+    setState(65);
     match(Pcl2Parser::Identifier);
-    setState(75);
-    paramaterTypeList();
-    setState(76);
+    setState(66);
+    parameterTypeList();
+    setState(67);
     compoundStatement();
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- DeclarationContext ------------------------------------------------------------------
+
+Pcl2Parser::DeclarationContext::DeclarationContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+Pcl2Parser::TypeSpecifierContext* Pcl2Parser::DeclarationContext::typeSpecifier() {
+  return getRuleContext<Pcl2Parser::TypeSpecifierContext>(0);
+}
+
+std::vector<tree::TerminalNode *> Pcl2Parser::DeclarationContext::Identifier() {
+  return getTokens(Pcl2Parser::Identifier);
+}
+
+tree::TerminalNode* Pcl2Parser::DeclarationContext::Identifier(size_t i) {
+  return getToken(Pcl2Parser::Identifier, i);
+}
+
+tree::TerminalNode* Pcl2Parser::DeclarationContext::Semi() {
+  return getToken(Pcl2Parser::Semi, 0);
+}
+
+std::vector<tree::TerminalNode *> Pcl2Parser::DeclarationContext::Comma() {
+  return getTokens(Pcl2Parser::Comma);
+}
+
+tree::TerminalNode* Pcl2Parser::DeclarationContext::Comma(size_t i) {
+  return getToken(Pcl2Parser::Comma, i);
+}
+
+std::vector<Pcl2Parser::AssignmentExpressionContext *> Pcl2Parser::DeclarationContext::assignmentExpression() {
+  return getRuleContexts<Pcl2Parser::AssignmentExpressionContext>();
+}
+
+Pcl2Parser::AssignmentExpressionContext* Pcl2Parser::DeclarationContext::assignmentExpression(size_t i) {
+  return getRuleContext<Pcl2Parser::AssignmentExpressionContext>(i);
+}
+
+
+size_t Pcl2Parser::DeclarationContext::getRuleIndex() const {
+  return Pcl2Parser::RuleDeclaration;
+}
+
+void Pcl2Parser::DeclarationContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterDeclaration(this);
+}
+
+void Pcl2Parser::DeclarationContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitDeclaration(this);
+}
+
+
+antlrcpp::Any Pcl2Parser::DeclarationContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
+    return parserVisitor->visitDeclaration(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+Pcl2Parser::DeclarationContext* Pcl2Parser::declaration() {
+  DeclarationContext *_localctx = _tracker.createInstance<DeclarationContext>(_ctx, getState());
+  enterRule(_localctx, 8, Pcl2Parser::RuleDeclaration);
+  size_t _la = 0;
+
+  auto onExit = finally([=] {
+    exitRule();
+  });
+  try {
+    setState(91);
+    _errHandler->sync(this);
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 5, _ctx)) {
+    case 1: {
+      enterOuterAlt(_localctx, 1);
+      setState(69);
+      typeSpecifier();
+      setState(70);
+      match(Pcl2Parser::Identifier);
+      setState(75);
+      _errHandler->sync(this);
+      _la = _input->LA(1);
+      while (_la == Pcl2Parser::Comma) {
+        setState(71);
+        match(Pcl2Parser::Comma);
+        setState(72);
+        match(Pcl2Parser::Identifier);
+        setState(77);
+        _errHandler->sync(this);
+        _la = _input->LA(1);
+      }
+      setState(78);
+      match(Pcl2Parser::Semi);
+      break;
+    }
+
+    case 2: {
+      enterOuterAlt(_localctx, 2);
+      setState(80);
+      typeSpecifier();
+      setState(81);
+      assignmentExpression();
+      setState(86);
+      _errHandler->sync(this);
+      _la = _input->LA(1);
+      while (_la == Pcl2Parser::Comma) {
+        setState(82);
+        match(Pcl2Parser::Comma);
+        setState(83);
+        assignmentExpression();
+        setState(88);
+        _errHandler->sync(this);
+        _la = _input->LA(1);
+      }
+      setState(89);
+      match(Pcl2Parser::Semi);
+      break;
+    }
+
+    }
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- TypeSpecifierContext ------------------------------------------------------------------
+
+Pcl2Parser::TypeSpecifierContext::TypeSpecifierContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Void() {
+  return getToken(Pcl2Parser::Void, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Bool() {
+  return getToken(Pcl2Parser::Bool, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Char() {
+  return getToken(Pcl2Parser::Char, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Int() {
+  return getToken(Pcl2Parser::Int, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Float() {
+  return getToken(Pcl2Parser::Float, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Double() {
+  return getToken(Pcl2Parser::Double, 0);
+}
+
+
+size_t Pcl2Parser::TypeSpecifierContext::getRuleIndex() const {
+  return Pcl2Parser::RuleTypeSpecifier;
+}
+
+void Pcl2Parser::TypeSpecifierContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterTypeSpecifier(this);
+}
+
+void Pcl2Parser::TypeSpecifierContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitTypeSpecifier(this);
+}
+
+
+antlrcpp::Any Pcl2Parser::TypeSpecifierContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
+    return parserVisitor->visitTypeSpecifier(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+Pcl2Parser::TypeSpecifierContext* Pcl2Parser::typeSpecifier() {
+  TypeSpecifierContext *_localctx = _tracker.createInstance<TypeSpecifierContext>(_ctx, getState());
+  enterRule(_localctx, 10, Pcl2Parser::RuleTypeSpecifier);
+  size_t _la = 0;
+
+  auto onExit = finally([=] {
+    exitRule();
+  });
+  try {
+    enterOuterAlt(_localctx, 1);
+    setState(93);
+    _la = _input->LA(1);
+    if (!((((_la & ~ 0x3fULL) == 0) &&
+      ((1ULL << _la) & ((1ULL << Pcl2Parser::Char)
+      | (1ULL << Pcl2Parser::Bool)
+      | (1ULL << Pcl2Parser::Double)
+      | (1ULL << Pcl2Parser::Float)
+      | (1ULL << Pcl2Parser::Int)
+      | (1ULL << Pcl2Parser::Void))) != 0))) {
+    _errHandler->recoverInline(this);
+    }
+    else {
+      _errHandler->reportMatch(this);
+      consume();
+    }
    
   }
   catch (RecognitionException &e) {
@@ -532,7 +644,7 @@ antlrcpp::Any Pcl2Parser::FunctionCallContext::accept(tree::ParseTreeVisitor *vi
 
 Pcl2Parser::FunctionCallContext* Pcl2Parser::functionCall() {
   FunctionCallContext *_localctx = _tracker.createInstance<FunctionCallContext>(_ctx, getState());
-  enterRule(_localctx, 10, Pcl2Parser::RuleFunctionCall);
+  enterRule(_localctx, 12, Pcl2Parser::RuleFunctionCall);
   size_t _la = 0;
 
   auto onExit = finally([=] {
@@ -540,21 +652,21 @@ Pcl2Parser::FunctionCallContext* Pcl2Parser::functionCall() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(78);
+    setState(95);
     match(Pcl2Parser::Identifier);
-    setState(79);
+    setState(96);
     match(Pcl2Parser::LeftParen);
-    setState(81);
+    setState(98);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Pcl2Parser::Identifier) {
-      setState(80);
+      setState(97);
       identifierList();
     }
-    setState(83);
+    setState(100);
     match(Pcl2Parser::RightParen);
-    setState(84);
+    setState(101);
     match(Pcl2Parser::Semi);
    
   }
@@ -616,7 +728,7 @@ antlrcpp::Any Pcl2Parser::FunctionReturnContext::accept(tree::ParseTreeVisitor *
 
 Pcl2Parser::FunctionReturnContext* Pcl2Parser::functionReturn() {
   FunctionReturnContext *_localctx = _tracker.createInstance<FunctionReturnContext>(_ctx, getState());
-  enterRule(_localctx, 12, Pcl2Parser::RuleFunctionReturn);
+  enterRule(_localctx, 14, Pcl2Parser::RuleFunctionReturn);
   size_t _la = 0;
 
   auto onExit = finally([=] {
@@ -624,19 +736,19 @@ Pcl2Parser::FunctionReturnContext* Pcl2Parser::functionReturn() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(86);
+    setState(103);
     match(Pcl2Parser::Identifier);
-    setState(87);
+    setState(104);
     match(Pcl2Parser::LeftParen);
-    setState(89);
+    setState(106);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
     if (_la == Pcl2Parser::Identifier) {
-      setState(88);
+      setState(105);
       identifierList();
     }
-    setState(91);
+    setState(108);
     match(Pcl2Parser::RightParen);
    
   }
@@ -698,7 +810,7 @@ antlrcpp::Any Pcl2Parser::IdentifierListContext::accept(tree::ParseTreeVisitor *
 
 Pcl2Parser::IdentifierListContext* Pcl2Parser::identifierList() {
   IdentifierListContext *_localctx = _tracker.createInstance<IdentifierListContext>(_ctx, getState());
-  enterRule(_localctx, 14, Pcl2Parser::RuleIdentifierList);
+  enterRule(_localctx, 16, Pcl2Parser::RuleIdentifierList);
   size_t _la = 0;
 
   auto onExit = finally([=] {
@@ -706,17 +818,17 @@ Pcl2Parser::IdentifierListContext* Pcl2Parser::identifierList() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(93);
+    setState(110);
     match(Pcl2Parser::Identifier);
-    setState(98);
+    setState(115);
     _errHandler->sync(this);
     _la = _input->LA(1);
     while (_la == Pcl2Parser::Comma) {
-      setState(94);
+      setState(111);
       match(Pcl2Parser::Comma);
-      setState(95);
+      setState(112);
       match(Pcl2Parser::Identifier);
-      setState(100);
+      setState(117);
       _errHandler->sync(this);
       _la = _input->LA(1);
     }
@@ -776,7 +888,7 @@ antlrcpp::Any Pcl2Parser::CompoundStatementContext::accept(tree::ParseTreeVisito
 
 Pcl2Parser::CompoundStatementContext* Pcl2Parser::compoundStatement() {
   CompoundStatementContext *_localctx = _tracker.createInstance<CompoundStatementContext>(_ctx, getState());
-  enterRule(_localctx, 16, Pcl2Parser::RuleCompoundStatement);
+  enterRule(_localctx, 18, Pcl2Parser::RuleCompoundStatement);
   size_t _la = 0;
 
   auto onExit = finally([=] {
@@ -784,9 +896,9 @@ Pcl2Parser::CompoundStatementContext* Pcl2Parser::compoundStatement() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(101);
+    setState(118);
     match(Pcl2Parser::LeftBrace);
-    setState(103);
+    setState(120);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
@@ -805,10 +917,10 @@ Pcl2Parser::CompoundStatementContext* Pcl2Parser::compoundStatement() {
       ((1ULL << (_la - 79)) & ((1ULL << (Pcl2Parser::IntegerConstant - 79))
       | (1ULL << (Pcl2Parser::FloatConstant - 79))
       | (1ULL << (Pcl2Parser::Identifier - 79)))) != 0)) {
-      setState(102);
+      setState(119);
       blockItemList(0);
     }
-    setState(105);
+    setState(122);
     match(Pcl2Parser::RightBrace);
    
   }
@@ -870,8 +982,8 @@ Pcl2Parser::BlockItemListContext* Pcl2Parser::blockItemList(int precedence) {
   size_t parentState = getState();
   Pcl2Parser::BlockItemListContext *_localctx = _tracker.createInstance<BlockItemListContext>(_ctx, parentState);
   Pcl2Parser::BlockItemListContext *previousContext = _localctx;
-  size_t startState = 18;
-  enterRecursionRule(_localctx, 18, Pcl2Parser::RuleBlockItemList, precedence);
+  size_t startState = 20;
+  enterRecursionRule(_localctx, 20, Pcl2Parser::RuleBlockItemList, precedence);
 
     
 
@@ -881,12 +993,12 @@ Pcl2Parser::BlockItemListContext* Pcl2Parser::blockItemList(int precedence) {
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(108);
+    setState(125);
     blockItem();
     _ctx->stop = _input->LT(-1);
-    setState(114);
+    setState(131);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 8, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
@@ -894,15 +1006,15 @@ Pcl2Parser::BlockItemListContext* Pcl2Parser::blockItemList(int precedence) {
         previousContext = _localctx;
         _localctx = _tracker.createInstance<BlockItemListContext>(parentContext, parentState);
         pushNewRecursionContext(_localctx, startState, RuleBlockItemList);
-        setState(110);
+        setState(127);
 
         if (!(precpred(_ctx, 1))) throw FailedPredicateException(this, "precpred(_ctx, 1)");
-        setState(111);
+        setState(128);
         blockItem(); 
       }
-      setState(116);
+      setState(133);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 8, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -954,13 +1066,13 @@ antlrcpp::Any Pcl2Parser::BlockItemContext::accept(tree::ParseTreeVisitor *visit
 
 Pcl2Parser::BlockItemContext* Pcl2Parser::blockItem() {
   BlockItemContext *_localctx = _tracker.createInstance<BlockItemContext>(_ctx, getState());
-  enterRule(_localctx, 20, Pcl2Parser::RuleBlockItem);
+  enterRule(_localctx, 22, Pcl2Parser::RuleBlockItem);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    setState(119);
+    setState(136);
     _errHandler->sync(this);
     switch (_input->LA(1)) {
       case Pcl2Parser::If:
@@ -972,7 +1084,7 @@ Pcl2Parser::BlockItemContext* Pcl2Parser::blockItem() {
       case Pcl2Parser::FloatConstant:
       case Pcl2Parser::Identifier: {
         enterOuterAlt(_localctx, 1);
-        setState(117);
+        setState(134);
         statement();
         break;
       }
@@ -984,7 +1096,7 @@ Pcl2Parser::BlockItemContext* Pcl2Parser::blockItem() {
       case Pcl2Parser::Int:
       case Pcl2Parser::Void: {
         enterOuterAlt(_localctx, 2);
-        setState(118);
+        setState(135);
         declaration();
         break;
       }
@@ -1056,46 +1168,46 @@ antlrcpp::Any Pcl2Parser::StatementContext::accept(tree::ParseTreeVisitor *visit
 
 Pcl2Parser::StatementContext* Pcl2Parser::statement() {
   StatementContext *_localctx = _tracker.createInstance<StatementContext>(_ctx, getState());
-  enterRule(_localctx, 22, Pcl2Parser::RuleStatement);
+  enterRule(_localctx, 24, Pcl2Parser::RuleStatement);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    setState(126);
+    setState(143);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 10, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 12, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(121);
+      setState(138);
       compoundStatement();
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(122);
+      setState(139);
       expressionStatement();
       break;
     }
 
     case 3: {
       enterOuterAlt(_localctx, 3);
-      setState(123);
+      setState(140);
       selectionStatement();
       break;
     }
 
     case 4: {
       enterOuterAlt(_localctx, 4);
-      setState(124);
+      setState(141);
       iterationStatement();
       break;
     }
 
     case 5: {
       enterOuterAlt(_localctx, 5);
-      setState(125);
+      setState(142);
       assignmentStatement();
       break;
     }
@@ -1153,16 +1265,16 @@ antlrcpp::Any Pcl2Parser::AssignmentStatementContext::accept(tree::ParseTreeVisi
 
 Pcl2Parser::AssignmentStatementContext* Pcl2Parser::assignmentStatement() {
   AssignmentStatementContext *_localctx = _tracker.createInstance<AssignmentStatementContext>(_ctx, getState());
-  enterRule(_localctx, 24, Pcl2Parser::RuleAssignmentStatement);
+  enterRule(_localctx, 26, Pcl2Parser::RuleAssignmentStatement);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(128);
+    setState(145);
     assignmentExpression();
-    setState(129);
+    setState(146);
     match(Pcl2Parser::Semi);
    
   }
@@ -1216,7 +1328,7 @@ antlrcpp::Any Pcl2Parser::ExpressionStatementContext::accept(tree::ParseTreeVisi
 
 Pcl2Parser::ExpressionStatementContext* Pcl2Parser::expressionStatement() {
   ExpressionStatementContext *_localctx = _tracker.createInstance<ExpressionStatementContext>(_ctx, getState());
-  enterRule(_localctx, 26, Pcl2Parser::RuleExpressionStatement);
+  enterRule(_localctx, 28, Pcl2Parser::RuleExpressionStatement);
   size_t _la = 0;
 
   auto onExit = finally([=] {
@@ -1224,7 +1336,7 @@ Pcl2Parser::ExpressionStatementContext* Pcl2Parser::expressionStatement() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(132);
+    setState(149);
     _errHandler->sync(this);
 
     _la = _input->LA(1);
@@ -1233,10 +1345,10 @@ Pcl2Parser::ExpressionStatementContext* Pcl2Parser::expressionStatement() {
       | (1ULL << (Pcl2Parser::IntegerConstant - 37))
       | (1ULL << (Pcl2Parser::FloatConstant - 37))
       | (1ULL << (Pcl2Parser::Identifier - 37)))) != 0)) {
-      setState(131);
+      setState(148);
       expression(0);
     }
-    setState(134);
+    setState(151);
     match(Pcl2Parser::Semi);
    
   }
@@ -1302,22 +1414,22 @@ antlrcpp::Any Pcl2Parser::SelectionStatementContext::accept(tree::ParseTreeVisit
 
 Pcl2Parser::SelectionStatementContext* Pcl2Parser::selectionStatement() {
   SelectionStatementContext *_localctx = _tracker.createInstance<SelectionStatementContext>(_ctx, getState());
-  enterRule(_localctx, 28, Pcl2Parser::RuleSelectionStatement);
+  enterRule(_localctx, 30, Pcl2Parser::RuleSelectionStatement);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(136);
+    setState(153);
     match(Pcl2Parser::If);
-    setState(137);
+    setState(154);
     match(Pcl2Parser::LeftParen);
-    setState(138);
+    setState(155);
     conditionalExpression(0);
-    setState(139);
+    setState(156);
     match(Pcl2Parser::RightParen);
-    setState(140);
+    setState(157);
     statement();
    
   }
@@ -1383,23 +1495,135 @@ antlrcpp::Any Pcl2Parser::IterationStatementContext::accept(tree::ParseTreeVisit
 
 Pcl2Parser::IterationStatementContext* Pcl2Parser::iterationStatement() {
   IterationStatementContext *_localctx = _tracker.createInstance<IterationStatementContext>(_ctx, getState());
-  enterRule(_localctx, 30, Pcl2Parser::RuleIterationStatement);
+  enterRule(_localctx, 32, Pcl2Parser::RuleIterationStatement);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(142);
+    setState(159);
     match(Pcl2Parser::While);
-    setState(143);
+    setState(160);
     match(Pcl2Parser::LeftParen);
-    setState(144);
+    setState(161);
     conditionalExpression(0);
-    setState(145);
+    setState(162);
     match(Pcl2Parser::RightParen);
-    setState(146);
+    setState(163);
     statement();
+   
+  }
+  catch (RecognitionException &e) {
+    _errHandler->reportError(this, e);
+    _localctx->exception = std::current_exception();
+    _errHandler->recover(this, _localctx->exception);
+  }
+
+  return _localctx;
+}
+
+//----------------- PrimaryExpressionContext ------------------------------------------------------------------
+
+Pcl2Parser::PrimaryExpressionContext::PrimaryExpressionContext(ParserRuleContext *parent, size_t invokingState)
+  : ParserRuleContext(parent, invokingState) {
+}
+
+tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::Identifier() {
+  return getToken(Pcl2Parser::Identifier, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::IntegerConstant() {
+  return getToken(Pcl2Parser::IntegerConstant, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::FloatConstant() {
+  return getToken(Pcl2Parser::FloatConstant, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::LeftParen() {
+  return getToken(Pcl2Parser::LeftParen, 0);
+}
+
+Pcl2Parser::ExpressionContext* Pcl2Parser::PrimaryExpressionContext::expression() {
+  return getRuleContext<Pcl2Parser::ExpressionContext>(0);
+}
+
+tree::TerminalNode* Pcl2Parser::PrimaryExpressionContext::RightParen() {
+  return getToken(Pcl2Parser::RightParen, 0);
+}
+
+
+size_t Pcl2Parser::PrimaryExpressionContext::getRuleIndex() const {
+  return Pcl2Parser::RulePrimaryExpression;
+}
+
+void Pcl2Parser::PrimaryExpressionContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterPrimaryExpression(this);
+}
+
+void Pcl2Parser::PrimaryExpressionContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitPrimaryExpression(this);
+}
+
+
+antlrcpp::Any Pcl2Parser::PrimaryExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
+    return parserVisitor->visitPrimaryExpression(this);
+  else
+    return visitor->visitChildren(this);
+}
+
+Pcl2Parser::PrimaryExpressionContext* Pcl2Parser::primaryExpression() {
+  PrimaryExpressionContext *_localctx = _tracker.createInstance<PrimaryExpressionContext>(_ctx, getState());
+  enterRule(_localctx, 34, Pcl2Parser::RulePrimaryExpression);
+
+  auto onExit = finally([=] {
+    exitRule();
+  });
+  try {
+    setState(172);
+    _errHandler->sync(this);
+    switch (_input->LA(1)) {
+      case Pcl2Parser::Identifier: {
+        enterOuterAlt(_localctx, 1);
+        setState(165);
+        match(Pcl2Parser::Identifier);
+        break;
+      }
+
+      case Pcl2Parser::IntegerConstant: {
+        enterOuterAlt(_localctx, 2);
+        setState(166);
+        match(Pcl2Parser::IntegerConstant);
+        break;
+      }
+
+      case Pcl2Parser::FloatConstant: {
+        enterOuterAlt(_localctx, 3);
+        setState(167);
+        match(Pcl2Parser::FloatConstant);
+        break;
+      }
+
+      case Pcl2Parser::LeftParen: {
+        enterOuterAlt(_localctx, 4);
+        setState(168);
+        match(Pcl2Parser::LeftParen);
+        setState(169);
+        expression(0);
+        setState(170);
+        match(Pcl2Parser::RightParen);
+        break;
+      }
+
+    default:
+      throw NoViableAltException(this);
+    }
    
   }
   catch (RecognitionException &e) {
@@ -1425,6 +1649,7 @@ size_t Pcl2Parser::ExpressionContext::getRuleIndex() const {
 void Pcl2Parser::ExpressionContext::copyFrom(ExpressionContext *ctx) {
   ParserRuleContext::copyFrom(ctx);
   this->type = ctx->type;
+  this->expr_operator = ctx->expr_operator;
 }
 
 //----------------- PrimExprContext ------------------------------------------------------------------
@@ -1520,8 +1745,8 @@ Pcl2Parser::ExpressionContext* Pcl2Parser::expression(int precedence) {
   size_t parentState = getState();
   Pcl2Parser::ExpressionContext *_localctx = _tracker.createInstance<ExpressionContext>(_ctx, parentState);
   Pcl2Parser::ExpressionContext *previousContext = _localctx;
-  size_t startState = 32;
-  enterRecursionRule(_localctx, 32, Pcl2Parser::RuleExpression, precedence);
+  size_t startState = 36;
+  enterRecursionRule(_localctx, 36, Pcl2Parser::RuleExpression, precedence);
 
     size_t _la = 0;
 
@@ -1535,28 +1760,28 @@ Pcl2Parser::ExpressionContext* Pcl2Parser::expression(int precedence) {
     _ctx = _localctx;
     previousContext = _localctx;
 
-    setState(149);
+    setState(175);
     primaryExpression();
     _ctx->stop = _input->LT(-1);
-    setState(159);
+    setState(185);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 13, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 16, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        setState(157);
+        setState(183);
         _errHandler->sync(this);
-        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 12, _ctx)) {
+        switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 15, _ctx)) {
         case 1: {
           auto newContext = _tracker.createInstance<MulDivExprContext>(_tracker.createInstance<ExpressionContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpression);
-          setState(151);
+          setState(177);
 
           if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
-          setState(152);
+          setState(178);
           dynamic_cast<MulDivExprContext *>(_localctx)->opr = _input->LT(1);
           _la = _input->LA(1);
           if (!((((_la & ~ 0x3fULL) == 0) &&
@@ -1569,7 +1794,7 @@ Pcl2Parser::ExpressionContext* Pcl2Parser::expression(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(153);
+          setState(179);
           expression(4);
           break;
         }
@@ -1578,10 +1803,10 @@ Pcl2Parser::ExpressionContext* Pcl2Parser::expression(int precedence) {
           auto newContext = _tracker.createInstance<AddminExprContext>(_tracker.createInstance<ExpressionContext>(parentContext, parentState));
           _localctx = newContext;
           pushNewRecursionContext(newContext, startState, RuleExpression);
-          setState(154);
+          setState(180);
 
           if (!(precpred(_ctx, 2))) throw FailedPredicateException(this, "precpred(_ctx, 2)");
-          setState(155);
+          setState(181);
           dynamic_cast<AddminExprContext *>(_localctx)->opr = _input->LT(1);
           _la = _input->LA(1);
           if (!(_la == Pcl2Parser::Plus
@@ -1593,16 +1818,16 @@ Pcl2Parser::ExpressionContext* Pcl2Parser::expression(int precedence) {
             _errHandler->reportMatch(this);
             consume();
           }
-          setState(156);
+          setState(182);
           expression(3);
           break;
         }
 
         } 
       }
-      setState(161);
+      setState(187);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 13, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 16, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -1619,67 +1844,151 @@ Pcl2Parser::ConditionalExpressionContext::ConditionalExpressionContext(ParserRul
   : ParserRuleContext(parent, invokingState) {
 }
 
-std::vector<Pcl2Parser::ExpressionContext *> Pcl2Parser::ConditionalExpressionContext::expression() {
-  return getRuleContexts<Pcl2Parser::ExpressionContext>();
-}
-
-Pcl2Parser::ExpressionContext* Pcl2Parser::ConditionalExpressionContext::expression(size_t i) {
-  return getRuleContext<Pcl2Parser::ExpressionContext>(i);
-}
-
-tree::TerminalNode* Pcl2Parser::ConditionalExpressionContext::ConditionalOperator() {
-  return getToken(Pcl2Parser::ConditionalOperator, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::ConditionalExpressionContext::Not() {
-  return getToken(Pcl2Parser::Not, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::ConditionalExpressionContext::LeftParen() {
-  return getToken(Pcl2Parser::LeftParen, 0);
-}
-
-std::vector<Pcl2Parser::ConditionalExpressionContext *> Pcl2Parser::ConditionalExpressionContext::conditionalExpression() {
-  return getRuleContexts<Pcl2Parser::ConditionalExpressionContext>();
-}
-
-Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::ConditionalExpressionContext::conditionalExpression(size_t i) {
-  return getRuleContext<Pcl2Parser::ConditionalExpressionContext>(i);
-}
-
-tree::TerminalNode* Pcl2Parser::ConditionalExpressionContext::RightParen() {
-  return getToken(Pcl2Parser::RightParen, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::ConditionalExpressionContext::ConditionalConnectOperator() {
-  return getToken(Pcl2Parser::ConditionalConnectOperator, 0);
-}
-
 
 size_t Pcl2Parser::ConditionalExpressionContext::getRuleIndex() const {
   return Pcl2Parser::RuleConditionalExpression;
 }
 
-void Pcl2Parser::ConditionalExpressionContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterConditionalExpression(this);
+void Pcl2Parser::ConditionalExpressionContext::copyFrom(ConditionalExpressionContext *ctx) {
+  ParserRuleContext::copyFrom(ctx);
 }
 
-void Pcl2Parser::ConditionalExpressionContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitConditionalExpression(this);
+//----------------- BasicConditionalExprContext ------------------------------------------------------------------
+
+std::vector<Pcl2Parser::ExpressionContext *> Pcl2Parser::BasicConditionalExprContext::expression() {
+  return getRuleContexts<Pcl2Parser::ExpressionContext>();
 }
 
+Pcl2Parser::ExpressionContext* Pcl2Parser::BasicConditionalExprContext::expression(size_t i) {
+  return getRuleContext<Pcl2Parser::ExpressionContext>(i);
+}
 
-antlrcpp::Any Pcl2Parser::ConditionalExpressionContext::accept(tree::ParseTreeVisitor *visitor) {
+tree::TerminalNode* Pcl2Parser::BasicConditionalExprContext::ConditionalOperator() {
+  return getToken(Pcl2Parser::ConditionalOperator, 0);
+}
+
+Pcl2Parser::BasicConditionalExprContext::BasicConditionalExprContext(ConditionalExpressionContext *ctx) { copyFrom(ctx); }
+
+void Pcl2Parser::BasicConditionalExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterBasicConditionalExpr(this);
+}
+void Pcl2Parser::BasicConditionalExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitBasicConditionalExpr(this);
+}
+
+antlrcpp::Any Pcl2Parser::BasicConditionalExprContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
-    return parserVisitor->visitConditionalExpression(this);
+    return parserVisitor->visitBasicConditionalExpr(this);
   else
     return visitor->visitChildren(this);
 }
+//----------------- NegatedConditionalExprContext ------------------------------------------------------------------
 
+tree::TerminalNode* Pcl2Parser::NegatedConditionalExprContext::Not() {
+  return getToken(Pcl2Parser::Not, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::NegatedConditionalExprContext::LeftParen() {
+  return getToken(Pcl2Parser::LeftParen, 0);
+}
+
+Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::NegatedConditionalExprContext::conditionalExpression() {
+  return getRuleContext<Pcl2Parser::ConditionalExpressionContext>(0);
+}
+
+tree::TerminalNode* Pcl2Parser::NegatedConditionalExprContext::RightParen() {
+  return getToken(Pcl2Parser::RightParen, 0);
+}
+
+Pcl2Parser::NegatedConditionalExprContext::NegatedConditionalExprContext(ConditionalExpressionContext *ctx) { copyFrom(ctx); }
+
+void Pcl2Parser::NegatedConditionalExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterNegatedConditionalExpr(this);
+}
+void Pcl2Parser::NegatedConditionalExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitNegatedConditionalExpr(this);
+}
+
+antlrcpp::Any Pcl2Parser::NegatedConditionalExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
+    return parserVisitor->visitNegatedConditionalExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- ConnectedConditionalExprContext ------------------------------------------------------------------
+
+std::vector<Pcl2Parser::ConditionalExpressionContext *> Pcl2Parser::ConnectedConditionalExprContext::conditionalExpression() {
+  return getRuleContexts<Pcl2Parser::ConditionalExpressionContext>();
+}
+
+Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::ConnectedConditionalExprContext::conditionalExpression(size_t i) {
+  return getRuleContext<Pcl2Parser::ConditionalExpressionContext>(i);
+}
+
+tree::TerminalNode* Pcl2Parser::ConnectedConditionalExprContext::ConditionalConnectOperator() {
+  return getToken(Pcl2Parser::ConditionalConnectOperator, 0);
+}
+
+Pcl2Parser::ConnectedConditionalExprContext::ConnectedConditionalExprContext(ConditionalExpressionContext *ctx) { copyFrom(ctx); }
+
+void Pcl2Parser::ConnectedConditionalExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterConnectedConditionalExpr(this);
+}
+void Pcl2Parser::ConnectedConditionalExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitConnectedConditionalExpr(this);
+}
+
+antlrcpp::Any Pcl2Parser::ConnectedConditionalExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
+    return parserVisitor->visitConnectedConditionalExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
+//----------------- ParenthesizedConditionalExprContext ------------------------------------------------------------------
+
+tree::TerminalNode* Pcl2Parser::ParenthesizedConditionalExprContext::LeftParen() {
+  return getToken(Pcl2Parser::LeftParen, 0);
+}
+
+Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::ParenthesizedConditionalExprContext::conditionalExpression() {
+  return getRuleContext<Pcl2Parser::ConditionalExpressionContext>(0);
+}
+
+tree::TerminalNode* Pcl2Parser::ParenthesizedConditionalExprContext::RightParen() {
+  return getToken(Pcl2Parser::RightParen, 0);
+}
+
+Pcl2Parser::ParenthesizedConditionalExprContext::ParenthesizedConditionalExprContext(ConditionalExpressionContext *ctx) { copyFrom(ctx); }
+
+void Pcl2Parser::ParenthesizedConditionalExprContext::enterRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->enterParenthesizedConditionalExpr(this);
+}
+void Pcl2Parser::ParenthesizedConditionalExprContext::exitRule(tree::ParseTreeListener *listener) {
+  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
+  if (parserListener != nullptr)
+    parserListener->exitParenthesizedConditionalExpr(this);
+}
+
+antlrcpp::Any Pcl2Parser::ParenthesizedConditionalExprContext::accept(tree::ParseTreeVisitor *visitor) {
+  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
+    return parserVisitor->visitParenthesizedConditionalExpr(this);
+  else
+    return visitor->visitChildren(this);
+}
 
 Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::conditionalExpression() {
    return conditionalExpression(0);
@@ -1690,8 +1999,8 @@ Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::conditionalExpression(int 
   size_t parentState = getState();
   Pcl2Parser::ConditionalExpressionContext *_localctx = _tracker.createInstance<ConditionalExpressionContext>(_ctx, parentState);
   Pcl2Parser::ConditionalExpressionContext *previousContext = _localctx;
-  size_t startState = 34;
-  enterRecursionRule(_localctx, 34, Pcl2Parser::RuleConditionalExpression, precedence);
+  size_t startState = 38;
+  enterRecursionRule(_localctx, 38, Pcl2Parser::RuleConditionalExpression, precedence);
 
     
 
@@ -1701,59 +2010,75 @@ Pcl2Parser::ConditionalExpressionContext* Pcl2Parser::conditionalExpression(int 
   try {
     size_t alt;
     enterOuterAlt(_localctx, 1);
-    setState(172);
+    setState(202);
     _errHandler->sync(this);
-    switch (_input->LA(1)) {
-      case Pcl2Parser::LeftParen:
-      case Pcl2Parser::IntegerConstant:
-      case Pcl2Parser::FloatConstant:
-      case Pcl2Parser::Identifier: {
-        setState(163);
-        expression(0);
-        setState(164);
-        match(Pcl2Parser::ConditionalOperator);
-        setState(165);
-        expression(0);
-        break;
-      }
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 17, _ctx)) {
+    case 1: {
+      _localctx = _tracker.createInstance<BasicConditionalExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
 
-      case Pcl2Parser::Not: {
-        setState(167);
-        match(Pcl2Parser::Not);
-        setState(168);
-        match(Pcl2Parser::LeftParen);
-        setState(169);
-        conditionalExpression(0);
-        setState(170);
-        match(Pcl2Parser::RightParen);
-        break;
-      }
+      setState(189);
+      expression(0);
+      setState(190);
+      match(Pcl2Parser::ConditionalOperator);
+      setState(191);
+      expression(0);
+      break;
+    }
 
-    default:
-      throw NoViableAltException(this);
+    case 2: {
+      _localctx = _tracker.createInstance<ParenthesizedConditionalExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(193);
+      match(Pcl2Parser::LeftParen);
+      setState(194);
+      conditionalExpression(0);
+      setState(195);
+      match(Pcl2Parser::RightParen);
+      break;
+    }
+
+    case 3: {
+      _localctx = _tracker.createInstance<NegatedConditionalExprContext>(_localctx);
+      _ctx = _localctx;
+      previousContext = _localctx;
+      setState(197);
+      match(Pcl2Parser::Not);
+      setState(198);
+      match(Pcl2Parser::LeftParen);
+      setState(199);
+      conditionalExpression(0);
+      setState(200);
+      match(Pcl2Parser::RightParen);
+      break;
+    }
+
     }
     _ctx->stop = _input->LT(-1);
-    setState(179);
+    setState(209);
     _errHandler->sync(this);
-    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 15, _ctx);
+    alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 18, _ctx);
     while (alt != 2 && alt != atn::ATN::INVALID_ALT_NUMBER) {
       if (alt == 1) {
         if (!_parseListeners.empty())
           triggerExitRuleEvent();
         previousContext = _localctx;
-        _localctx = _tracker.createInstance<ConditionalExpressionContext>(parentContext, parentState);
-        pushNewRecursionContext(_localctx, startState, RuleConditionalExpression);
-        setState(174);
+        auto newContext = _tracker.createInstance<ConnectedConditionalExprContext>(_tracker.createInstance<ConditionalExpressionContext>(parentContext, parentState));
+        _localctx = newContext;
+        pushNewRecursionContext(newContext, startState, RuleConditionalExpression);
+        setState(204);
 
-        if (!(precpred(_ctx, 2))) throw FailedPredicateException(this, "precpred(_ctx, 2)");
-        setState(175);
+        if (!(precpred(_ctx, 3))) throw FailedPredicateException(this, "precpred(_ctx, 3)");
+        setState(205);
         match(Pcl2Parser::ConditionalConnectOperator);
-        setState(176);
-        conditionalExpression(3); 
+        setState(206);
+        conditionalExpression(4); 
       }
-      setState(181);
+      setState(211);
       _errHandler->sync(this);
-      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 15, _ctx);
+      alt = getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 18, _ctx);
     }
   }
   catch (RecognitionException &e) {
@@ -1813,33 +2138,33 @@ antlrcpp::Any Pcl2Parser::AssignmentExpressionContext::accept(tree::ParseTreeVis
 
 Pcl2Parser::AssignmentExpressionContext* Pcl2Parser::assignmentExpression() {
   AssignmentExpressionContext *_localctx = _tracker.createInstance<AssignmentExpressionContext>(_ctx, getState());
-  enterRule(_localctx, 36, Pcl2Parser::RuleAssignmentExpression);
+  enterRule(_localctx, 40, Pcl2Parser::RuleAssignmentExpression);
 
   auto onExit = finally([=] {
     exitRule();
   });
   try {
-    setState(188);
+    setState(218);
     _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 16, _ctx)) {
+    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 19, _ctx)) {
     case 1: {
       enterOuterAlt(_localctx, 1);
-      setState(182);
+      setState(212);
       match(Pcl2Parser::Identifier);
-      setState(183);
+      setState(213);
       match(Pcl2Parser::Assign);
-      setState(184);
+      setState(214);
       expression(0);
       break;
     }
 
     case 2: {
       enterOuterAlt(_localctx, 2);
-      setState(185);
+      setState(215);
       match(Pcl2Parser::Identifier);
-      setState(186);
+      setState(216);
       match(Pcl2Parser::Assign);
-      setState(187);
+      setState(217);
       functionReturn();
       break;
     }
@@ -1856,147 +2181,56 @@ Pcl2Parser::AssignmentExpressionContext* Pcl2Parser::assignmentExpression() {
   return _localctx;
 }
 
-//----------------- TypeSpecifierContext ------------------------------------------------------------------
+//----------------- ParameterTypeListContext ------------------------------------------------------------------
 
-Pcl2Parser::TypeSpecifierContext::TypeSpecifierContext(ParserRuleContext *parent, size_t invokingState)
+Pcl2Parser::ParameterTypeListContext::ParameterTypeListContext(ParserRuleContext *parent, size_t invokingState)
   : ParserRuleContext(parent, invokingState) {
 }
 
-tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Void() {
-  return getToken(Pcl2Parser::Void, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Bool() {
-  return getToken(Pcl2Parser::Bool, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Char() {
-  return getToken(Pcl2Parser::Char, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Int() {
-  return getToken(Pcl2Parser::Int, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Float() {
-  return getToken(Pcl2Parser::Float, 0);
-}
-
-tree::TerminalNode* Pcl2Parser::TypeSpecifierContext::Double() {
-  return getToken(Pcl2Parser::Double, 0);
-}
-
-
-size_t Pcl2Parser::TypeSpecifierContext::getRuleIndex() const {
-  return Pcl2Parser::RuleTypeSpecifier;
-}
-
-void Pcl2Parser::TypeSpecifierContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterTypeSpecifier(this);
-}
-
-void Pcl2Parser::TypeSpecifierContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitTypeSpecifier(this);
-}
-
-
-antlrcpp::Any Pcl2Parser::TypeSpecifierContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
-    return parserVisitor->visitTypeSpecifier(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-Pcl2Parser::TypeSpecifierContext* Pcl2Parser::typeSpecifier() {
-  TypeSpecifierContext *_localctx = _tracker.createInstance<TypeSpecifierContext>(_ctx, getState());
-  enterRule(_localctx, 38, Pcl2Parser::RuleTypeSpecifier);
-  size_t _la = 0;
-
-  auto onExit = finally([=] {
-    exitRule();
-  });
-  try {
-    enterOuterAlt(_localctx, 1);
-    setState(190);
-    _la = _input->LA(1);
-    if (!((((_la & ~ 0x3fULL) == 0) &&
-      ((1ULL << _la) & ((1ULL << Pcl2Parser::Char)
-      | (1ULL << Pcl2Parser::Bool)
-      | (1ULL << Pcl2Parser::Double)
-      | (1ULL << Pcl2Parser::Float)
-      | (1ULL << Pcl2Parser::Int)
-      | (1ULL << Pcl2Parser::Void))) != 0))) {
-    _errHandler->recoverInline(this);
-    }
-    else {
-      _errHandler->reportMatch(this);
-      consume();
-    }
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- ParamaterTypeListContext ------------------------------------------------------------------
-
-Pcl2Parser::ParamaterTypeListContext::ParamaterTypeListContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-tree::TerminalNode* Pcl2Parser::ParamaterTypeListContext::LeftParen() {
+tree::TerminalNode* Pcl2Parser::ParameterTypeListContext::LeftParen() {
   return getToken(Pcl2Parser::LeftParen, 0);
 }
 
-tree::TerminalNode* Pcl2Parser::ParamaterTypeListContext::RightParen() {
+tree::TerminalNode* Pcl2Parser::ParameterTypeListContext::RightParen() {
   return getToken(Pcl2Parser::RightParen, 0);
 }
 
-std::vector<Pcl2Parser::DeclarationContext *> Pcl2Parser::ParamaterTypeListContext::declaration() {
+std::vector<Pcl2Parser::DeclarationContext *> Pcl2Parser::ParameterTypeListContext::declaration() {
   return getRuleContexts<Pcl2Parser::DeclarationContext>();
 }
 
-Pcl2Parser::DeclarationContext* Pcl2Parser::ParamaterTypeListContext::declaration(size_t i) {
+Pcl2Parser::DeclarationContext* Pcl2Parser::ParameterTypeListContext::declaration(size_t i) {
   return getRuleContext<Pcl2Parser::DeclarationContext>(i);
 }
 
 
-size_t Pcl2Parser::ParamaterTypeListContext::getRuleIndex() const {
-  return Pcl2Parser::RuleParamaterTypeList;
+size_t Pcl2Parser::ParameterTypeListContext::getRuleIndex() const {
+  return Pcl2Parser::RuleParameterTypeList;
 }
 
-void Pcl2Parser::ParamaterTypeListContext::enterRule(tree::ParseTreeListener *listener) {
+void Pcl2Parser::ParameterTypeListContext::enterRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
   if (parserListener != nullptr)
-    parserListener->enterParamaterTypeList(this);
+    parserListener->enterParameterTypeList(this);
 }
 
-void Pcl2Parser::ParamaterTypeListContext::exitRule(tree::ParseTreeListener *listener) {
+void Pcl2Parser::ParameterTypeListContext::exitRule(tree::ParseTreeListener *listener) {
   auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
   if (parserListener != nullptr)
-    parserListener->exitParamaterTypeList(this);
+    parserListener->exitParameterTypeList(this);
 }
 
 
-antlrcpp::Any Pcl2Parser::ParamaterTypeListContext::accept(tree::ParseTreeVisitor *visitor) {
+antlrcpp::Any Pcl2Parser::ParameterTypeListContext::accept(tree::ParseTreeVisitor *visitor) {
   if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
-    return parserVisitor->visitParamaterTypeList(this);
+    return parserVisitor->visitParameterTypeList(this);
   else
     return visitor->visitChildren(this);
 }
 
-Pcl2Parser::ParamaterTypeListContext* Pcl2Parser::paramaterTypeList() {
-  ParamaterTypeListContext *_localctx = _tracker.createInstance<ParamaterTypeListContext>(_ctx, getState());
-  enterRule(_localctx, 40, Pcl2Parser::RuleParamaterTypeList);
+Pcl2Parser::ParameterTypeListContext* Pcl2Parser::parameterTypeList() {
+  ParameterTypeListContext *_localctx = _tracker.createInstance<ParameterTypeListContext>(_ctx, getState());
+  enterRule(_localctx, 42, Pcl2Parser::RuleParameterTypeList);
   size_t _la = 0;
 
   auto onExit = finally([=] {
@@ -2004,9 +2238,9 @@ Pcl2Parser::ParamaterTypeListContext* Pcl2Parser::paramaterTypeList() {
   });
   try {
     enterOuterAlt(_localctx, 1);
-    setState(192);
+    setState(220);
     match(Pcl2Parser::LeftParen);
-    setState(196);
+    setState(224);
     _errHandler->sync(this);
     _la = _input->LA(1);
     while ((((_la & ~ 0x3fULL) == 0) &&
@@ -2016,147 +2250,14 @@ Pcl2Parser::ParamaterTypeListContext* Pcl2Parser::paramaterTypeList() {
       | (1ULL << Pcl2Parser::Float)
       | (1ULL << Pcl2Parser::Int)
       | (1ULL << Pcl2Parser::Void))) != 0)) {
-      setState(193);
-      declaration();
-      setState(198);
-      _errHandler->sync(this);
-      _la = _input->LA(1);
-    }
-    setState(199);
-    match(Pcl2Parser::RightParen);
-   
-  }
-  catch (RecognitionException &e) {
-    _errHandler->reportError(this, e);
-    _localctx->exception = std::current_exception();
-    _errHandler->recover(this, _localctx->exception);
-  }
-
-  return _localctx;
-}
-
-//----------------- DeclarationContext ------------------------------------------------------------------
-
-Pcl2Parser::DeclarationContext::DeclarationContext(ParserRuleContext *parent, size_t invokingState)
-  : ParserRuleContext(parent, invokingState) {
-}
-
-Pcl2Parser::TypeSpecifierContext* Pcl2Parser::DeclarationContext::typeSpecifier() {
-  return getRuleContext<Pcl2Parser::TypeSpecifierContext>(0);
-}
-
-std::vector<tree::TerminalNode *> Pcl2Parser::DeclarationContext::Identifier() {
-  return getTokens(Pcl2Parser::Identifier);
-}
-
-tree::TerminalNode* Pcl2Parser::DeclarationContext::Identifier(size_t i) {
-  return getToken(Pcl2Parser::Identifier, i);
-}
-
-tree::TerminalNode* Pcl2Parser::DeclarationContext::Semi() {
-  return getToken(Pcl2Parser::Semi, 0);
-}
-
-std::vector<tree::TerminalNode *> Pcl2Parser::DeclarationContext::Comma() {
-  return getTokens(Pcl2Parser::Comma);
-}
-
-tree::TerminalNode* Pcl2Parser::DeclarationContext::Comma(size_t i) {
-  return getToken(Pcl2Parser::Comma, i);
-}
-
-std::vector<Pcl2Parser::AssignmentExpressionContext *> Pcl2Parser::DeclarationContext::assignmentExpression() {
-  return getRuleContexts<Pcl2Parser::AssignmentExpressionContext>();
-}
-
-Pcl2Parser::AssignmentExpressionContext* Pcl2Parser::DeclarationContext::assignmentExpression(size_t i) {
-  return getRuleContext<Pcl2Parser::AssignmentExpressionContext>(i);
-}
-
-
-size_t Pcl2Parser::DeclarationContext::getRuleIndex() const {
-  return Pcl2Parser::RuleDeclaration;
-}
-
-void Pcl2Parser::DeclarationContext::enterRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->enterDeclaration(this);
-}
-
-void Pcl2Parser::DeclarationContext::exitRule(tree::ParseTreeListener *listener) {
-  auto parserListener = dynamic_cast<Pcl2Listener *>(listener);
-  if (parserListener != nullptr)
-    parserListener->exitDeclaration(this);
-}
-
-
-antlrcpp::Any Pcl2Parser::DeclarationContext::accept(tree::ParseTreeVisitor *visitor) {
-  if (auto parserVisitor = dynamic_cast<Pcl2Visitor*>(visitor))
-    return parserVisitor->visitDeclaration(this);
-  else
-    return visitor->visitChildren(this);
-}
-
-Pcl2Parser::DeclarationContext* Pcl2Parser::declaration() {
-  DeclarationContext *_localctx = _tracker.createInstance<DeclarationContext>(_ctx, getState());
-  enterRule(_localctx, 42, Pcl2Parser::RuleDeclaration);
-  size_t _la = 0;
-
-  auto onExit = finally([=] {
-    exitRule();
-  });
-  try {
-    setState(223);
-    _errHandler->sync(this);
-    switch (getInterpreter<atn::ParserATNSimulator>()->adaptivePredict(_input, 20, _ctx)) {
-    case 1: {
-      enterOuterAlt(_localctx, 1);
-      setState(201);
-      typeSpecifier();
-      setState(202);
-      match(Pcl2Parser::Identifier);
-      setState(207);
-      _errHandler->sync(this);
-      _la = _input->LA(1);
-      while (_la == Pcl2Parser::Comma) {
-        setState(203);
-        match(Pcl2Parser::Comma);
-        setState(204);
-        match(Pcl2Parser::Identifier);
-        setState(209);
-        _errHandler->sync(this);
-        _la = _input->LA(1);
-      }
-      setState(210);
-      match(Pcl2Parser::Semi);
-      break;
-    }
-
-    case 2: {
-      enterOuterAlt(_localctx, 2);
-      setState(212);
-      typeSpecifier();
-      setState(213);
-      assignmentExpression();
-      setState(218);
-      _errHandler->sync(this);
-      _la = _input->LA(1);
-      while (_la == Pcl2Parser::Comma) {
-        setState(214);
-        match(Pcl2Parser::Comma);
-        setState(215);
-        assignmentExpression();
-        setState(220);
-        _errHandler->sync(this);
-        _la = _input->LA(1);
-      }
       setState(221);
-      match(Pcl2Parser::Semi);
-      break;
+      declaration();
+      setState(226);
+      _errHandler->sync(this);
+      _la = _input->LA(1);
     }
-
-    }
+    setState(227);
+    match(Pcl2Parser::RightParen);
    
   }
   catch (RecognitionException &e) {
@@ -2171,9 +2272,9 @@ Pcl2Parser::DeclarationContext* Pcl2Parser::declaration() {
 bool Pcl2Parser::sempred(RuleContext *context, size_t ruleIndex, size_t predicateIndex) {
   switch (ruleIndex) {
     case 1: return translationUnitSempred(dynamic_cast<TranslationUnitContext *>(context), predicateIndex);
-    case 9: return blockItemListSempred(dynamic_cast<BlockItemListContext *>(context), predicateIndex);
-    case 16: return expressionSempred(dynamic_cast<ExpressionContext *>(context), predicateIndex);
-    case 17: return conditionalExpressionSempred(dynamic_cast<ConditionalExpressionContext *>(context), predicateIndex);
+    case 10: return blockItemListSempred(dynamic_cast<BlockItemListContext *>(context), predicateIndex);
+    case 18: return expressionSempred(dynamic_cast<ExpressionContext *>(context), predicateIndex);
+    case 19: return conditionalExpressionSempred(dynamic_cast<ConditionalExpressionContext *>(context), predicateIndex);
 
   default:
     break;
@@ -2214,7 +2315,7 @@ bool Pcl2Parser::expressionSempred(ExpressionContext *_localctx, size_t predicat
 
 bool Pcl2Parser::conditionalExpressionSempred(ConditionalExpressionContext *_localctx, size_t predicateIndex) {
   switch (predicateIndex) {
-    case 4: return precpred(_ctx, 2);
+    case 4: return precpred(_ctx, 3);
 
   default:
     break;
@@ -2231,12 +2332,11 @@ atn::ATN Pcl2Parser::_atn;
 std::vector<uint16_t> Pcl2Parser::_serializedATN;
 
 std::vector<std::string> Pcl2Parser::_ruleNames = {
-  "compilationUnit", "translationUnit", "externalDeclaration", "primaryExpression", 
-  "functionDefinition", "functionCall", "functionReturn", "identifierList", 
+  "compilationUnit", "translationUnit", "externalDeclaration", "functionDefinition", 
+  "declaration", "typeSpecifier", "functionCall", "functionReturn", "identifierList", 
   "compoundStatement", "blockItemList", "blockItem", "statement", "assignmentStatement", 
-  "expressionStatement", "selectionStatement", "iterationStatement", "expression", 
-  "conditionalExpression", "assignmentExpression", "typeSpecifier", "paramaterTypeList", 
-  "declaration"
+  "expressionStatement", "selectionStatement", "iterationStatement", "primaryExpression", 
+  "expression", "conditionalExpression", "assignmentExpression", "parameterTypeList"
 };
 
 std::vector<std::string> Pcl2Parser::_literalNames = {
@@ -2289,7 +2389,7 @@ Pcl2Parser::Initializer::Initializer() {
 
   _serializedATN = {
     0x3, 0x608b, 0xa72a, 0x8133, 0xb9ed, 0x417c, 0x3be7, 0x7786, 0x5964, 
-    0x3, 0x5c, 0xe4, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 0x4, 0x4, 0x9, 
+    0x3, 0x5c, 0xe8, 0x4, 0x2, 0x9, 0x2, 0x4, 0x3, 0x9, 0x3, 0x4, 0x4, 0x9, 
     0x4, 0x4, 0x5, 0x9, 0x5, 0x4, 0x6, 0x9, 0x6, 0x4, 0x7, 0x9, 0x7, 0x4, 
     0x8, 0x9, 0x8, 0x4, 0x9, 0x9, 0x9, 0x4, 0xa, 0x9, 0xa, 0x4, 0xb, 0x9, 
     0xb, 0x4, 0xc, 0x9, 0xc, 0x4, 0xd, 0x9, 0xd, 0x4, 0xe, 0x9, 0xe, 0x4, 
@@ -2299,145 +2399,148 @@ Pcl2Parser::Initializer::Initializer() {
     0x30, 0xa, 0x2, 0x3, 0x2, 0x3, 0x2, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 0x3, 
     0x3, 0x3, 0x3, 0x7, 0x3, 0x39, 0xa, 0x3, 0xc, 0x3, 0xe, 0x3, 0x3c, 0xb, 
     0x3, 0x3, 0x4, 0x3, 0x4, 0x3, 0x4, 0x5, 0x4, 0x41, 0xa, 0x4, 0x3, 0x5, 
-    0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x5, 0x5, 
-    0x4a, 0xa, 0x5, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 
-    0x7, 0x3, 0x7, 0x3, 0x7, 0x5, 0x7, 0x54, 0xa, 0x7, 0x3, 0x7, 0x3, 0x7, 
-    0x3, 0x7, 0x3, 0x8, 0x3, 0x8, 0x3, 0x8, 0x5, 0x8, 0x5c, 0xa, 0x8, 0x3, 
-    0x8, 0x3, 0x8, 0x3, 0x9, 0x3, 0x9, 0x3, 0x9, 0x7, 0x9, 0x63, 0xa, 0x9, 
-    0xc, 0x9, 0xe, 0x9, 0x66, 0xb, 0x9, 0x3, 0xa, 0x3, 0xa, 0x5, 0xa, 0x6a, 
-    0xa, 0xa, 0x3, 0xa, 0x3, 0xa, 0x3, 0xb, 0x3, 0xb, 0x3, 0xb, 0x3, 0xb, 
-    0x3, 0xb, 0x7, 0xb, 0x73, 0xa, 0xb, 0xc, 0xb, 0xe, 0xb, 0x76, 0xb, 0xb, 
-    0x3, 0xc, 0x3, 0xc, 0x5, 0xc, 0x7a, 0xa, 0xc, 0x3, 0xd, 0x3, 0xd, 0x3, 
-    0xd, 0x3, 0xd, 0x3, 0xd, 0x5, 0xd, 0x81, 0xa, 0xd, 0x3, 0xe, 0x3, 0xe, 
-    0x3, 0xe, 0x3, 0xf, 0x5, 0xf, 0x87, 0xa, 0xf, 0x3, 0xf, 0x3, 0xf, 0x3, 
-    0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x11, 
-    0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x12, 0x3, 
-    0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 
-    0x3, 0x12, 0x7, 0x12, 0xa0, 0xa, 0x12, 0xc, 0x12, 0xe, 0x12, 0xa3, 0xb, 
-    0x12, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 
+    0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x3, 0x5, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 
+    0x3, 0x6, 0x7, 0x6, 0x4c, 0xa, 0x6, 0xc, 0x6, 0xe, 0x6, 0x4f, 0xb, 0x6, 
+    0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x3, 0x6, 0x7, 0x6, 
+    0x57, 0xa, 0x6, 0xc, 0x6, 0xe, 0x6, 0x5a, 0xb, 0x6, 0x3, 0x6, 0x3, 0x6, 
+    0x5, 0x6, 0x5e, 0xa, 0x6, 0x3, 0x7, 0x3, 0x7, 0x3, 0x8, 0x3, 0x8, 0x3, 
+    0x8, 0x5, 0x8, 0x65, 0xa, 0x8, 0x3, 0x8, 0x3, 0x8, 0x3, 0x8, 0x3, 0x9, 
+    0x3, 0x9, 0x3, 0x9, 0x5, 0x9, 0x6d, 0xa, 0x9, 0x3, 0x9, 0x3, 0x9, 0x3, 
+    0xa, 0x3, 0xa, 0x3, 0xa, 0x7, 0xa, 0x74, 0xa, 0xa, 0xc, 0xa, 0xe, 0xa, 
+    0x77, 0xb, 0xa, 0x3, 0xb, 0x3, 0xb, 0x5, 0xb, 0x7b, 0xa, 0xb, 0x3, 0xb, 
+    0x3, 0xb, 0x3, 0xc, 0x3, 0xc, 0x3, 0xc, 0x3, 0xc, 0x3, 0xc, 0x7, 0xc, 
+    0x84, 0xa, 0xc, 0xc, 0xc, 0xe, 0xc, 0x87, 0xb, 0xc, 0x3, 0xd, 0x3, 0xd, 
+    0x5, 0xd, 0x8b, 0xa, 0xd, 0x3, 0xe, 0x3, 0xe, 0x3, 0xe, 0x3, 0xe, 0x3, 
+    0xe, 0x5, 0xe, 0x92, 0xa, 0xe, 0x3, 0xf, 0x3, 0xf, 0x3, 0xf, 0x3, 0x10, 
+    0x5, 0x10, 0x98, 0xa, 0x10, 0x3, 0x10, 0x3, 0x10, 0x3, 0x11, 0x3, 0x11, 
+    0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x11, 0x3, 0x12, 0x3, 0x12, 0x3, 
+    0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x12, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 
     0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x5, 0x13, 0xaf, 0xa, 0x13, 
-    0x3, 0x13, 0x3, 0x13, 0x3, 0x13, 0x7, 0x13, 0xb4, 0xa, 0x13, 0xc, 0x13, 
-    0xe, 0x13, 0xb7, 0xb, 0x13, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 
-    0x3, 0x14, 0x3, 0x14, 0x5, 0x14, 0xbf, 0xa, 0x14, 0x3, 0x15, 0x3, 0x15, 
-    0x3, 0x16, 0x3, 0x16, 0x7, 0x16, 0xc5, 0xa, 0x16, 0xc, 0x16, 0xe, 0x16, 
-    0xc8, 0xb, 0x16, 0x3, 0x16, 0x3, 0x16, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 
-    0x3, 0x17, 0x7, 0x17, 0xd0, 0xa, 0x17, 0xc, 0x17, 0xe, 0x17, 0xd3, 0xb, 
-    0x17, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 0x3, 0x17, 
-    0x7, 0x17, 0xdb, 0xa, 0x17, 0xc, 0x17, 0xe, 0x17, 0xde, 0xb, 0x17, 0x3, 
-    0x17, 0x3, 0x17, 0x5, 0x17, 0xe2, 0xa, 0x17, 0x3, 0x17, 0x2, 0x6, 0x4, 
-    0x14, 0x22, 0x24, 0x18, 0x2, 0x4, 0x6, 0x8, 0xa, 0xc, 0xe, 0x10, 0x12, 
-    0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e, 0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 
-    0x2c, 0x2, 0x5, 0x3, 0x2, 0x37, 0x39, 0x4, 0x2, 0x33, 0x33, 0x35, 0x35, 
-    0x8, 0x2, 0xe, 0xe, 0x11, 0x11, 0x13, 0x13, 0x16, 0x16, 0x19, 0x19, 
-    0x25, 0x25, 0x2, 0xe8, 0x2, 0x2f, 0x3, 0x2, 0x2, 0x2, 0x4, 0x33, 0x3, 
-    0x2, 0x2, 0x2, 0x6, 0x40, 0x3, 0x2, 0x2, 0x2, 0x8, 0x49, 0x3, 0x2, 0x2, 
-    0x2, 0xa, 0x4b, 0x3, 0x2, 0x2, 0x2, 0xc, 0x50, 0x3, 0x2, 0x2, 0x2, 0xe, 
-    0x58, 0x3, 0x2, 0x2, 0x2, 0x10, 0x5f, 0x3, 0x2, 0x2, 0x2, 0x12, 0x67, 
-    0x3, 0x2, 0x2, 0x2, 0x14, 0x6d, 0x3, 0x2, 0x2, 0x2, 0x16, 0x79, 0x3, 
-    0x2, 0x2, 0x2, 0x18, 0x80, 0x3, 0x2, 0x2, 0x2, 0x1a, 0x82, 0x3, 0x2, 
-    0x2, 0x2, 0x1c, 0x86, 0x3, 0x2, 0x2, 0x2, 0x1e, 0x8a, 0x3, 0x2, 0x2, 
-    0x2, 0x20, 0x90, 0x3, 0x2, 0x2, 0x2, 0x22, 0x96, 0x3, 0x2, 0x2, 0x2, 
-    0x24, 0xae, 0x3, 0x2, 0x2, 0x2, 0x26, 0xbe, 0x3, 0x2, 0x2, 0x2, 0x28, 
-    0xc0, 0x3, 0x2, 0x2, 0x2, 0x2a, 0xc2, 0x3, 0x2, 0x2, 0x2, 0x2c, 0xe1, 
-    0x3, 0x2, 0x2, 0x2, 0x2e, 0x30, 0x5, 0x4, 0x3, 0x2, 0x2f, 0x2e, 0x3, 
-    0x2, 0x2, 0x2, 0x2f, 0x30, 0x3, 0x2, 0x2, 0x2, 0x30, 0x31, 0x3, 0x2, 
-    0x2, 0x2, 0x31, 0x32, 0x7, 0x2, 0x2, 0x3, 0x32, 0x3, 0x3, 0x2, 0x2, 
-    0x2, 0x33, 0x34, 0x8, 0x3, 0x1, 0x2, 0x34, 0x35, 0x5, 0x6, 0x4, 0x2, 
-    0x35, 0x3a, 0x3, 0x2, 0x2, 0x2, 0x36, 0x37, 0xc, 0x3, 0x2, 0x2, 0x37, 
-    0x39, 0x5, 0x6, 0x4, 0x2, 0x38, 0x36, 0x3, 0x2, 0x2, 0x2, 0x39, 0x3c, 
-    0x3, 0x2, 0x2, 0x2, 0x3a, 0x38, 0x3, 0x2, 0x2, 0x2, 0x3a, 0x3b, 0x3, 
-    0x2, 0x2, 0x2, 0x3b, 0x5, 0x3, 0x2, 0x2, 0x2, 0x3c, 0x3a, 0x3, 0x2, 
-    0x2, 0x2, 0x3d, 0x41, 0x5, 0xa, 0x6, 0x2, 0x3e, 0x41, 0x5, 0x2c, 0x17, 
-    0x2, 0x3f, 0x41, 0x7, 0x40, 0x2, 0x2, 0x40, 0x3d, 0x3, 0x2, 0x2, 0x2, 
-    0x40, 0x3e, 0x3, 0x2, 0x2, 0x2, 0x40, 0x3f, 0x3, 0x2, 0x2, 0x2, 0x41, 
-    0x7, 0x3, 0x2, 0x2, 0x2, 0x42, 0x4a, 0x7, 0x58, 0x2, 0x2, 0x43, 0x4a, 
-    0x7, 0x51, 0x2, 0x2, 0x44, 0x4a, 0x7, 0x52, 0x2, 0x2, 0x45, 0x46, 0x7, 
-    0x27, 0x2, 0x2, 0x46, 0x47, 0x5, 0x22, 0x12, 0x2, 0x47, 0x48, 0x7, 0x28, 
-    0x2, 0x2, 0x48, 0x4a, 0x3, 0x2, 0x2, 0x2, 0x49, 0x42, 0x3, 0x2, 0x2, 
-    0x2, 0x49, 0x43, 0x3, 0x2, 0x2, 0x2, 0x49, 0x44, 0x3, 0x2, 0x2, 0x2, 
-    0x49, 0x45, 0x3, 0x2, 0x2, 0x2, 0x4a, 0x9, 0x3, 0x2, 0x2, 0x2, 0x4b, 
-    0x4c, 0x5, 0x28, 0x15, 0x2, 0x4c, 0x4d, 0x7, 0x58, 0x2, 0x2, 0x4d, 0x4e, 
-    0x5, 0x2a, 0x16, 0x2, 0x4e, 0x4f, 0x5, 0x12, 0xa, 0x2, 0x4f, 0xb, 0x3, 
-    0x2, 0x2, 0x2, 0x50, 0x51, 0x7, 0x58, 0x2, 0x2, 0x51, 0x53, 0x7, 0x27, 
-    0x2, 0x2, 0x52, 0x54, 0x5, 0x10, 0x9, 0x2, 0x53, 0x52, 0x3, 0x2, 0x2, 
-    0x2, 0x53, 0x54, 0x3, 0x2, 0x2, 0x2, 0x54, 0x55, 0x3, 0x2, 0x2, 0x2, 
-    0x55, 0x56, 0x7, 0x28, 0x2, 0x2, 0x56, 0x57, 0x7, 0x40, 0x2, 0x2, 0x57, 
-    0xd, 0x3, 0x2, 0x2, 0x2, 0x58, 0x59, 0x7, 0x58, 0x2, 0x2, 0x59, 0x5b, 
-    0x7, 0x27, 0x2, 0x2, 0x5a, 0x5c, 0x5, 0x10, 0x9, 0x2, 0x5b, 0x5a, 0x3, 
-    0x2, 0x2, 0x2, 0x5b, 0x5c, 0x3, 0x2, 0x2, 0x2, 0x5c, 0x5d, 0x3, 0x2, 
-    0x2, 0x2, 0x5d, 0x5e, 0x7, 0x28, 0x2, 0x2, 0x5e, 0xf, 0x3, 0x2, 0x2, 
-    0x2, 0x5f, 0x64, 0x7, 0x58, 0x2, 0x2, 0x60, 0x61, 0x7, 0x41, 0x2, 0x2, 
-    0x61, 0x63, 0x7, 0x58, 0x2, 0x2, 0x62, 0x60, 0x3, 0x2, 0x2, 0x2, 0x63, 
-    0x66, 0x3, 0x2, 0x2, 0x2, 0x64, 0x62, 0x3, 0x2, 0x2, 0x2, 0x64, 0x65, 
-    0x3, 0x2, 0x2, 0x2, 0x65, 0x11, 0x3, 0x2, 0x2, 0x2, 0x66, 0x64, 0x3, 
-    0x2, 0x2, 0x2, 0x67, 0x69, 0x7, 0x2b, 0x2, 0x2, 0x68, 0x6a, 0x5, 0x14, 
-    0xb, 0x2, 0x69, 0x68, 0x3, 0x2, 0x2, 0x2, 0x69, 0x6a, 0x3, 0x2, 0x2, 
-    0x2, 0x6a, 0x6b, 0x3, 0x2, 0x2, 0x2, 0x6b, 0x6c, 0x7, 0x2c, 0x2, 0x2, 
-    0x6c, 0x13, 0x3, 0x2, 0x2, 0x2, 0x6d, 0x6e, 0x8, 0xb, 0x1, 0x2, 0x6e, 
-    0x6f, 0x5, 0x16, 0xc, 0x2, 0x6f, 0x74, 0x3, 0x2, 0x2, 0x2, 0x70, 0x71, 
-    0xc, 0x3, 0x2, 0x2, 0x71, 0x73, 0x5, 0x16, 0xc, 0x2, 0x72, 0x70, 0x3, 
-    0x2, 0x2, 0x2, 0x73, 0x76, 0x3, 0x2, 0x2, 0x2, 0x74, 0x72, 0x3, 0x2, 
-    0x2, 0x2, 0x74, 0x75, 0x3, 0x2, 0x2, 0x2, 0x75, 0x15, 0x3, 0x2, 0x2, 
-    0x2, 0x76, 0x74, 0x3, 0x2, 0x2, 0x2, 0x77, 0x7a, 0x5, 0x18, 0xd, 0x2, 
-    0x78, 0x7a, 0x5, 0x2c, 0x17, 0x2, 0x79, 0x77, 0x3, 0x2, 0x2, 0x2, 0x79, 
-    0x78, 0x3, 0x2, 0x2, 0x2, 0x7a, 0x17, 0x3, 0x2, 0x2, 0x2, 0x7b, 0x81, 
-    0x5, 0x12, 0xa, 0x2, 0x7c, 0x81, 0x5, 0x1c, 0xf, 0x2, 0x7d, 0x81, 0x5, 
-    0x1e, 0x10, 0x2, 0x7e, 0x81, 0x5, 0x20, 0x11, 0x2, 0x7f, 0x81, 0x5, 
-    0x1a, 0xe, 0x2, 0x80, 0x7b, 0x3, 0x2, 0x2, 0x2, 0x80, 0x7c, 0x3, 0x2, 
-    0x2, 0x2, 0x80, 0x7d, 0x3, 0x2, 0x2, 0x2, 0x80, 0x7e, 0x3, 0x2, 0x2, 
-    0x2, 0x80, 0x7f, 0x3, 0x2, 0x2, 0x2, 0x81, 0x19, 0x3, 0x2, 0x2, 0x2, 
-    0x82, 0x83, 0x5, 0x26, 0x14, 0x2, 0x83, 0x84, 0x7, 0x40, 0x2, 0x2, 0x84, 
-    0x1b, 0x3, 0x2, 0x2, 0x2, 0x85, 0x87, 0x5, 0x22, 0x12, 0x2, 0x86, 0x85, 
-    0x3, 0x2, 0x2, 0x2, 0x86, 0x87, 0x3, 0x2, 0x2, 0x2, 0x87, 0x88, 0x3, 
-    0x2, 0x2, 0x2, 0x88, 0x89, 0x7, 0x40, 0x2, 0x2, 0x89, 0x1d, 0x3, 0x2, 
-    0x2, 0x2, 0x8a, 0x8b, 0x7, 0x18, 0x2, 0x2, 0x8b, 0x8c, 0x7, 0x27, 0x2, 
-    0x2, 0x8c, 0x8d, 0x5, 0x24, 0x13, 0x2, 0x8d, 0x8e, 0x7, 0x28, 0x2, 0x2, 
-    0x8e, 0x8f, 0x5, 0x18, 0xd, 0x2, 0x8f, 0x1f, 0x3, 0x2, 0x2, 0x2, 0x90, 
-    0x91, 0x7, 0x26, 0x2, 0x2, 0x91, 0x92, 0x7, 0x27, 0x2, 0x2, 0x92, 0x93, 
-    0x5, 0x24, 0x13, 0x2, 0x93, 0x94, 0x7, 0x28, 0x2, 0x2, 0x94, 0x95, 0x5, 
-    0x18, 0xd, 0x2, 0x95, 0x21, 0x3, 0x2, 0x2, 0x2, 0x96, 0x97, 0x8, 0x12, 
-    0x1, 0x2, 0x97, 0x98, 0x5, 0x8, 0x5, 0x2, 0x98, 0xa1, 0x3, 0x2, 0x2, 
-    0x2, 0x99, 0x9a, 0xc, 0x5, 0x2, 0x2, 0x9a, 0x9b, 0x9, 0x2, 0x2, 0x2, 
-    0x9b, 0xa0, 0x5, 0x22, 0x12, 0x6, 0x9c, 0x9d, 0xc, 0x4, 0x2, 0x2, 0x9d, 
-    0x9e, 0x9, 0x3, 0x2, 0x2, 0x9e, 0xa0, 0x5, 0x22, 0x12, 0x5, 0x9f, 0x99, 
-    0x3, 0x2, 0x2, 0x2, 0x9f, 0x9c, 0x3, 0x2, 0x2, 0x2, 0xa0, 0xa3, 0x3, 
-    0x2, 0x2, 0x2, 0xa1, 0x9f, 0x3, 0x2, 0x2, 0x2, 0xa1, 0xa2, 0x3, 0x2, 
-    0x2, 0x2, 0xa2, 0x23, 0x3, 0x2, 0x2, 0x2, 0xa3, 0xa1, 0x3, 0x2, 0x2, 
-    0x2, 0xa4, 0xa5, 0x8, 0x13, 0x1, 0x2, 0xa5, 0xa6, 0x5, 0x22, 0x12, 0x2, 
-    0xa6, 0xa7, 0x7, 0x4, 0x2, 0x2, 0xa7, 0xa8, 0x5, 0x22, 0x12, 0x2, 0xa8, 
-    0xaf, 0x3, 0x2, 0x2, 0x2, 0xa9, 0xaa, 0x7, 0x55, 0x2, 0x2, 0xaa, 0xab, 
-    0x7, 0x27, 0x2, 0x2, 0xab, 0xac, 0x5, 0x24, 0x13, 0x2, 0xac, 0xad, 0x7, 
-    0x28, 0x2, 0x2, 0xad, 0xaf, 0x3, 0x2, 0x2, 0x2, 0xae, 0xa4, 0x3, 0x2, 
-    0x2, 0x2, 0xae, 0xa9, 0x3, 0x2, 0x2, 0x2, 0xaf, 0xb5, 0x3, 0x2, 0x2, 
-    0x2, 0xb0, 0xb1, 0xc, 0x4, 0x2, 0x2, 0xb1, 0xb2, 0x7, 0x3, 0x2, 0x2, 
-    0xb2, 0xb4, 0x5, 0x24, 0x13, 0x5, 0xb3, 0xb0, 0x3, 0x2, 0x2, 0x2, 0xb4, 
-    0xb7, 0x3, 0x2, 0x2, 0x2, 0xb5, 0xb3, 0x3, 0x2, 0x2, 0x2, 0xb5, 0xb6, 
-    0x3, 0x2, 0x2, 0x2, 0xb6, 0x25, 0x3, 0x2, 0x2, 0x2, 0xb7, 0xb5, 0x3, 
-    0x2, 0x2, 0x2, 0xb8, 0xb9, 0x7, 0x58, 0x2, 0x2, 0xb9, 0xba, 0x7, 0x42, 
-    0x2, 0x2, 0xba, 0xbf, 0x5, 0x22, 0x12, 0x2, 0xbb, 0xbc, 0x7, 0x58, 0x2, 
-    0x2, 0xbc, 0xbd, 0x7, 0x42, 0x2, 0x2, 0xbd, 0xbf, 0x5, 0xe, 0x8, 0x2, 
-    0xbe, 0xb8, 0x3, 0x2, 0x2, 0x2, 0xbe, 0xbb, 0x3, 0x2, 0x2, 0x2, 0xbf, 
-    0x27, 0x3, 0x2, 0x2, 0x2, 0xc0, 0xc1, 0x9, 0x4, 0x2, 0x2, 0xc1, 0x29, 
-    0x3, 0x2, 0x2, 0x2, 0xc2, 0xc6, 0x7, 0x27, 0x2, 0x2, 0xc3, 0xc5, 0x5, 
-    0x2c, 0x17, 0x2, 0xc4, 0xc3, 0x3, 0x2, 0x2, 0x2, 0xc5, 0xc8, 0x3, 0x2, 
-    0x2, 0x2, 0xc6, 0xc4, 0x3, 0x2, 0x2, 0x2, 0xc6, 0xc7, 0x3, 0x2, 0x2, 
-    0x2, 0xc7, 0xc9, 0x3, 0x2, 0x2, 0x2, 0xc8, 0xc6, 0x3, 0x2, 0x2, 0x2, 
-    0xc9, 0xca, 0x7, 0x28, 0x2, 0x2, 0xca, 0x2b, 0x3, 0x2, 0x2, 0x2, 0xcb, 
-    0xcc, 0x5, 0x28, 0x15, 0x2, 0xcc, 0xd1, 0x7, 0x58, 0x2, 0x2, 0xcd, 0xce, 
-    0x7, 0x41, 0x2, 0x2, 0xce, 0xd0, 0x7, 0x58, 0x2, 0x2, 0xcf, 0xcd, 0x3, 
-    0x2, 0x2, 0x2, 0xd0, 0xd3, 0x3, 0x2, 0x2, 0x2, 0xd1, 0xcf, 0x3, 0x2, 
-    0x2, 0x2, 0xd1, 0xd2, 0x3, 0x2, 0x2, 0x2, 0xd2, 0xd4, 0x3, 0x2, 0x2, 
-    0x2, 0xd3, 0xd1, 0x3, 0x2, 0x2, 0x2, 0xd4, 0xd5, 0x7, 0x40, 0x2, 0x2, 
-    0xd5, 0xe2, 0x3, 0x2, 0x2, 0x2, 0xd6, 0xd7, 0x5, 0x28, 0x15, 0x2, 0xd7, 
-    0xdc, 0x5, 0x26, 0x14, 0x2, 0xd8, 0xd9, 0x7, 0x41, 0x2, 0x2, 0xd9, 0xdb, 
-    0x5, 0x26, 0x14, 0x2, 0xda, 0xd8, 0x3, 0x2, 0x2, 0x2, 0xdb, 0xde, 0x3, 
-    0x2, 0x2, 0x2, 0xdc, 0xda, 0x3, 0x2, 0x2, 0x2, 0xdc, 0xdd, 0x3, 0x2, 
-    0x2, 0x2, 0xdd, 0xdf, 0x3, 0x2, 0x2, 0x2, 0xde, 0xdc, 0x3, 0x2, 0x2, 
-    0x2, 0xdf, 0xe0, 0x7, 0x40, 0x2, 0x2, 0xe0, 0xe2, 0x3, 0x2, 0x2, 0x2, 
-    0xe1, 0xcb, 0x3, 0x2, 0x2, 0x2, 0xe1, 0xd6, 0x3, 0x2, 0x2, 0x2, 0xe2, 
-    0x2d, 0x3, 0x2, 0x2, 0x2, 0x17, 0x2f, 0x3a, 0x40, 0x49, 0x53, 0x5b, 
-    0x64, 0x69, 0x74, 0x79, 0x80, 0x86, 0x9f, 0xa1, 0xae, 0xb5, 0xbe, 0xc6, 
-    0xd1, 0xdc, 0xe1, 
+    0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 0x14, 0x3, 
+    0x14, 0x3, 0x14, 0x3, 0x14, 0x7, 0x14, 0xba, 0xa, 0x14, 0xc, 0x14, 0xe, 
+    0x14, 0xbd, 0xb, 0x14, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 
+    0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 
+    0x3, 0x15, 0x3, 0x15, 0x3, 0x15, 0x5, 0x15, 0xcd, 0xa, 0x15, 0x3, 0x15, 
+    0x3, 0x15, 0x3, 0x15, 0x7, 0x15, 0xd2, 0xa, 0x15, 0xc, 0x15, 0xe, 0x15, 
+    0xd5, 0xb, 0x15, 0x3, 0x16, 0x3, 0x16, 0x3, 0x16, 0x3, 0x16, 0x3, 0x16, 
+    0x3, 0x16, 0x5, 0x16, 0xdd, 0xa, 0x16, 0x3, 0x17, 0x3, 0x17, 0x7, 0x17, 
+    0xe1, 0xa, 0x17, 0xc, 0x17, 0xe, 0x17, 0xe4, 0xb, 0x17, 0x3, 0x17, 0x3, 
+    0x17, 0x3, 0x17, 0x2, 0x6, 0x4, 0x16, 0x26, 0x28, 0x18, 0x2, 0x4, 0x6, 
+    0x8, 0xa, 0xc, 0xe, 0x10, 0x12, 0x14, 0x16, 0x18, 0x1a, 0x1c, 0x1e, 
+    0x20, 0x22, 0x24, 0x26, 0x28, 0x2a, 0x2c, 0x2, 0x5, 0x8, 0x2, 0xe, 0xe, 
+    0x11, 0x11, 0x13, 0x13, 0x16, 0x16, 0x19, 0x19, 0x25, 0x25, 0x3, 0x2, 
+    0x37, 0x39, 0x4, 0x2, 0x33, 0x33, 0x35, 0x35, 0x2, 0xed, 0x2, 0x2f, 
+    0x3, 0x2, 0x2, 0x2, 0x4, 0x33, 0x3, 0x2, 0x2, 0x2, 0x6, 0x40, 0x3, 0x2, 
+    0x2, 0x2, 0x8, 0x42, 0x3, 0x2, 0x2, 0x2, 0xa, 0x5d, 0x3, 0x2, 0x2, 0x2, 
+    0xc, 0x5f, 0x3, 0x2, 0x2, 0x2, 0xe, 0x61, 0x3, 0x2, 0x2, 0x2, 0x10, 
+    0x69, 0x3, 0x2, 0x2, 0x2, 0x12, 0x70, 0x3, 0x2, 0x2, 0x2, 0x14, 0x78, 
+    0x3, 0x2, 0x2, 0x2, 0x16, 0x7e, 0x3, 0x2, 0x2, 0x2, 0x18, 0x8a, 0x3, 
+    0x2, 0x2, 0x2, 0x1a, 0x91, 0x3, 0x2, 0x2, 0x2, 0x1c, 0x93, 0x3, 0x2, 
+    0x2, 0x2, 0x1e, 0x97, 0x3, 0x2, 0x2, 0x2, 0x20, 0x9b, 0x3, 0x2, 0x2, 
+    0x2, 0x22, 0xa1, 0x3, 0x2, 0x2, 0x2, 0x24, 0xae, 0x3, 0x2, 0x2, 0x2, 
+    0x26, 0xb0, 0x3, 0x2, 0x2, 0x2, 0x28, 0xcc, 0x3, 0x2, 0x2, 0x2, 0x2a, 
+    0xdc, 0x3, 0x2, 0x2, 0x2, 0x2c, 0xde, 0x3, 0x2, 0x2, 0x2, 0x2e, 0x30, 
+    0x5, 0x4, 0x3, 0x2, 0x2f, 0x2e, 0x3, 0x2, 0x2, 0x2, 0x2f, 0x30, 0x3, 
+    0x2, 0x2, 0x2, 0x30, 0x31, 0x3, 0x2, 0x2, 0x2, 0x31, 0x32, 0x7, 0x2, 
+    0x2, 0x3, 0x32, 0x3, 0x3, 0x2, 0x2, 0x2, 0x33, 0x34, 0x8, 0x3, 0x1, 
+    0x2, 0x34, 0x35, 0x5, 0x6, 0x4, 0x2, 0x35, 0x3a, 0x3, 0x2, 0x2, 0x2, 
+    0x36, 0x37, 0xc, 0x3, 0x2, 0x2, 0x37, 0x39, 0x5, 0x6, 0x4, 0x2, 0x38, 
+    0x36, 0x3, 0x2, 0x2, 0x2, 0x39, 0x3c, 0x3, 0x2, 0x2, 0x2, 0x3a, 0x38, 
+    0x3, 0x2, 0x2, 0x2, 0x3a, 0x3b, 0x3, 0x2, 0x2, 0x2, 0x3b, 0x5, 0x3, 
+    0x2, 0x2, 0x2, 0x3c, 0x3a, 0x3, 0x2, 0x2, 0x2, 0x3d, 0x41, 0x5, 0x8, 
+    0x5, 0x2, 0x3e, 0x41, 0x5, 0xa, 0x6, 0x2, 0x3f, 0x41, 0x7, 0x40, 0x2, 
+    0x2, 0x40, 0x3d, 0x3, 0x2, 0x2, 0x2, 0x40, 0x3e, 0x3, 0x2, 0x2, 0x2, 
+    0x40, 0x3f, 0x3, 0x2, 0x2, 0x2, 0x41, 0x7, 0x3, 0x2, 0x2, 0x2, 0x42, 
+    0x43, 0x5, 0xc, 0x7, 0x2, 0x43, 0x44, 0x7, 0x58, 0x2, 0x2, 0x44, 0x45, 
+    0x5, 0x2c, 0x17, 0x2, 0x45, 0x46, 0x5, 0x14, 0xb, 0x2, 0x46, 0x9, 0x3, 
+    0x2, 0x2, 0x2, 0x47, 0x48, 0x5, 0xc, 0x7, 0x2, 0x48, 0x4d, 0x7, 0x58, 
+    0x2, 0x2, 0x49, 0x4a, 0x7, 0x41, 0x2, 0x2, 0x4a, 0x4c, 0x7, 0x58, 0x2, 
+    0x2, 0x4b, 0x49, 0x3, 0x2, 0x2, 0x2, 0x4c, 0x4f, 0x3, 0x2, 0x2, 0x2, 
+    0x4d, 0x4b, 0x3, 0x2, 0x2, 0x2, 0x4d, 0x4e, 0x3, 0x2, 0x2, 0x2, 0x4e, 
+    0x50, 0x3, 0x2, 0x2, 0x2, 0x4f, 0x4d, 0x3, 0x2, 0x2, 0x2, 0x50, 0x51, 
+    0x7, 0x40, 0x2, 0x2, 0x51, 0x5e, 0x3, 0x2, 0x2, 0x2, 0x52, 0x53, 0x5, 
+    0xc, 0x7, 0x2, 0x53, 0x58, 0x5, 0x2a, 0x16, 0x2, 0x54, 0x55, 0x7, 0x41, 
+    0x2, 0x2, 0x55, 0x57, 0x5, 0x2a, 0x16, 0x2, 0x56, 0x54, 0x3, 0x2, 0x2, 
+    0x2, 0x57, 0x5a, 0x3, 0x2, 0x2, 0x2, 0x58, 0x56, 0x3, 0x2, 0x2, 0x2, 
+    0x58, 0x59, 0x3, 0x2, 0x2, 0x2, 0x59, 0x5b, 0x3, 0x2, 0x2, 0x2, 0x5a, 
+    0x58, 0x3, 0x2, 0x2, 0x2, 0x5b, 0x5c, 0x7, 0x40, 0x2, 0x2, 0x5c, 0x5e, 
+    0x3, 0x2, 0x2, 0x2, 0x5d, 0x47, 0x3, 0x2, 0x2, 0x2, 0x5d, 0x52, 0x3, 
+    0x2, 0x2, 0x2, 0x5e, 0xb, 0x3, 0x2, 0x2, 0x2, 0x5f, 0x60, 0x9, 0x2, 
+    0x2, 0x2, 0x60, 0xd, 0x3, 0x2, 0x2, 0x2, 0x61, 0x62, 0x7, 0x58, 0x2, 
+    0x2, 0x62, 0x64, 0x7, 0x27, 0x2, 0x2, 0x63, 0x65, 0x5, 0x12, 0xa, 0x2, 
+    0x64, 0x63, 0x3, 0x2, 0x2, 0x2, 0x64, 0x65, 0x3, 0x2, 0x2, 0x2, 0x65, 
+    0x66, 0x3, 0x2, 0x2, 0x2, 0x66, 0x67, 0x7, 0x28, 0x2, 0x2, 0x67, 0x68, 
+    0x7, 0x40, 0x2, 0x2, 0x68, 0xf, 0x3, 0x2, 0x2, 0x2, 0x69, 0x6a, 0x7, 
+    0x58, 0x2, 0x2, 0x6a, 0x6c, 0x7, 0x27, 0x2, 0x2, 0x6b, 0x6d, 0x5, 0x12, 
+    0xa, 0x2, 0x6c, 0x6b, 0x3, 0x2, 0x2, 0x2, 0x6c, 0x6d, 0x3, 0x2, 0x2, 
+    0x2, 0x6d, 0x6e, 0x3, 0x2, 0x2, 0x2, 0x6e, 0x6f, 0x7, 0x28, 0x2, 0x2, 
+    0x6f, 0x11, 0x3, 0x2, 0x2, 0x2, 0x70, 0x75, 0x7, 0x58, 0x2, 0x2, 0x71, 
+    0x72, 0x7, 0x41, 0x2, 0x2, 0x72, 0x74, 0x7, 0x58, 0x2, 0x2, 0x73, 0x71, 
+    0x3, 0x2, 0x2, 0x2, 0x74, 0x77, 0x3, 0x2, 0x2, 0x2, 0x75, 0x73, 0x3, 
+    0x2, 0x2, 0x2, 0x75, 0x76, 0x3, 0x2, 0x2, 0x2, 0x76, 0x13, 0x3, 0x2, 
+    0x2, 0x2, 0x77, 0x75, 0x3, 0x2, 0x2, 0x2, 0x78, 0x7a, 0x7, 0x2b, 0x2, 
+    0x2, 0x79, 0x7b, 0x5, 0x16, 0xc, 0x2, 0x7a, 0x79, 0x3, 0x2, 0x2, 0x2, 
+    0x7a, 0x7b, 0x3, 0x2, 0x2, 0x2, 0x7b, 0x7c, 0x3, 0x2, 0x2, 0x2, 0x7c, 
+    0x7d, 0x7, 0x2c, 0x2, 0x2, 0x7d, 0x15, 0x3, 0x2, 0x2, 0x2, 0x7e, 0x7f, 
+    0x8, 0xc, 0x1, 0x2, 0x7f, 0x80, 0x5, 0x18, 0xd, 0x2, 0x80, 0x85, 0x3, 
+    0x2, 0x2, 0x2, 0x81, 0x82, 0xc, 0x3, 0x2, 0x2, 0x82, 0x84, 0x5, 0x18, 
+    0xd, 0x2, 0x83, 0x81, 0x3, 0x2, 0x2, 0x2, 0x84, 0x87, 0x3, 0x2, 0x2, 
+    0x2, 0x85, 0x83, 0x3, 0x2, 0x2, 0x2, 0x85, 0x86, 0x3, 0x2, 0x2, 0x2, 
+    0x86, 0x17, 0x3, 0x2, 0x2, 0x2, 0x87, 0x85, 0x3, 0x2, 0x2, 0x2, 0x88, 
+    0x8b, 0x5, 0x1a, 0xe, 0x2, 0x89, 0x8b, 0x5, 0xa, 0x6, 0x2, 0x8a, 0x88, 
+    0x3, 0x2, 0x2, 0x2, 0x8a, 0x89, 0x3, 0x2, 0x2, 0x2, 0x8b, 0x19, 0x3, 
+    0x2, 0x2, 0x2, 0x8c, 0x92, 0x5, 0x14, 0xb, 0x2, 0x8d, 0x92, 0x5, 0x1e, 
+    0x10, 0x2, 0x8e, 0x92, 0x5, 0x20, 0x11, 0x2, 0x8f, 0x92, 0x5, 0x22, 
+    0x12, 0x2, 0x90, 0x92, 0x5, 0x1c, 0xf, 0x2, 0x91, 0x8c, 0x3, 0x2, 0x2, 
+    0x2, 0x91, 0x8d, 0x3, 0x2, 0x2, 0x2, 0x91, 0x8e, 0x3, 0x2, 0x2, 0x2, 
+    0x91, 0x8f, 0x3, 0x2, 0x2, 0x2, 0x91, 0x90, 0x3, 0x2, 0x2, 0x2, 0x92, 
+    0x1b, 0x3, 0x2, 0x2, 0x2, 0x93, 0x94, 0x5, 0x2a, 0x16, 0x2, 0x94, 0x95, 
+    0x7, 0x40, 0x2, 0x2, 0x95, 0x1d, 0x3, 0x2, 0x2, 0x2, 0x96, 0x98, 0x5, 
+    0x26, 0x14, 0x2, 0x97, 0x96, 0x3, 0x2, 0x2, 0x2, 0x97, 0x98, 0x3, 0x2, 
+    0x2, 0x2, 0x98, 0x99, 0x3, 0x2, 0x2, 0x2, 0x99, 0x9a, 0x7, 0x40, 0x2, 
+    0x2, 0x9a, 0x1f, 0x3, 0x2, 0x2, 0x2, 0x9b, 0x9c, 0x7, 0x18, 0x2, 0x2, 
+    0x9c, 0x9d, 0x7, 0x27, 0x2, 0x2, 0x9d, 0x9e, 0x5, 0x28, 0x15, 0x2, 0x9e, 
+    0x9f, 0x7, 0x28, 0x2, 0x2, 0x9f, 0xa0, 0x5, 0x1a, 0xe, 0x2, 0xa0, 0x21, 
+    0x3, 0x2, 0x2, 0x2, 0xa1, 0xa2, 0x7, 0x26, 0x2, 0x2, 0xa2, 0xa3, 0x7, 
+    0x27, 0x2, 0x2, 0xa3, 0xa4, 0x5, 0x28, 0x15, 0x2, 0xa4, 0xa5, 0x7, 0x28, 
+    0x2, 0x2, 0xa5, 0xa6, 0x5, 0x1a, 0xe, 0x2, 0xa6, 0x23, 0x3, 0x2, 0x2, 
+    0x2, 0xa7, 0xaf, 0x7, 0x58, 0x2, 0x2, 0xa8, 0xaf, 0x7, 0x51, 0x2, 0x2, 
+    0xa9, 0xaf, 0x7, 0x52, 0x2, 0x2, 0xaa, 0xab, 0x7, 0x27, 0x2, 0x2, 0xab, 
+    0xac, 0x5, 0x26, 0x14, 0x2, 0xac, 0xad, 0x7, 0x28, 0x2, 0x2, 0xad, 0xaf, 
+    0x3, 0x2, 0x2, 0x2, 0xae, 0xa7, 0x3, 0x2, 0x2, 0x2, 0xae, 0xa8, 0x3, 
+    0x2, 0x2, 0x2, 0xae, 0xa9, 0x3, 0x2, 0x2, 0x2, 0xae, 0xaa, 0x3, 0x2, 
+    0x2, 0x2, 0xaf, 0x25, 0x3, 0x2, 0x2, 0x2, 0xb0, 0xb1, 0x8, 0x14, 0x1, 
+    0x2, 0xb1, 0xb2, 0x5, 0x24, 0x13, 0x2, 0xb2, 0xbb, 0x3, 0x2, 0x2, 0x2, 
+    0xb3, 0xb4, 0xc, 0x5, 0x2, 0x2, 0xb4, 0xb5, 0x9, 0x3, 0x2, 0x2, 0xb5, 
+    0xba, 0x5, 0x26, 0x14, 0x6, 0xb6, 0xb7, 0xc, 0x4, 0x2, 0x2, 0xb7, 0xb8, 
+    0x9, 0x4, 0x2, 0x2, 0xb8, 0xba, 0x5, 0x26, 0x14, 0x5, 0xb9, 0xb3, 0x3, 
+    0x2, 0x2, 0x2, 0xb9, 0xb6, 0x3, 0x2, 0x2, 0x2, 0xba, 0xbd, 0x3, 0x2, 
+    0x2, 0x2, 0xbb, 0xb9, 0x3, 0x2, 0x2, 0x2, 0xbb, 0xbc, 0x3, 0x2, 0x2, 
+    0x2, 0xbc, 0x27, 0x3, 0x2, 0x2, 0x2, 0xbd, 0xbb, 0x3, 0x2, 0x2, 0x2, 
+    0xbe, 0xbf, 0x8, 0x15, 0x1, 0x2, 0xbf, 0xc0, 0x5, 0x26, 0x14, 0x2, 0xc0, 
+    0xc1, 0x7, 0x4, 0x2, 0x2, 0xc1, 0xc2, 0x5, 0x26, 0x14, 0x2, 0xc2, 0xcd, 
+    0x3, 0x2, 0x2, 0x2, 0xc3, 0xc4, 0x7, 0x27, 0x2, 0x2, 0xc4, 0xc5, 0x5, 
+    0x28, 0x15, 0x2, 0xc5, 0xc6, 0x7, 0x28, 0x2, 0x2, 0xc6, 0xcd, 0x3, 0x2, 
+    0x2, 0x2, 0xc7, 0xc8, 0x7, 0x55, 0x2, 0x2, 0xc8, 0xc9, 0x7, 0x27, 0x2, 
+    0x2, 0xc9, 0xca, 0x5, 0x28, 0x15, 0x2, 0xca, 0xcb, 0x7, 0x28, 0x2, 0x2, 
+    0xcb, 0xcd, 0x3, 0x2, 0x2, 0x2, 0xcc, 0xbe, 0x3, 0x2, 0x2, 0x2, 0xcc, 
+    0xc3, 0x3, 0x2, 0x2, 0x2, 0xcc, 0xc7, 0x3, 0x2, 0x2, 0x2, 0xcd, 0xd3, 
+    0x3, 0x2, 0x2, 0x2, 0xce, 0xcf, 0xc, 0x5, 0x2, 0x2, 0xcf, 0xd0, 0x7, 
+    0x3, 0x2, 0x2, 0xd0, 0xd2, 0x5, 0x28, 0x15, 0x6, 0xd1, 0xce, 0x3, 0x2, 
+    0x2, 0x2, 0xd2, 0xd5, 0x3, 0x2, 0x2, 0x2, 0xd3, 0xd1, 0x3, 0x2, 0x2, 
+    0x2, 0xd3, 0xd4, 0x3, 0x2, 0x2, 0x2, 0xd4, 0x29, 0x3, 0x2, 0x2, 0x2, 
+    0xd5, 0xd3, 0x3, 0x2, 0x2, 0x2, 0xd6, 0xd7, 0x7, 0x58, 0x2, 0x2, 0xd7, 
+    0xd8, 0x7, 0x42, 0x2, 0x2, 0xd8, 0xdd, 0x5, 0x26, 0x14, 0x2, 0xd9, 0xda, 
+    0x7, 0x58, 0x2, 0x2, 0xda, 0xdb, 0x7, 0x42, 0x2, 0x2, 0xdb, 0xdd, 0x5, 
+    0x10, 0x9, 0x2, 0xdc, 0xd6, 0x3, 0x2, 0x2, 0x2, 0xdc, 0xd9, 0x3, 0x2, 
+    0x2, 0x2, 0xdd, 0x2b, 0x3, 0x2, 0x2, 0x2, 0xde, 0xe2, 0x7, 0x27, 0x2, 
+    0x2, 0xdf, 0xe1, 0x5, 0xa, 0x6, 0x2, 0xe0, 0xdf, 0x3, 0x2, 0x2, 0x2, 
+    0xe1, 0xe4, 0x3, 0x2, 0x2, 0x2, 0xe2, 0xe0, 0x3, 0x2, 0x2, 0x2, 0xe2, 
+    0xe3, 0x3, 0x2, 0x2, 0x2, 0xe3, 0xe5, 0x3, 0x2, 0x2, 0x2, 0xe4, 0xe2, 
+    0x3, 0x2, 0x2, 0x2, 0xe5, 0xe6, 0x7, 0x28, 0x2, 0x2, 0xe6, 0x2d, 0x3, 
+    0x2, 0x2, 0x2, 0x17, 0x2f, 0x3a, 0x40, 0x4d, 0x58, 0x5d, 0x64, 0x6c, 
+    0x75, 0x7a, 0x85, 0x8a, 0x91, 0x97, 0xae, 0xb9, 0xbb, 0xcc, 0xd3, 0xdc, 
+    0xe2, 
   };
 
   atn::ATNDeserializer deserializer;
