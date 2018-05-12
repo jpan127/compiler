@@ -90,7 +90,7 @@ TypeSpecImpl::~TypeSpecImpl()
 
 TypeForm TypeSpecImpl::get_form() const { return form; }
 
-SymTabEntry *TypeSpecImpl::get_identifier() { return type_id; }
+SymTabEntry *TypeSpecImpl::get_identifier() const { return type_id; }
 
 void TypeSpecImpl::set_identifier(SymTabEntry *id) { type_id = id; }
 

@@ -94,7 +94,7 @@ public:
      * Getter.
      * @return the type identifier (symbol table entry).
      */
-    SymTabEntry *get_identifier();
+    SymTabEntry *get_identifier() const;
 
     /**
      * Setter.

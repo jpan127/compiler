@@ -14,19 +14,3 @@
 .limit stack 1
 .end method
 
-
-; voida;
-
-.field private static a V 
-
-; boolb=0;
-
-.field private static b B 0
-
-; doublec=0;
-
-.field private static c D 0
-
-; inte=a*b;
-
-.field private static e I a*b

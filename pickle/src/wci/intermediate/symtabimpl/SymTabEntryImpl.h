@@ -48,27 +48,32 @@ constexpr SymTabKeyImpl DATA_VALUE = SymTabKeyImpl::DATA_VALUE;
  */
 enum class DefinitionImpl
 {
-    CONSTANT, ENUMERATION_CONSTANT,
-    TYPE, VARIABLE, FIELD,
-    VALUE_PARM, VAR_PARM,
+    CONSTANT, 
+    ENUMERATION_CONSTANT,
+    TYPE, 
+    VARIABLE, 
+    FIELD,
+    VALUE_PARM, 
+    VAR_PARM,
     PROGRAM_PARM,
-    PROGRAM, PROCEDURE, FUNCTION,
+    PROGRAM, 
+    PROCEDURE, 
+    FUNCTION,
     UNDEFINED,
 };
 
-constexpr DefinitionImpl DF_CONSTANT = DefinitionImpl::CONSTANT;
-constexpr DefinitionImpl DF_ENUMERATION_CONSTANT =
-                                    DefinitionImpl::ENUMERATION_CONSTANT;
-constexpr DefinitionImpl DF_TYPE = DefinitionImpl::TYPE;
-constexpr DefinitionImpl DF_VARIABLE = DefinitionImpl::VARIABLE;
-constexpr DefinitionImpl DF_FIELD = DefinitionImpl::FIELD;
-constexpr DefinitionImpl DF_VALUE_PARM = DefinitionImpl::VALUE_PARM;
-constexpr DefinitionImpl DF_VAR_PARM = DefinitionImpl::VAR_PARM;
-constexpr DefinitionImpl DF_PROGRAM_PARM = DefinitionImpl::PROGRAM_PARM;
-constexpr DefinitionImpl DF_PROGRAM = DefinitionImpl::PROGRAM;
-constexpr DefinitionImpl DF_PROCEDURE = DefinitionImpl::PROCEDURE;
-constexpr DefinitionImpl DF_FUNCTION = DefinitionImpl::FUNCTION;
-constexpr DefinitionImpl DF_UNDEFINED = DefinitionImpl::UNDEFINED;
+constexpr DefinitionImpl DF_CONSTANT             = DefinitionImpl::CONSTANT;
+constexpr DefinitionImpl DF_ENUMERATION_CONSTANT = DefinitionImpl::ENUMERATION_CONSTANT;
+constexpr DefinitionImpl DF_TYPE                 = DefinitionImpl::TYPE;
+constexpr DefinitionImpl DF_VARIABLE             = DefinitionImpl::VARIABLE;
+constexpr DefinitionImpl DF_FIELD                = DefinitionImpl::FIELD;
+constexpr DefinitionImpl DF_VALUE_PARM           = DefinitionImpl::VALUE_PARM;
+constexpr DefinitionImpl DF_VAR_PARM             = DefinitionImpl::VAR_PARM;
+constexpr DefinitionImpl DF_PROGRAM_PARM         = DefinitionImpl::PROGRAM_PARM;
+constexpr DefinitionImpl DF_PROGRAM              = DefinitionImpl::PROGRAM;
+constexpr DefinitionImpl DF_PROCEDURE            = DefinitionImpl::PROCEDURE;
+constexpr DefinitionImpl DF_FUNCTION             = DefinitionImpl::FUNCTION;
+constexpr DefinitionImpl DF_UNDEFINED            = DefinitionImpl::UNDEFINED;
 
 /**
  * Pascal routines.

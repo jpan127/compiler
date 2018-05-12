@@ -29,11 +29,14 @@ public:
   virtual void enterExternalDeclaration(Pcl2Parser::ExternalDeclarationContext * /*ctx*/) override { }
   virtual void exitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext * /*ctx*/) override { }
 
-  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
-  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
-
   virtual void enterFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
   virtual void exitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
+
+  virtual void enterDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
+  virtual void exitDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
+
+  virtual void enterTypeSpecifier(Pcl2Parser::TypeSpecifierContext * /*ctx*/) override { }
+  virtual void exitTypeSpecifier(Pcl2Parser::TypeSpecifierContext * /*ctx*/) override { }
 
   virtual void enterFunctionCall(Pcl2Parser::FunctionCallContext * /*ctx*/) override { }
   virtual void exitFunctionCall(Pcl2Parser::FunctionCallContext * /*ctx*/) override { }
@@ -68,6 +71,9 @@ public:
   virtual void enterIterationStatement(Pcl2Parser::IterationStatementContext * /*ctx*/) override { }
   virtual void exitIterationStatement(Pcl2Parser::IterationStatementContext * /*ctx*/) override { }
 
+  virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
+  virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
+
   virtual void enterPrimExpr(Pcl2Parser::PrimExprContext * /*ctx*/) override { }
   virtual void exitPrimExpr(Pcl2Parser::PrimExprContext * /*ctx*/) override { }
 
@@ -77,20 +83,23 @@ public:
   virtual void enterAddminExpr(Pcl2Parser::AddminExprContext * /*ctx*/) override { }
   virtual void exitAddminExpr(Pcl2Parser::AddminExprContext * /*ctx*/) override { }
 
-  virtual void enterConditionalExpression(Pcl2Parser::ConditionalExpressionContext * /*ctx*/) override { }
-  virtual void exitConditionalExpression(Pcl2Parser::ConditionalExpressionContext * /*ctx*/) override { }
+  virtual void enterBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * /*ctx*/) override { }
+  virtual void exitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * /*ctx*/) override { }
+
+  virtual void enterNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext * /*ctx*/) override { }
+  virtual void exitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext * /*ctx*/) override { }
+
+  virtual void enterConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * /*ctx*/) override { }
+  virtual void exitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * /*ctx*/) override { }
+
+  virtual void enterParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext * /*ctx*/) override { }
+  virtual void exitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext * /*ctx*/) override { }
 
   virtual void enterAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * /*ctx*/) override { }
   virtual void exitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * /*ctx*/) override { }
 
-  virtual void enterTypeSpecifier(Pcl2Parser::TypeSpecifierContext * /*ctx*/) override { }
-  virtual void exitTypeSpecifier(Pcl2Parser::TypeSpecifierContext * /*ctx*/) override { }
-
-  virtual void enterParamaterTypeList(Pcl2Parser::ParamaterTypeListContext * /*ctx*/) override { }
-  virtual void exitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext * /*ctx*/) override { }
-
-  virtual void enterDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
-  virtual void exitDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
+  virtual void enterParameterTypeList(Pcl2Parser::ParameterTypeListContext * /*ctx*/) override { }
+  virtual void exitParameterTypeList(Pcl2Parser::ParameterTypeListContext * /*ctx*/) override { }
 
 
   virtual void enterEveryRule(antlr4::ParserRuleContext * /*ctx*/) override { }

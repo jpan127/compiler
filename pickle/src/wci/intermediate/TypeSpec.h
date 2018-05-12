@@ -76,7 +76,7 @@ public:
      * Getter.
      * @return the type identifier (symbol table entry).
      */
-    virtual SymTabEntry *get_identifier() = 0;
+    virtual SymTabEntry *get_identifier() const = 0;
 
     /**
      * Setter.
@@ -111,6 +111,8 @@ public:
     virtual TypeSpec *base_type() = 0;
 
     friend ostream & operator << (ostream & out, const TypeSpec * other);
+
+    string to_string() const;
     
 };
 
