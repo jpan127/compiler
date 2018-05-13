@@ -40,10 +40,10 @@ public:
     RuleFunctionDefinition = 3, RuleDeclaration = 4, RuleTypeSpecifier = 5, 
     RuleFunctionCall = 6, RuleFunctionReturn = 7, RuleIdentifierList = 8, 
     RuleCompoundStatement = 9, RuleBlockItemList = 10, RuleBlockItem = 11, 
-    RuleStatement = 12, RuleAssignmentStatement = 13, RuleExpressionStatement = 14, 
-    RuleSelectionStatement = 15, RuleIterationStatement = 16, RulePrimaryExpression = 17, 
-    RuleExpression = 18, RuleConditionalExpression = 19, RuleAssignmentExpression = 20, 
-    RuleParameterTypeList = 21
+    RuleStatement = 12, RuleUnaryStatement = 13, RuleAssignmentStatement = 14, 
+    RuleExpressionStatement = 15, RuleSelectionStatement = 16, RuleIterationStatement = 17, 
+    RulePrimaryExpression = 18, RuleExpression = 19, RuleConditionalExpression = 20, 
+    RuleAssignmentExpression = 21, RuleParameterTypeList = 22
   };
 
   Pcl2Parser(antlr4::TokenStream *input);
@@ -69,6 +69,7 @@ public:
   class BlockItemListContext;
   class BlockItemContext;
   class StatementContext;
+  class UnaryStatementContext;
   class AssignmentStatementContext;
   class ExpressionStatementContext;
   class SelectionStatementContext;
@@ -304,6 +305,8 @@ public:
     SelectionStatementContext *selectionStatement();
     IterationStatementContext *iterationStatement();
     AssignmentStatementContext *assignmentStatement();
+    UnaryStatementContext *unaryStatement();
+    antlr4::tree::TerminalNode *Semi();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -313,6 +316,23 @@ public:
   };
 
   StatementContext* statement();
+
+  class  UnaryStatementContext : public antlr4::ParserRuleContext {
+  public:
+    UnaryStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    antlr4::tree::TerminalNode *PlusPlus();
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *MinusMinus();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  UnaryStatementContext* unaryStatement();
 
   class  AssignmentStatementContext : public antlr4::ParserRuleContext {
   public:

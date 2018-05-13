@@ -50,11 +50,11 @@ link_exe = env.Program(
 Default(link_exe)
 Depends(link_exe, autogenerate_antlr)
 
-if EXECUTE is not None:
+if COMPILE is not None:
     execute = env.Command(
         target = "execute",
         source = [link_exe],
-        action = "build\compiler samples/sample2.c",
+        action = "build\compiler samples/{}.c".format(COMPILE),
     )
 
     Default(execute)

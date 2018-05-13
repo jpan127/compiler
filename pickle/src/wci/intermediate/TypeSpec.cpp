@@ -28,7 +28,7 @@ ostream & operator << (ostream & out, const TypeSpec * other)
             else if (other->get_identifier() == symtabimpl::Predefined::signed_type->get_identifier()   ) { output = "signed_type"  ; }
             else if (other->get_identifier() == symtabimpl::Predefined::unsigned_type->get_identifier() ) { output = "unsigned_type"; }
             else if (other->get_identifier() == symtabimpl::Predefined::uint32_t_type->get_identifier() ) { output = "uint32_t_type"; }
-            else if (other->get_identifier() == symtabimpl::Predefined::int32_t_type->get_identifier()  ) { output = "int32_t_type" ; }
+            else if (other->get_identifier() == symtabimpl::Predefined::integer_type->get_identifier()  ) { output = "integer_type" ; }
             else                                                                                          { output = "???"          ; }
         }
         catch (const char * msg)
@@ -49,19 +49,19 @@ string TypeSpec::to_string() const
 
     try
     {
-             if (this == (symtabimpl::Predefined::void_type)     ) { s = "void_type"    ; }
-        else if (this == (symtabimpl::Predefined::bool_type)     ) { s = "bool_type"    ; }
-        else if (this == (symtabimpl::Predefined::char_type)     ) { s = "char_type"    ; }
-        else if (this == (symtabimpl::Predefined::short_type)    ) { s = "short_type"   ; }
-        else if (this == (symtabimpl::Predefined::int_type)      ) { s = "int_type"     ; }
-        else if (this == (symtabimpl::Predefined::long_type)     ) { s = "long_type"    ; }
-        else if (this == (symtabimpl::Predefined::float_type)    ) { s = "float_type"   ; }
-        else if (this == (symtabimpl::Predefined::double_type)   ) { s = "double_type"  ; }
-        else if (this == (symtabimpl::Predefined::signed_type)   ) { s = "signed_type"  ; }
-        else if (this == (symtabimpl::Predefined::unsigned_type) ) { s = "unsigned_type"; }
-        else if (this == (symtabimpl::Predefined::uint32_t_type) ) { s = "uint32_t_type"; }
-        else if (this == (symtabimpl::Predefined::int32_t_type)  ) { s = "int32_t_type" ; }
-        else                                                       { s = "???"          ; }
+             if (this == (symtabimpl::Predefined::void_type)     ) { s = "void"    ; }
+        else if (this == (symtabimpl::Predefined::bool_type)     ) { s = "bool"    ; }
+        else if (this == (symtabimpl::Predefined::char_type)     ) { s = "char"    ; }
+        else if (this == (symtabimpl::Predefined::short_type)    ) { s = "short"   ; }
+        else if (this == (symtabimpl::Predefined::int_type)      ) { s = "int"     ; }
+        else if (this == (symtabimpl::Predefined::long_type)     ) { s = "long"    ; }
+        else if (this == (symtabimpl::Predefined::float_type)    ) { s = "float"   ; }
+        else if (this == (symtabimpl::Predefined::double_type)   ) { s = "double"  ; }
+        else if (this == (symtabimpl::Predefined::signed_type)   ) { s = "signed"  ; }
+        else if (this == (symtabimpl::Predefined::unsigned_type) ) { s = "unsigned"; }
+        else if (this == (symtabimpl::Predefined::uint32_t_type) ) { s = "uint32_t"; }
+        else if (this == (symtabimpl::Predefined::integer_type)  ) { s = "integer" ; }
+        else                                                       { s = "????????"; }
     }
     catch (const char * msg)
     {

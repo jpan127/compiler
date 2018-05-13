@@ -71,6 +71,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) override {
     return visitChildren(ctx);
   }

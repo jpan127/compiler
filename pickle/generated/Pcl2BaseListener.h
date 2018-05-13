@@ -59,6 +59,9 @@ public:
   virtual void enterStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
   virtual void exitStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
 
+  virtual void enterUnaryStatement(Pcl2Parser::UnaryStatementContext * /*ctx*/) override { }
+  virtual void exitUnaryStatement(Pcl2Parser::UnaryStatementContext * /*ctx*/) override { }
+
   virtual void enterAssignmentStatement(Pcl2Parser::AssignmentStatementContext * /*ctx*/) override { }
   virtual void exitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * /*ctx*/) override { }
 

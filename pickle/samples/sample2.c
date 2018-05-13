@@ -11,5 +11,9 @@ void main()
     while (d > 0)
     {
         e = 5;
+        if (e == 5)
+        {
+            b = 1;
+        }
     }
 }

@@ -105,7 +105,6 @@ antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
     auto value = visitChildren(context);
 
     // Emit the main program epilogue
-    j_file                                                                          << endl;
     j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
     j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
     j_file                                                                          << endl;
@@ -127,6 +126,11 @@ antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
 antlrcpp::Any Pass2Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context)
 {
     print_debug_context(2, context, "visitTypeSpecifier");
+
+    /**
+     *  Nothing yet
+     */
+
     return visitChildren(context);
 }
 
@@ -139,12 +143,22 @@ antlrcpp::Any Pass2Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext 
 antlrcpp::Any Pass2Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *context)
 {
     print_debug_context(2, context, "visitDeclaration");
+
+    /**
+     *  Nothing yet
+     */
+
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
 {
     print_debug_context(2, context, "visitFunctionDefinition");
+
+    /**
+     *  Nothing yet
+     */
+
     return visitChildren(context);
 }
 
@@ -186,8 +200,8 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 
     /**
      *  If variable : emit getstatic
-     *  If integer  : emit iconst
-     *  If float    : emit fconst
+     *  If integer  : emit ldc
+     *  If float    : emit ldc
      */
 
     if (context->primaryExpression()->Identifier())
@@ -202,18 +216,12 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
                << context->type_letter
                << endl;
     }
-    else if (context->primaryExpression()->IntegerConstant())
+    else if (context->primaryExpression()->IntegerConstant() ||
+            (context->primaryExpression()->FloatConstant()))
     {
         j_file << TAB
-               << "iconst "
+               << "ldc "
                << context->primaryExpression()->IntegerConstant()->getText()
-               << endl;
-    }
-    else if (context->primaryExpression()->FloatConstant())
-    {
-        j_file << TAB
-               << "fconst "
-               << context->primaryExpression()->FloatConstant()->getText()
                << endl;
     }
 
@@ -285,61 +293,6 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
     j_file << "\t" << opcode << endl;
 
     return nullptr;
-}
-
-/*////////////////////////////////////////////////////////////
- *                                                           *
- *                     S T A T E M E N T S                   *
- *                                                           *
- */////////////////////////////////////////////////////////////
-
-antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context)
-{
-    print_debug_context(2, context, "visitAssignmentStatement");
-
-    /**
-     *  Nothing yet
-     */
-
-    return visitChildren(context);
-}
-
-antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
-{
-    print_debug_context(2, context, "visitIterationStatement");
-
-    /**
-     *  Emit start of loop label
-     *  Visit children which will emit the instructions internal to the loop
-     *  Emit a jump to start of loop
-     *  Emit a label for the end of loop
-     */
-
-    // Emit the iteration label
-    j_file << endl 
-           << context->conditionalExpression()->iteration_name 
-           << ":" 
-           << endl;
-
-    // Emit while loop
-    auto value = visitChildren(context);
-
-    // Emit a jump to start of loop
-    j_file << TAB
-           << "; Jump to start of loop"
-           << endl
-           << TAB
-           << "goto "
-           << context->conditionalExpression()->iteration_name
-           << endl;
-
-    // Add label to branch to for exiting the loop
-    j_file << context->conditionalExpression()->iteration_name
-           << "_end"
-           << ":"
-           << endl;
-
-    return value;
 }
 
 antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *context)
@@ -450,4 +403,91 @@ antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::Parent
      */
 
     return visitChildren(context);
+}
+
+/*////////////////////////////////////////////////////////////
+ *                                                           *
+ *                     S T A T E M E N T S                   *
+ *                                                           *
+ */////////////////////////////////////////////////////////////
+
+antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context)
+{
+    print_debug_context(2, context, "visitAssignmentStatement");
+
+    /**
+     *  Nothing yet
+     */
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
+{
+    print_debug_context(2, context, "visitIterationStatement");
+
+    /**
+     *  Emit start of loop label
+     *  Visit children which will emit the instructions internal to the loop
+     *  Emit a jump to start of loop
+     *  Emit a label for the end of loop
+     */
+
+    // Emit the iteration label
+    j_file << endl 
+           << context->conditionalExpression()->iteration_name 
+           << ":" 
+           << endl;
+
+    // Emit while loop
+    auto value = visitChildren(context);
+
+    // Emit a jump to start of loop
+    j_file << TAB
+           << "; Jump to start of loop"
+           << endl
+           << TAB
+           << "goto "
+           << context->conditionalExpression()->iteration_name
+           << endl;
+
+    // Add label to branch to for exiting the loop
+    j_file << context->conditionalExpression()->iteration_name
+           << "_end"
+           << ":"
+           << endl
+           << endl;
+
+    return value;
+}
+
+antlrcpp::Any Pass2Visitor::visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context)
+{
+    print_debug_context(2, context, "visitSelectionStatement");
+
+    /**
+     *  Emit start of if label
+     *  Visit children which will emit the instructions internal to the branch
+     *  Emit a label for the end of if
+     */
+
+    // Emit start label
+    j_file << context->conditionalExpression()->iteration_name
+           << ":"
+           << endl;
+
+    // Visit expression child first
+    visit(context->conditionalExpression());
+
+    // Visit children inside the if block
+    visit(context->statement());
+
+    // Emit end label
+    j_file << context->conditionalExpression()->iteration_name
+           << "_end"
+           << ":"
+           << endl
+           << endl;
+
+    return nullptr;
 }

@@ -49,6 +49,8 @@ public:
 
     virtual antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context) = 0;
 
+    virtual antlrcpp::Any visitUnaryStatement(Pcl2Parser::UnaryStatementContext *context) = 0;
+
     virtual antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context) = 0;
 
     virtual antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context) = 0;

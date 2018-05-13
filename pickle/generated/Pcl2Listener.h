@@ -57,6 +57,9 @@ public:
   virtual void enterStatement(Pcl2Parser::StatementContext *ctx) = 0;
   virtual void exitStatement(Pcl2Parser::StatementContext *ctx) = 0;
 
+  virtual void enterUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) = 0;
+  virtual void exitUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) = 0;
+
   virtual void enterAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) = 0;
   virtual void exitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) = 0;
 

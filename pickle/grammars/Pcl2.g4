@@ -74,6 +74,14 @@ statement
     |   selectionStatement
     |   iterationStatement
     |   assignmentStatement
+    |   unaryStatement Semi
+    ;
+
+unaryStatement
+    :   PlusPlus Identifier
+    |   MinusMinus Identifier
+    |   Identifier PlusPlus
+    |   Identifier MinusMinus
     ;
 
 assignmentStatement

@@ -15,7 +15,7 @@
 using namespace wci;
 using namespace wci::intermediate;
 
-#define TESTING
+
 
 class Pass1Visitor : public PassVisitor, public Pcl2BaseVisitor
 {
@@ -33,13 +33,8 @@ private:
     /// Flag to print debug messages or not
     const bool debug_flag;
 
-    /// Type of last declaration node
-    TypeSpec * current_type;
-
     /// Name of current program
     const string program_name;
-
-    string current_scope;
 
 public:
 
@@ -60,7 +55,6 @@ public:
 
     antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context);
     antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context);
-    // antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context);
     antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
     antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context);
 
@@ -72,17 +66,6 @@ public:
 
     antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context);
-
-    // antlrcpp::Any visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context);
-    // antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context);
-    // antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context);
-    // antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context);
-    // antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context);
-    // antlrcpp::Any visitBlockItemList(Pcl2Parser::BlockItemListContext *context);
-    // antlrcpp::Any visitBlockItem(Pcl2Parser::BlockItemContext *context);
-    // antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context);
-    // antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context);
-    // antlrcpp::Any visitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *context);
 
 };
 
