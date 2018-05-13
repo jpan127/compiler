@@ -18,6 +18,14 @@ namespace wci { namespace intermediate {
 
 using namespace std;
 
+
+typedef enum
+{
+    expr_mul_div,
+    expr_add_min,
+    expr_primary,
+} expression_type_E;
+
 /**
  * Type specification form
  */

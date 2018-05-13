@@ -10,6 +10,8 @@
 #include "antlr4-runtime.h"
 #include "Pcl2Visitor.h"
 
+#include "common.hpp"
+
 using namespace wci;
 using namespace wci::intermediate;
 
@@ -19,9 +21,11 @@ class PassVisitor
 {
 protected:
 
-    PassVisitor() { }
+    PassVisitor() : scope_counter(0) { }
 
     virtual ~PassVisitor() { }
+
+
 
     /// Just a tab character
     static const char TAB = '\t';
@@ -29,6 +33,10 @@ protected:
     static const map <string, TypeSpec **> type_map;
 
     static const unordered_map <TypeSpec **, char> letter_map;
+
+    uint64_t scope_counter;
+
+
 
     TypeSpec * resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type);
 

@@ -20,14 +20,14 @@ Pass1Visitor::~Pass1Visitor()
     /// Empty
 }
 
-Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : program_name(fname), program_id(nullptr), j_file(nullptr), debug_flag(debug)
+Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : PassVisitor(), program_name(fname), program_id(nullptr), j_file(nullptr), debug_flag(debug)
 {
     // Create and initialize the symbol table stack.
     symtab_stack = SymTabFactory::create_symtab_stack();
     Predefined::initialize(symtab_stack);
 
     program_id = symtab_stack->enter_local(program_name);
-    program_id->set_definition((Definition)DF_PROGRAM);
+    program_id->set_definition((Definition) DF_PROGRAM);
     program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB, new EntryValue(symtab_stack->push()));
     symtab_stack->set_program_id(program_id);
 
@@ -55,13 +55,12 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
         j_file.open(program_name + ".j");
         if (j_file.fail())
         {
-            throw "***** Failed to open file";
+            throw FileOpenError("Failed to open file");
         }
     }
-    catch (const char * exception)
+    catch (FileOpenError const & error)
     {
-        cerr << exception << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     // Emit the program header
@@ -116,6 +115,7 @@ antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext 
 /*////////////////////////////////////////////////////////////
  *                                                           *
  *                   D E C L A R A T I O N S                 *
+ *                     S T A T E M E N T S                   *
  *                                                           *
  */////////////////////////////////////////////////////////////
 
@@ -132,30 +132,29 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
         {
             cout << TAB << context->typeSpecifier()->getText() << endl;
             context->type = *(type_map.at(context->typeSpecifier()->getText()));
-            context->assignmentExpression(0)->type_letter = toupper(context->typeSpecifier()->getText()[0]);
         }
         else
         {
-        #ifdef TESTING
-            throw "Type not supported : " + context->getText();
-        #else
-            cerr << "Type not supported : " << context->getText() << endl;
-        #endif
+            throw InvalidType("Type not supported : " + context->getText());
         }
     }
-    catch (const string msg)
+    catch (InvalidType const & error)
     {
-        cerr << msg << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     string variable_name;
     string variable_initial_value;
+
+    context->type_letter = toupper(context->typeSpecifier()->getText()[0]);
     
     if (context->assignmentExpression(0))
     {
         cout << TAB << "Has assignment\n";
         variable_name = context->assignmentExpression(0)->Identifier()->getText();
+
+        // Save type letter inside assignmentExpression
+        context->assignmentExpression(0)->type_letter = context->type_letter;
     
         if (context->assignmentExpression(0)->expression())
         {
@@ -214,6 +213,32 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     return visitChildren(context);
 }
 
+antlrcpp::Any Pass1Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
+{
+    print_debug_context(1, context, "visitIterationStatement");
+
+    /**
+     *  Sets the iteration name to while_N where N is the current scope number
+     */
+
+    context->conditionalExpression()->iteration_name = "while_" + std::to_string(scope_counter++);
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context)
+{
+    print_debug_context(1, context, "visitSelectionStatement");
+
+    /**
+     *  Sets the iteration name to if_N where N is the current scope number
+     */
+
+    context->conditionalExpression()->iteration_name = "if_" + std::to_string(scope_counter++);
+
+    return visitChildren(context);
+}
+
 /*////////////////////////////////////////////////////////////
  *                                                           *
  *                   E X P R E S S I O N S                   *
@@ -224,12 +249,14 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 {
     print_debug_context(1, context, "visitPrimExpr");
 
+    context->expression_type = expr_primary;
+
     if (context->primaryExpression()->Identifier())
     {
         // Look up type of this expression in the symbol table stack
         try
         {
-            auto id = symtab_stack->lookup_local(context->getText());
+            auto id = symtab_stack->lookup(context->getText());
 
             if (!id)
             {
@@ -243,11 +270,12 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
             {
                 if (*x.first == type)
                 {
-                    context->expr_operator = x.second;
+                    context->type_letter = x.second;
                     context->type = type;
-                    cout << TAB << type                   << endl;
-                    cout << TAB << *x.first               << endl;
-                    cout << TAB << context->expr_operator << endl;
+                    context->primaryExpression()->type_letter = x.second;
+                    cout << TAB << type                 << endl;
+                    cout << TAB << *x.first             << endl;
+                    cout << TAB << context->type_letter << endl;
                     found = true;
                     break;
                 }
@@ -256,23 +284,22 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
             if (!found)
             {
                 const string error = string("[visitPrimExpr] Could not find type : ") + type->to_string();
-                throw error;
+                throw InvalidType("[visitPrimExpr] Could not find type : " + type->to_string());
             }
         }
-        catch (const string & msg)
+        catch (InvalidType const & error)
         {
-            cerr << msg << endl;
-            exit(-1);
+            error.print_and_exit();
         }
     }
     else if (context->primaryExpression()->IntegerConstant())
     {
-        context->expr_operator = 'I';
+        context->type_letter = 'I';
         context->type = Predefined::integer_type;
     }
     else if (context->primaryExpression()->FloatConstant())
     {
-        context->expr_operator = 'F';
+        context->type_letter = 'F';
         context->type = Predefined::float_type;
     }
 
@@ -283,6 +310,8 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 {
     print_debug_context(1, context, "visitMulDivExpr");
     
+    context->expression_type = expr_mul_div;
+
     try
     {
         if (nullptr != context->opr)
@@ -295,19 +324,18 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
                     context->expr_operator = context->opr->getText()[0];
                     break;
                 default:
-                    throw "MulDivExpr received impossible operator : " + context->opr->getText()[0];
+                    throw InvalidOperator("MulDivExpr received impossible operator : " + context->opr->getText()[0]);
                     break;
             }
         }
         else
         {
-            throw "MulDivExpr missing operator";
+            throw InvalidOperator("MulDivExpr missing operator");
         }
     }
-    catch (const string msg)
+    catch (InvalidOperator const & error)
     {
-        cout << msg << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     const string lhs_name = context->expression(0)->getText();
@@ -315,25 +343,24 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 
     try
     {
-        auto lhs_id = symtab_stack->lookup_local(lhs_name);
-        auto rhs_id = symtab_stack->lookup_local(rhs_name);
+        auto lhs_id = symtab_stack->lookup(lhs_name);
+        auto rhs_id = symtab_stack->lookup(rhs_name);
 
         if (!lhs_id)
         {
-            throw "[visitMulDivExpr] Could not find symbol : " + lhs_name;
+            throw MissingSymbol("[visitMulDivExpr] Could not find symbol : " + lhs_name);
         }
 
         if (!rhs_id)
         {
-            throw "[visitMulDivExpr] Could not find symbol : " + rhs_name;
+            throw MissingSymbol("[visitMulDivExpr] Could not find symbol : " + rhs_name);
         }
 
         context->type = resolve_expression_type(lhs_id->get_typespec(), rhs_id->get_typespec());
     }
-    catch (const char * msg)
+    catch (MissingSymbol const & error)
     {
-        cout << msg << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
@@ -344,6 +371,8 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *context)
 {
     print_debug_context(1, context, "visitAddminExpr");
+
+    context->expression_type = expr_add_min;
 
     try
     {
@@ -356,19 +385,18 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
                     context->expr_operator = context->opr->getText()[0];
                     break;
                 default:
-                    throw "[visitAddminExpr] received impossible operator : " + context->opr->getText()[0];
+                    throw InvalidOperator("[visitAddminExpr] received impossible operator : " + context->opr->getText()[0]);
                     break;
             }
         }
         else
         {
-            throw "[visitAddminExpr] missing operator";
+            throw InvalidOperator("[visitAddminExpr] missing operator");
         }
     }
-    catch (const string msg)
+    catch (InvalidOperator const & error)
     {
-        cout << msg << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     const string lhs_name = context->expression(0)->getText();
@@ -376,25 +404,24 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
 
     try
     {
-        auto lhs_id = symtab_stack->lookup_local(lhs_name);
-        auto rhs_id = symtab_stack->lookup_local(rhs_name);
+        auto lhs_id = symtab_stack->lookup(lhs_name);
+        auto rhs_id = symtab_stack->lookup(rhs_name);
 
         if (!lhs_id)
         {
-            throw "[visitAddminExpr] Could not find symbol : " + lhs_name;
+            throw MissingSymbol("[visitAddminExpr] Could not find symbol : " + lhs_name);
         }
 
         if (!rhs_id)
         {
-            throw "[visitAddminExpr] Could not find symbol : " + rhs_name;
+            throw MissingSymbol("[visitAddminExpr] Could not find symbol : " + rhs_name);
         }
 
         context->type = resolve_expression_type(lhs_id->get_typespec(), rhs_id->get_typespec());
     }
-    catch (const char * msg)
+    catch (MissingSymbol const & error)
     {
-        cout << msg << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
@@ -407,7 +434,7 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
     print_debug_context(1, context, "visitAssignmentExpression");
 
     const string variable = context->Identifier()->getText();
-    TypeSpec * type = symtab_stack->lookup_local(variable)->get_typespec();
+    TypeSpec * type = symtab_stack->lookup(variable)->get_typespec();
 
     try
     {
@@ -432,21 +459,83 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
             if (!found)
             {
-                throw "Cannot find type : " + type->to_string();
+                throw InvalidType(type->to_string());
             }
         }
         else
         {
-            const string error = "Missing symbol table : " + variable;
-            throw error;
+            throw MissingSymbol("Missing symbol table : " + variable);
         }
     }
-    catch (const string & error)
+    catch (InvalidType const & error)
     {
-        cerr << error << endl;
-        exit(-1);
+        error.print_and_exit();
+    }
+    catch (MissingSymbol const & error)
+    {
+        error.print_and_exit();
     }
 
-    return visitChildren(context);   
+    return visitChildren(context);
+}
 
+antlrcpp::Any Pass1Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context)
+{
+    print_debug_context(1, context, "visitBasicConditionalExpr");
+
+    /**
+     *  Saves the operator characters
+     *  Saves the opcode
+     */
+
+    const string opr = context->ConditionalOperator()->getText();
+
+    string opcode;
+
+    try
+    {
+             if (opr == "<")                     { opcode = "if_icmpge"; }  ///< (x <  y) branch if >=
+        else if (opr == "<=")                    { opcode = "if_icmpgt"; }  ///< (x <= y) branch if >
+        else if (opr == ">")                     { opcode = "if_icmple"; }  ///< (x >  y) branch if <=
+        else if (opr == ">=")                    { opcode = "if_icmplt"; }  ///< (x >= y) branch if <
+        else if (opr == "==" || opr == "is")     { opcode = "if_icmpeq"; }  ///< (x == y) branch if ==
+        else if (opr == "!=" || opr == "is not") { opcode = "if_icmpne"; }  ///< (x != y) branch if !=
+        else                                     { throw InvalidOperator(opr); }
+    }
+    catch (InvalidOperator const & error)
+    {
+        error.print_and_exit();
+    }
+
+    context->opr = opr;
+    context->opcode = opcode;
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context)
+{
+    print_debug_context(1, context, "visitConnectedConditionalExpr");
+
+    /**
+     *  Saves the operator characters
+     */
+
+    // Left and right operands should have pushed values to the stack
+    if ("||" == context->ConditionalConnectOperator()->getText() ||
+        "or" == context->ConditionalConnectOperator()->getText())
+    {
+        context->opr = "or";
+    }
+    else if ("&&"  == context->ConditionalConnectOperator()->getText() ||
+             "and" == context->ConditionalConnectOperator()->getText())
+    {
+       context->opr = "and";
+    }
+    else
+    {
+        throw AntlrParsedIncorrectly("[visitConnectedConditionalExpr] Does not have proper operands");
+    }
+
+    return visitChildren(context);
 }

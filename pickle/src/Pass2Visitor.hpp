@@ -32,8 +32,6 @@ private:
 
     string resolve_expression_instruction(TypeSpec * type, const char opr);
 
-    uint64_t scope_counter;
-
 public:
 
     /// Constructor

@@ -61,10 +61,14 @@ public:
     antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context);
     antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context);
     // antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context);
+    antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
+    antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context);
 
     antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context);
     antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context);
     antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context);
+    antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context);
+    antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context);
 
     antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context);
@@ -78,7 +82,6 @@ public:
     // antlrcpp::Any visitBlockItem(Pcl2Parser::BlockItemContext *context);
     // antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context);
     // antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context);
-    // antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
     // antlrcpp::Any visitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *context);
 
 };

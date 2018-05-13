@@ -6,7 +6,7 @@ using namespace wci::intermediate;
 }
 
 compilationUnit
-    :   translationUnit? EOF
+    :translationUnit? EOF
     ;
 
 translationUnit
@@ -84,15 +84,20 @@ expressionStatement
     :   expression? Semi
     ;
 
+/// If Statement
 selectionStatement
     : If LeftParen conditionalExpression RightParen statement
     ;
 
+/// While Statement
 iterationStatement
     :   While LeftParen conditionalExpression RightParen statement
     ;
 
 primaryExpression
+    locals [
+        char type_letter = '?'
+    ]
     :   Identifier
     |   IntegerConstant
     |   FloatConstant
@@ -103,13 +108,20 @@ expression
     locals [
         TypeSpec * type = nullptr,
         char expr_operator = 0,
+        char type_letter = '?',
+        expression_type_E expression_type
     ]
     :   expression opr=('*'|'/'|'%') expression # mulDivExpr
     |   expression opr=('+'|'-') expression     # addminExpr
     |   primaryExpression                       # primExpr
     ;
 
-conditionalExpression locals [ string iteration_name ]
+conditionalExpression 
+    locals [ 
+        string iteration_name,  /// Stores the name of the parent statement (while_N | if_N)
+        string opr,             /// Stores the operator chars
+        string opcode           /// Stores the instruction opcode used in Pass 2
+    ]
     :   expression ConditionalOperator expression                               # basicConditionalExpr
     |   conditionalExpression ConditionalConnectOperator conditionalExpression  # connectedConditionalExpr
     |   LeftParen conditionalExpression RightParen                              # parenthesizedConditionalExpr
@@ -128,12 +140,6 @@ assignmentExpression
 parameterTypeList
     :   LeftParen (declaration)* RightParen;
 
-Identifier
-    :   IdentifierNondigit
-        (   IdentifierNondigit
-        |   Digit
-        )*
-    ;
 
 /***************************************************
  *                                                 *
@@ -144,7 +150,6 @@ Identifier
 fragment
 IdentifierNondigit
     :   Nondigit
-    //|   // other implementation-defined characters...
     ;
 
 fragment
@@ -304,6 +309,13 @@ Equal
 NotEqual
     : '!='
     | 'is not'
+    ;
+
+Identifier
+    :   IdentifierNondigit
+        (   IdentifierNondigit
+        |   Digit
+        )*
     ;
 
 Whitespace

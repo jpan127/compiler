@@ -16,7 +16,7 @@ using namespace wci::intermediate::symtabimpl;
 
 /// @NOTE : There's no fucking good resources for Jasmin instructions except this https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html
 
-Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : program_name(fname), j_file(j_file), debug_flag(debug), scope_counter(0)
+Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : PassVisitor(), program_name(fname), j_file(j_file), debug_flag(debug)
 {
     /// Empty
 }
@@ -35,36 +35,36 @@ string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, const char 
     {
         switch (opr)
         {
-            case '*': opcode = "lmul";          break;
-            case '/': opcode = "ldiv";          break;
-            case '%': opcode = "lrem";          break;
-            case '+': opcode = "ladd";          break;
-            case '-': opcode = "lsub";          break;
-            default : throw out_of_range(&opr); break;
+            case '*': opcode = "lmul";             break;
+            case '/': opcode = "ldiv";             break;
+            case '%': opcode = "lrem";             break;
+            case '+': opcode = "ladd";             break;
+            case '-': opcode = "lsub";             break;
+            default : throw InvalidOperator(&opr); break;
         }
     }
     else if (Predefined::float_type == type)
     {
         switch (opr)
         {
-            case '*': opcode = "fmul";          break;
-            case '/': opcode = "fdiv";          break;
-            case '%': opcode = "frem";          break;
-            case '+': opcode = "fadd";          break;
-            case '-': opcode = "fsub";          break;
-            default : throw out_of_range(&opr); break;
+            case '*': opcode = "fmul";             break;
+            case '/': opcode = "fdiv";             break;
+            case '%': opcode = "frem";             break;
+            case '+': opcode = "fadd";             break;
+            case '-': opcode = "fsub";             break;
+            default : throw InvalidOperator(&opr); break;
         }
     }
     else
     {
         switch (opr)
         {
-            case '*': opcode = "imul";          break;
-            case '/': opcode = "idiv";          break;
-            case '%': opcode = "irem";          break;
-            case '+': opcode = "iadd";          break;
-            case '-': opcode = "isub";          break;
-            default : throw out_of_range(&opr); break;
+            case '*': opcode = "imul";             break;
+            case '/': opcode = "idiv";             break;
+            case '%': opcode = "irem";             break;
+            case '+': opcode = "iadd";             break;
+            case '-': opcode = "isub";             break;
+            default : throw InvalidOperator(&opr); break;
         }            
     }
 
@@ -99,6 +99,7 @@ antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
     j_file << "\tdup"                                                               << endl;
     j_file << "\tinvokenonvirtual PascalTextIn/<init>()V"                           << endl;
     j_file << "\tputstatic        " + program_name << "/_standardIn LPascalTextIn;" << endl;
+    j_file                                                                          << endl;
 
     // We want to vist the children and traverse the entire tree before printing the next epilogue
     auto value = visitChildren(context);
@@ -157,45 +158,24 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 {
     print_debug_context(2, context, "visitAssignmentExpression");
 
-    j_file << endl << "; " + context->getText() << endl << endl;
+    /**
+     *  RHS expression will take care of emitting its own instructions
+     *  This node will just load the value into the assigned variable
+     */
 
-    // Get value of the right hand side expression first
+    j_file << TAB << "; " + context->getText() << endl;
+
+    // Visit right hand side expression first
     auto expression_result = visit(context->expression());
 
-    try
-    {
-        char letter = '?';
-
-        cout << "******************** " << context->type_letter << endl;
-        
-        // // Get type set by first pass
-        // if (auto base = dynamic_cast<Pcl2Parser::DeclarationContext *>(context->parent))
-        // {
-        //     letter = base->type_letter;
-        // }
-        // else if (auto base = dynamic_cast <Pcl2Parser::AssignmentStatementContext *>(context->parent))
-        // {
-        //     letter = base->type_letter;
-        // }
-        // else
-        // {
-        //     throw bad_cast();
-        // }
-
-        // Emit a field put instruction.
-        j_file << "\tputstatic\t" 
-               << program_name
-               << "/" 
-               << context->Identifier()->toString()
-               << " " 
-               << context->type_letter 
-               << endl;
-    }
-    catch (std::bad_cast & msg)
-    {
-        cerr << "Assignment parent is not castable to declaration or AssignmentStatement : " << msg.what() << endl;
-        exit(-1);
-    }
+    // Emit a field put instruction.
+    j_file << "\tputstatic\t" 
+           << program_name
+           << "/" 
+           << context->Identifier()->toString()
+           << " " 
+           << context->type_letter 
+           << endl;
 
     return expression_result;
 }
@@ -203,6 +183,40 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 {
     print_debug_context(2, context, "visitPrimExpr");
+
+    /**
+     *  If variable : emit getstatic
+     *  If integer  : emit iconst
+     *  If float    : emit fconst
+     */
+
+    if (context->primaryExpression()->Identifier())
+    {
+        j_file << TAB
+               << "getstatic"
+               << TAB
+               << program_name
+               << "/"
+               << context->primaryExpression()->Identifier()->getText()
+               << " "
+               << context->type_letter
+               << endl;
+    }
+    else if (context->primaryExpression()->IntegerConstant())
+    {
+        j_file << TAB
+               << "iconst "
+               << context->primaryExpression()->IntegerConstant()->getText()
+               << endl;
+    }
+    else if (context->primaryExpression()->FloatConstant())
+    {
+        j_file << TAB
+               << "fconst "
+               << context->primaryExpression()->FloatConstant()->getText()
+               << endl;
+    }
+
     return visitChildren(context);
 }
 
@@ -210,43 +224,13 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 {
     print_debug_context(2, context, "visitMulDivExpr");
 
-    const string lhs_name = context->expression(0)->getText();
-    const string rhs_name = context->expression(1)->getText();
+    /**
+     *  Visits children expressions first which will push to stack
+     *  Then this node will emit an instruction using the previously pushed values
+     */
 
-    const TypeSpec * lhs_type = context->expression(0)->type;
-    const TypeSpec * rhs_type = context->expression(1)->type;
-
-    if (!lhs_type)
-    {
-        cerr << "lhs_type is NULL" << endl;
-        exit(-1);
-    }
-    else
-    {
-        j_file << "\tgetstatic\t" 
-               << program_name
-               << "/" 
-               << lhs_name 
-               << " " 
-               << letter_map_lookup(lhs_type)
-               << endl;
-    }
-
-    if (!rhs_type)
-    {
-        cerr << "rhs_type is NULL" << endl;
-        exit(-1);
-    }
-    else
-    {
-        j_file << "\tgetstatic\t" 
-               << program_name
-               << "/" 
-               << rhs_name 
-               << " " 
-               << letter_map_lookup(rhs_type)
-               << endl;
-    }
+    visit(context->expression(0));
+    visit(context->expression(1));
 
     string opcode;
 
@@ -257,66 +241,30 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
             case '*': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
             case '/': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
             case '%': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            default : throw invalid_argument(&context->expr_operator);                                break;
+            default : throw InvalidOperator(&context->expr_operator);                                 break;
         }
     }
-    catch (out_of_range & exception)
+    catch (InvalidOperator const & error)
     {
-        cerr << "[resolve_expression_instruction] Impossible operator found : " << context->expr_operator << " " << exception.what() << endl;
-        exit(-1);
-    }
-    catch (invalid_argument & exception)
-    {
-        cerr << "[visitMulDivExpr] Impossible operator found : " << context->expr_operator << " " << exception.what() << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     j_file << "\t" << opcode << endl;
 
-    return visitChildren(context);
+    return nullptr;
 }
 
 antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *context)
 {
     print_debug_context(2, context, "visitAddminExpr");
 
-    const string lhs_name = context->expression(0)->getText();
-    const string rhs_name = context->expression(1)->getText();
+    /**
+     *  Visits children expressions first which will push to stack
+     *  Then this node will emit an instruction using the previously pushed values
+     */
 
-    const TypeSpec * lhs_type = context->expression(0)->type;
-    const TypeSpec * rhs_type = context->expression(1)->type;
-
-    if (!lhs_type)
-    {
-        cerr << "lhs_type is NULL" << endl;
-        exit(-1);
-    }
-    else
-    {
-        j_file << "\tgetstatic\t" 
-               << program_name
-               << "/" 
-               << lhs_name 
-               << " " 
-               << letter_map_lookup(lhs_type)
-               << endl;
-    }
-
-    if (!rhs_type)
-    {
-        cerr << "rhs_type is NULL" << endl;
-        exit(-1);
-    }
-    else
-    {
-        j_file << "\tgetstatic\t" 
-               << program_name
-               << "/" 
-               << rhs_name 
-               << " " 
-               << letter_map_lookup(rhs_type)
-               << endl;
-    }
+    visit(context->expression(0));
+    visit(context->expression(1));
 
     string opcode;
 
@@ -326,59 +274,18 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
         {
             case '+': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
             case '-': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            default : throw invalid_argument(&context->expr_operator);                                break;
+            default : throw InvalidOperator(&context->expr_operator);                                 break;
         }
     }
-    catch (out_of_range & exception)
+    catch (InvalidOperator const & error)
     {
-        cerr << "[resolve_expression_instruction] Impossible operator found : " << context->expr_operator << " " << exception.what() << endl;
-        exit(-1);
-    }
-    catch (invalid_argument & exception)
-    {
-        cerr << "[visitAddminExpr] Impossible operator found : " << context->expr_operator << " " << exception.what() << endl;
-        exit(-1);
+        error.print_and_exit();
     }
 
     j_file << "\t" << opcode << endl;
 
-    return visitChildren(context);
+    return nullptr;
 }
-
-#if 0
-
-    antlrcpp::Any Pass2Visitor::visitSignedNumber(Pcl2Parser::SignedNumberContext *ctx)
-    {
-        auto value = visitChildren(ctx);
-        TypeSpec *type = ctx->number()->type;
-
-        if (ctx->sign()->children[0] == ctx->sign()->SUB_OP())
-        {
-            string opcode = (type == Predefined::integer_type) ? "ineg"
-                          : (type == Predefined::float_type)    ? "fneg"
-                          :                                      "?neg";
-
-            // Emit a negate instruction.
-            j_file << "\t" << opcode << endl;
-        }
-
-        return value;
-    }
-
-    antlrcpp::Any Pass2Visitor::visitIntegerConst(Pcl2Parser::IntegerConstContext *ctx)
-    {
-        j_file << "\tldc\t" << ctx->getText() << endl;
-        return visitChildren(ctx);
-    }
-
-    antlrcpp::Any Pass2Visitor::visitFloatConst(Pcl2Parser::FloatConstContext *ctx)
-    {
-        j_file << "\tldc\t" << ctx->getText() << endl;
-        return visitChildren(ctx);
-    }
-
-#endif
-
 
 /*////////////////////////////////////////////////////////////
  *                                                           *
@@ -388,15 +295,25 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
 
 antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context)
 {
+    print_debug_context(2, context, "visitAssignmentStatement");
 
+    /**
+     *  Nothing yet
+     */
+
+    return visitChildren(context);
 }
 
 antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
 {
     print_debug_context(2, context, "visitIterationStatement");
 
-    // Store iteration name
-    context->conditionalExpression()->iteration_name = "while" + std::to_string(scope_counter++);
+    /**
+     *  Emit start of loop label
+     *  Visit children which will emit the instructions internal to the loop
+     *  Emit a jump to start of loop
+     *  Emit a label for the end of loop
+     */
 
     // Emit the iteration label
     j_file << endl 
@@ -404,11 +321,22 @@ antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
            << ":" 
            << endl;
 
+    // Emit while loop
     auto value = visitChildren(context);
 
-    // Emit comment saying end of loop
-    j_file << "; End : "
+    // Emit a jump to start of loop
+    j_file << TAB
+           << "; Jump to start of loop"
+           << endl
+           << TAB
+           << "goto "
            << context->conditionalExpression()->iteration_name
+           << endl;
+
+    // Add label to branch to for exiting the loop
+    j_file << context->conditionalExpression()->iteration_name
+           << "_end"
+           << ":"
            << endl;
 
     return value;
@@ -418,110 +346,108 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicCondition
 {
     print_debug_context(2, context, "visitBasicConditionalExpr");
 
-    // ConditionalOperator
-    const string opr = context->ConditionalOperator()->getText();
+    /**
+     *  Children emit instructions first
+     *  Emits branch instruction for exiting the current branch
+     */
+
     const string lhs_name = context->expression(0)->getText();
     const string rhs_name = context->expression(1)->getText();
 
-    string opcode;
-
-    try
-    {
-             if (opr == "<")                     { opcode = "if_icmplt"; }
-        else if (opr == "<=")                    { opcode = "if_icmple"; }
-        else if (opr == ">")                     { opcode = "if_icmpgt"; }
-        else if (opr == ">=")                    { opcode = "if_icmpge"; }
-        else if (opr == "==" || opr == "is")     { opcode = "if_icmpeq"; }
-        else if (opr == "!=" || opr == "is not") { opcode = "if_icmpne"; }
-        else                                     { throw invalid_argument(opr); }
-    }
-    catch (invalid_argument const & exception)
-    {
-        cerr << exception.what() << endl;
-        exit(-1);
-    }
-
-    // Emit an explanation comment
+    // Emit an explanation comment for condition
     j_file << TAB 
            << "; "
            << lhs_name
            << " "
-           << opr
+           << context->opr
            << " "
            << rhs_name
            << endl;
 
-    // auto lhs_result = visit(context->expression(0));
-    // auto rhs_result = visit(context->expression(1));
+    auto lhs_result = visit(context->expression(0));
+    auto rhs_result = visit(context->expression(1));
 
-    // If right operand is a variable
-    if (PassVisitor::is_digit(rhs_name))
-    {
-        j_file << TAB
-               << "ldc "
-               << rhs_name
-               << endl;
-    }
-    else
-    {
-        // context->expression(0)->expression(0)->Identifier()->getText()
-        j_file << TAB
-               << "getstatic"
-               << TAB
-               << program_name
-               << "/"
-               << rhs_name
-               << " "
-               << context->expression(0)->type
-               << endl;
-    }
-
-    // If left operand is a variable
-    if (PassVisitor::is_digit(lhs_name))
-    {
-        j_file << TAB
-               << "ldc "
-               << lhs_name
-               << endl;
-    }
-    else
-    {
-        // context->expression(0)->expression(0)->Identifier()->getText()
-        j_file << TAB
-               << "getstatic"
-               << TAB
-               << program_name
-               << "/"
-               << lhs_name
-               << " "
-               << context->expression(0)->type
-               << endl;
-    }
+    // Emit an explanation comment for exit
+    j_file << TAB
+           << "; Exit ["
+           << context->iteration_name
+           << "] condition"
+           << endl;
 
     // Emit the instruction
     j_file << TAB
-           << opcode
+           << context->opcode
            << " "
-           << context->iteration_name
+           << context->iteration_name + "_end"
            << endl;
 
-    return visitChildren(context);
-}
-
-antlrcpp::Any Pass2Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context)
-{
-    print_debug_context(2, context, "visitNegatedConditionalExpr");
-    return visitChildren(context);
+    // return visitChildren(context);
+    return nullptr;
 }
 
 antlrcpp::Any Pass2Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *context)
 {
     print_debug_context(2, context, "visitConnectedConditionalExpr");
+
+    /**
+     *  Top level conditional expression
+     *  Responsible for only checking the top 2 values on the stack
+     *  For an OR operation, if any of them are nonzero positive, jump
+     *  For an AND operation, if both of them are nonzero positive, jump
+     */
+
+    // Visit left and right sides first
+    auto lhs_result = visit(context->conditionalExpression(0));
+    auto rhs_result = visit(context->conditionalExpression(1));
+
+    // Left and right operands should have pushed values to the stack
+    if ("or" == context->opr)
+    {
+        // If left condition is > 0, jump 
+        j_file << TAB
+               << "ifgt "
+               << context->iteration_name
+               << endl;
+        // If right condition is > 0, jump
+        j_file << TAB
+               << "ifgt "
+               << context->iteration_name
+               << endl;
+    }
+    else if ("and" == context->opr)
+    {
+        // If both conditions are > 0, then multiplying them will be > 0
+        j_file << TAB
+               << "imul "
+               << endl;
+        j_file << TAB
+               << "ifgt "
+               << context->iteration_name
+               << endl;
+    }
+
+    // Return visiting the middle
+    return nullptr;
+}
+
+antlrcpp::Any Pass2Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context)
+{
+    print_debug_context(2, context, "visitNegatedConditionalExpr");
+
+    /**
+     *  Nothing yet
+     */
+
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context)
 {
     print_debug_context(2, context, "visitParenthesizedConditionalExpr");
+
+    /**
+     *  Nothing yet
+     */
+
     return visitChildren(context);
 }
