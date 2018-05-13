@@ -11,26 +11,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fef5fbeb-a377-4e1f-b6d0-619af358397c" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/pickle/antlr/libantlr-runtime2.a" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/antlr/libantlr-runtime2.a" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2BaseListener.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2BaseListener.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2BaseListener.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2BaseListener.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Lexer.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Lexer.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Lexer.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Lexer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Listener.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Listener.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Listener.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Listener.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Visitor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Visitor.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Visitor.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/scripts/build.sh" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/scripts/build.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/scripts/recompile_runtime.sh" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/scripts/recompile_runtime.sh" afterDir="false" />
+    <list default="true" id="fef5fbeb-a377-4e1f-b6d0-619af358397c" name="Default" comment="refactored Function Definition visitor">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pickle/HELLOOOOOOO_WORRRRRLD.j" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/HELLOOOOOOO_WORRRRRLD.j" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -45,14 +30,35 @@
     <splitter split-orientation="horizontal" split-proportion="0.6563877">
       <split-first>
         <leaf>
-          <file leaf-file-name="Pass1Visitor.cpp" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Pass1Visitor.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-1852">
-                  <caret line="194" column="41" selection-start-line="194" selection-start-column="33" selection-end-line="194" selection-end-column="41" />
+                <state relative-caret-position="906">
+                  <caret line="92" column="23" lean-forward="true" selection-start-line="92" selection-start-column="23" selection-end-line="92" selection-end-column="23" />
                   <folding>
                     <element signature="e#0#19#0" expanded="true" />
                   </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Pass2Visitor.cpp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="294">
+                  <caret line="148" column="16" selection-start-line="148" selection-start-column="16" selection-end-line="148" selection-end-column="16" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="CrossReferencer.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/pickle/src/wci/util/CrossReferencer.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="219">
+                  <caret line="50" column="22" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
                 </state>
               </provider>
             </entry>
@@ -107,24 +113,6 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="SymTabEntryImpl.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="527">
-                  <caret line="37" column="33" selection-start-line="37" selection-start-column="33" selection-end-line="37" selection-end-column="33" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="Predefined.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/Predefined.h">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-590">
-                  <caret line="17" column="41" selection-start-line="17" selection-start-column="41" selection-end-line="17" selection-end-column="41" />
-                </state>
-              </provider>
-            </entry>
-          </file>
           <file leaf-file-name="Pcl2.g4" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/grammars/Pcl2.g4">
               <provider selected="true" editor-type-id="text-editor">
@@ -161,7 +149,6 @@
       <find>block</find>
       <find>jump</find>
       <find>decl</find>
-      <find>function</find>
       <find>functionDef</find>
       <find>statement</find>
       <find>primary</find>
@@ -177,6 +164,9 @@
       <find>parameter</find>
       <find>typespecifier</find>
       <find>compound</find>
+      <find>function</find>
+      <find>typespec</find>
+      <find>cross</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -191,6 +181,7 @@
         <option value="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp" />
         <option value="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" />
         <option value="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" />
+        <option value="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" />
       </list>
     </option>
   </component>
@@ -305,12 +296,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1526168759377</updated>
-      <workItem from="1526168760793" duration="14907000" />
+      <workItem from="1526168760793" duration="20922000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="14907000" />
+    <option name="totallyTimeSpent" value="20922000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
@@ -343,6 +334,10 @@
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="refactored Function Definition visitor" />
+    <option name="LAST_COMMIT_MESSAGE" value="refactored Function Definition visitor" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -468,10 +463,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-102">
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/wci/util/CrossReferencer.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="50" column="22" selection-start-line="50" selection-start-column="22" selection-end-line="50" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1852">
-          <caret line="194" column="41" selection-start-line="194" selection-start-column="33" selection-end-line="194" selection-end-column="41" />
+        <state relative-caret-position="906">
+          <caret line="92" column="23" lean-forward="true" selection-start-line="92" selection-start-column="23" selection-end-line="92" selection-end-column="23" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="294">
+          <caret line="148" column="16" selection-start-line="148" selection-start-column="16" selection-end-line="148" selection-end-column="16" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>

@@ -144,6 +144,10 @@ antlrcpp::Any Pass2Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
 antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
 {
     print_debug_context(2, context, "visitFunctionDefinition");
+    j_file << context->function_header;
+    visit(context->compoundStatement());
+    j_file << ".end method";
+
     return visitChildren(context);
 }
 

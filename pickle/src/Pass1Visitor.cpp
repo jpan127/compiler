@@ -213,24 +213,40 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 {
     print_debug_context(1, context, "visitFunctionDefinition");
 
+    std::string function_name = context->Identifier()->toString();
+    std::string function_return_type;
+    function_return_type = (char)toupper(context->typeSpecifier()->getText()[0]);
+
     // Set the compound statement's scope name as the function name
     context->compoundStatement()->scope_name = context->Identifier()->getText();
+
+    //create a header for pass2visitor to use when creating the method
+    context->function_header = ".method public static " + context->Identifier()->toString() + "(";
+
+    //add each function parameter to jasmin function header
+    for(auto variable: context->parameterTypeList()->functionDeclaration()) {
+        string var_type = variable->typeSpecifier()->getText();
+        context->function_header += (char)toupper(var_type[0]);
+    }
+
+    //close parameter parenthesis and declare function return type
+    context->function_header += ")" + function_return_type;
+
+    //add comment of function signature for jasmin file
+    context->function_header += "\n; " + context->getText() + "\n";
+
+    //create a local symbal table for the function
     SymTab *local_symTab = symtab_stack->push();
     SymTabEntry *local_name_entry = local_symTab->enter(context->Identifier()->toString());
     local_name_entry->set_definition((Definition) DF_FUNCTION);
+
+    //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
 
-
+    //use the created symtab as the symtab for compound statement {} scope
+    //symtab will be pushed back on in compound statement
     context->compoundStatement()->local_symTab = symtab_stack->pop();
 
-//    .method public static One(I)I
-    context->function_header = ".method public static " + context->Identifier()->toString() + "(";
-
-    for(auto variable: context->parameterTypeList()->functionDeclaration()) {
-        //todo: add each variable to string and symtab
-
-    }
-    context->function_header += ")" + toupper(context->typeSpecifier()->getText()[0]);
     return visit(context->compoundStatement());
 }
 
