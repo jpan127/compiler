@@ -14,8 +14,8 @@
 .limit stack 1
 .end method
 
-
-.method public static main([Ljava/lang/String;)V
+.method public static main()I
+; intmain(){}
 
 	new RunTimer
 	dup
@@ -25,9 +25,7 @@
 	dup
 	invokenonvirtual PascalTextIn/<init>()V
 	putstatic        HELLOOOOOOO_WORRRRRLD/_standardIn LPascalTextIn;
-.method public static func(II)I
-; intfunc(inty,intx){}
-.end method
+
 	getstatic     HELLOOOOOOO_WORRRRRLD/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V
 
@@ -35,4 +33,7 @@
 
 .limit locals 16
 .limit stack 16
+.end method
+.method public static func(II)I
+; intfunc(inty,intx){}
 .end method

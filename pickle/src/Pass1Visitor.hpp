@@ -70,6 +70,8 @@ public:
 
     antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
 
+
+    antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *context);
     // antlrcpp::Any visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context);
     // antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context);
     // antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context);

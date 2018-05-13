@@ -55,7 +55,7 @@ functionReturn
     ;
 
 jumpStatement
-    :      'return' expression? ';'
+    :      Return expression? Semi
     ;
 
 identifierList

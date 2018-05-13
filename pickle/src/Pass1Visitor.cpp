@@ -213,6 +213,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 {
     print_debug_context(1, context, "visitFunctionDefinition");
 
+    std::string function_header;
     std::string function_name = context->Identifier()->toString();
     std::string function_return_type;
     function_return_type = (char)toupper(context->typeSpecifier()->getText()[0]);
@@ -436,4 +437,13 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
     cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
 
     return visitChildren(context);   
+}
+
+antlrcpp::Any Pass1Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
+
+    if(context->Return()){//jump is return statement
+        visit(context->expression());
+
+    }
+    return visitChildren(context);
 }

@@ -831,6 +831,14 @@ Pcl2Parser::JumpStatementContext::JumpStatementContext(ParserRuleContext *parent
   : ParserRuleContext(parent, invokingState) {
 }
 
+tree::TerminalNode* Pcl2Parser::JumpStatementContext::Return() {
+  return getToken(Pcl2Parser::Return, 0);
+}
+
+tree::TerminalNode* Pcl2Parser::JumpStatementContext::Semi() {
+  return getToken(Pcl2Parser::Semi, 0);
+}
+
 Pcl2Parser::ExpressionContext* Pcl2Parser::JumpStatementContext::expression() {
   return getRuleContext<Pcl2Parser::ExpressionContext>(0);
 }
