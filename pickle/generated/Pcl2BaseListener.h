@@ -1,4 +1,5 @@
 
+#include "wci/intermediate/symtab.h"
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
 
@@ -32,6 +33,9 @@ public:
   virtual void enterFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
   virtual void exitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
 
+  virtual void enterFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext * /*ctx*/) override { }
+  virtual void exitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext * /*ctx*/) override { }
+
   virtual void enterDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
   virtual void exitDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
 
@@ -43,6 +47,9 @@ public:
 
   virtual void enterFunctionReturn(Pcl2Parser::FunctionReturnContext * /*ctx*/) override { }
   virtual void exitFunctionReturn(Pcl2Parser::FunctionReturnContext * /*ctx*/) override { }
+
+  virtual void enterJumpStatement(Pcl2Parser::JumpStatementContext * /*ctx*/) override { }
+  virtual void exitJumpStatement(Pcl2Parser::JumpStatementContext * /*ctx*/) override { }
 
   virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }
   virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext * /*ctx*/) override { }

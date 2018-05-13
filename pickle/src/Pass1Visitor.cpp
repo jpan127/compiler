@@ -196,10 +196,15 @@ antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatement
 {
     print_debug_context(1, context, "visitCompoundStatement");
 
-    SymTab * function_symtab = symtab_stack->push();
-    SymTabEntry * function_name_entry = function_symtab->enter(context->scope_name);
-    function_name_entry->set_definition((Definition) DF_FUNCTION);
+    if(context->local_symTab == nullptr) {
+        context->local_symTab = symtab_stack->push();
+        SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
+        local_name_entry->set_definition((Definition) DF_SCOPE);
+    }else{
+        symtab_stack->push(context->local_symTab);
+    }
     cout << TAB << "Symbol table created for : " << context->scope_name << endl;
+
 
     return visitChildren(context);
 }
@@ -210,8 +215,23 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     // Set the compound statement's scope name as the function name
     context->compoundStatement()->scope_name = context->Identifier()->getText();
+    SymTab *local_symTab = symtab_stack->push();
+    SymTabEntry *local_name_entry = local_symTab->enter(context->Identifier()->toString());
+    local_name_entry->set_definition((Definition) DF_FUNCTION);
+    visit(context->parameterTypeList());
 
-    return visitChildren(context);
+
+    context->compoundStatement()->local_symTab = symtab_stack->pop();
+
+//    .method public static One(I)I
+    context->function_header = ".method public static " + context->Identifier()->toString() + "(";
+
+    for(auto variable: context->parameterTypeList()->functionDeclaration()) {
+        //todo: add each variable to string and symtab
+
+    }
+    context->function_header += ")" + toupper(context->typeSpecifier()->getText()[0]);
+    return visit(context->compoundStatement());
 }
 
 /*////////////////////////////////////////////////////////////

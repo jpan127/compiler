@@ -1,4 +1,5 @@
 
+#include "wci/intermediate/symtab.h"
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
 
@@ -37,13 +38,13 @@ public:
 
   enum {
     RuleCompilationUnit = 0, RuleTranslationUnit = 1, RuleExternalDeclaration = 2, 
-    RuleFunctionDefinition = 3, RuleDeclaration = 4, RuleTypeSpecifier = 5, 
-    RuleFunctionCall = 6, RuleFunctionReturn = 7, RuleIdentifierList = 8, 
-    RuleCompoundStatement = 9, RuleBlockItemList = 10, RuleBlockItem = 11, 
-    RuleStatement = 12, RuleAssignmentStatement = 13, RuleExpressionStatement = 14, 
-    RuleSelectionStatement = 15, RuleIterationStatement = 16, RulePrimaryExpression = 17, 
-    RuleExpression = 18, RuleConditionalExpression = 19, RuleAssignmentExpression = 20, 
-    RuleParameterTypeList = 21
+    RuleFunctionDefinition = 3, RuleFunctionDeclaration = 4, RuleDeclaration = 5, 
+    RuleTypeSpecifier = 6, RuleFunctionCall = 7, RuleFunctionReturn = 8, 
+    RuleJumpStatement = 9, RuleIdentifierList = 10, RuleCompoundStatement = 11, 
+    RuleBlockItemList = 12, RuleBlockItem = 13, RuleStatement = 14, RuleAssignmentStatement = 15, 
+    RuleExpressionStatement = 16, RuleSelectionStatement = 17, RuleIterationStatement = 18, 
+    RulePrimaryExpression = 19, RuleExpression = 20, RuleConditionalExpression = 21, 
+    RuleAssignmentExpression = 22, RuleParameterTypeList = 23
   };
 
   Pcl2Parser(antlr4::TokenStream *input);
@@ -60,10 +61,12 @@ public:
   class TranslationUnitContext;
   class ExternalDeclarationContext;
   class FunctionDefinitionContext;
+  class FunctionDeclarationContext;
   class DeclarationContext;
   class TypeSpecifierContext;
   class FunctionCallContext;
   class FunctionReturnContext;
+  class JumpStatementContext;
   class IdentifierListContext;
   class CompoundStatementContext;
   class BlockItemListContext;
@@ -130,6 +133,7 @@ public:
 
   class  FunctionDefinitionContext : public antlr4::ParserRuleContext {
   public:
+    string function_header;
     FunctionDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeSpecifierContext *typeSpecifier();
@@ -145,6 +149,22 @@ public:
   };
 
   FunctionDefinitionContext* functionDefinition();
+
+  class  FunctionDeclarationContext : public antlr4::ParserRuleContext {
+  public:
+    FunctionDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    TypeSpecifierContext *typeSpecifier();
+    antlr4::tree::TerminalNode *Identifier();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  FunctionDeclarationContext* functionDeclaration();
 
   class  DeclarationContext : public antlr4::ParserRuleContext {
   public:
@@ -227,6 +247,21 @@ public:
 
   FunctionReturnContext* functionReturn();
 
+  class  JumpStatementContext : public antlr4::ParserRuleContext {
+  public:
+    JumpStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
+    virtual size_t getRuleIndex() const override;
+    ExpressionContext *expression();
+
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+   
+  };
+
+  JumpStatementContext* jumpStatement();
+
   class  IdentifierListContext : public antlr4::ParserRuleContext {
   public:
     IdentifierListContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -248,6 +283,7 @@ public:
   class  CompoundStatementContext : public antlr4::ParserRuleContext {
   public:
     string scope_name = "Anonymous";
+    SymTab * local_symTab = nullptr;
     CompoundStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *LeftBrace();
@@ -304,6 +340,7 @@ public:
     SelectionStatementContext *selectionStatement();
     IterationStatementContext *iterationStatement();
     AssignmentStatementContext *assignmentStatement();
+    JumpStatementContext *jumpStatement();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -550,8 +587,10 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *LeftParen();
     antlr4::tree::TerminalNode *RightParen();
-    std::vector<DeclarationContext *> declaration();
-    DeclarationContext* declaration(size_t i);
+    std::vector<FunctionDeclarationContext *> functionDeclaration();
+    FunctionDeclarationContext* functionDeclaration(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

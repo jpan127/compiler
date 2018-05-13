@@ -59,6 +59,7 @@ enum class DefinitionImpl
     PROGRAM, 
     PROCEDURE, 
     FUNCTION,
+    SCOPE,
     UNDEFINED,
 };
 
@@ -73,6 +74,7 @@ constexpr DefinitionImpl DF_PROGRAM_PARM         = DefinitionImpl::PROGRAM_PARM;
 constexpr DefinitionImpl DF_PROGRAM              = DefinitionImpl::PROGRAM;
 constexpr DefinitionImpl DF_PROCEDURE            = DefinitionImpl::PROCEDURE;
 constexpr DefinitionImpl DF_FUNCTION             = DefinitionImpl::FUNCTION;
+constexpr DefinitionImpl DF_SCOPE                = DefinitionImpl::SCOPE;
 constexpr DefinitionImpl DF_UNDEFINED            = DefinitionImpl::UNDEFINED;
 
 /**

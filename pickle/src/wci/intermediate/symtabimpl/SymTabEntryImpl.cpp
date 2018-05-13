@@ -35,7 +35,7 @@ void SymTabEntryImpl::initialize()
         "type", "variable", "record field",
         "value parameter", "VAR parameter",
         "program parameter",
-        "PROGRAM", "PROCEDURE", "FUNCTION",
+        "PROGRAM", "PROCEDURE", "FUNCTION", "SCOPE",
         "undefined",
     };
 
@@ -52,6 +52,7 @@ void SymTabEntryImpl::initialize()
         DefinitionImpl::PROGRAM,
         DefinitionImpl::PROCEDURE,
         DefinitionImpl::FUNCTION,
+        DefinitionImpl::SCOPE,
         DefinitionImpl::UNDEFINED,
     };
 

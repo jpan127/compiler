@@ -1,4 +1,5 @@
 
+#include "wci/intermediate/symtab.h"
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
 
@@ -31,6 +32,8 @@ public:
 
     virtual antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) = 0;
 
+    virtual antlrcpp::Any visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context) = 0;
+
     virtual antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) = 0;
 
     virtual antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context) = 0;
@@ -38,6 +41,8 @@ public:
     virtual antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context) = 0;
 
     virtual antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context) = 0;
+
+    virtual antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *context) = 0;
 
     virtual antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context) = 0;
 

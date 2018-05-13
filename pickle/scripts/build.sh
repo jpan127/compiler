@@ -25,7 +25,7 @@ COMPILE=false
 #                     Variable Paths                   #
 #======================================================#
 
-JAVA_JDK_PATH="C:/Program Files/Java/jdk-9/bin"
+JAVA_JDK_PATH="C:/Program Files/Java/jdk1.8.0_161/bin"
 ANTLR_JAR_PATH="antlr"
 ANTLR_JAR_FILE_NAME="antlr-4.7-complete.jar"
 GRAMMAR_PATH="grammars"
