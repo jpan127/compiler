@@ -33,9 +33,6 @@ public:
   virtual void enterFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
   virtual void exitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * /*ctx*/) override { }
 
-  virtual void enterFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext * /*ctx*/) override { }
-  virtual void exitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext * /*ctx*/) override { }
-
   virtual void enterDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
   virtual void exitDeclaration(Pcl2Parser::DeclarationContext * /*ctx*/) override { }
 
@@ -65,6 +62,9 @@ public:
 
   virtual void enterStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
   virtual void exitStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
+
+  virtual void enterUnaryStatement(Pcl2Parser::UnaryStatementContext * /*ctx*/) override { }
+  virtual void exitUnaryStatement(Pcl2Parser::UnaryStatementContext * /*ctx*/) override { }
 
   virtual void enterAssignmentStatement(Pcl2Parser::AssignmentStatementContext * /*ctx*/) override { }
   virtual void exitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * /*ctx*/) override { }

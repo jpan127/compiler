@@ -27,6 +27,7 @@ functionDefinition locals [string function_header]
 functionDeclaration
     :   typeSpecifier Identifier
     ;
+
 declaration 
     locals [
         TypeSpec * type = nullptr, 
@@ -84,6 +85,14 @@ statement
     |   iterationStatement
     |   assignmentStatement
     |   jumpStatement
+    |   unaryStatement Semi
+    ;
+
+unaryStatement
+    :   PlusPlus Identifier
+    |   MinusMinus Identifier
+    |   Identifier PlusPlus
+    |   Identifier MinusMinus
     ;
 
 assignmentStatement
@@ -94,15 +103,20 @@ expressionStatement
     :   expression? Semi
     ;
 
+/// If Statement
 selectionStatement
     : If LeftParen conditionalExpression RightParen statement
     ;
 
+/// While Statement
 iterationStatement
     :   While LeftParen conditionalExpression RightParen statement
     ;
 
 primaryExpression
+    locals [
+        char type_letter = '?'
+    ]
     :   Identifier
     |   IntegerConstant
     |   FloatConstant
@@ -113,13 +127,20 @@ expression
     locals [
         TypeSpec * type = nullptr,
         char expr_operator = 0,
+        char type_letter = '?',
+        expression_type_E expression_type
     ]
     :   expression opr=('*'|'/'|'%') expression # mulDivExpr
     |   expression opr=('+'|'-') expression     # addminExpr
     |   primaryExpression                       # primExpr
     ;
 
-conditionalExpression
+conditionalExpression 
+    locals [ 
+        string iteration_name,  /// Stores the name of the parent statement (while_N | if_N)
+        string opr,             /// Stores the operator chars
+        string opcode           /// Stores the instruction opcode used in Pass 2
+    ]
     :   expression ConditionalOperator expression                               # basicConditionalExpr
     |   conditionalExpression ConditionalConnectOperator conditionalExpression  # connectedConditionalExpr
     |   LeftParen conditionalExpression RightParen                              # parenthesizedConditionalExpr
@@ -127,6 +148,10 @@ conditionalExpression
     ;
 
 assignmentExpression
+    locals [
+        TypeSpec * type = nullptr, 
+        char type_letter = 0
+    ]
     :   Identifier Assign expression
     |   Identifier Assign functionReturn
     ;
@@ -143,7 +168,6 @@ parameterTypeList
 fragment
 IdentifierNondigit
     :   Nondigit
-    //|   // other implementation-defined characters...
     ;
 
 fragment

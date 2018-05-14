@@ -31,9 +31,6 @@ public:
   virtual void enterFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *ctx) = 0;
   virtual void exitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *ctx) = 0;
 
-  virtual void enterFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *ctx) = 0;
-  virtual void exitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *ctx) = 0;
-
   virtual void enterDeclaration(Pcl2Parser::DeclarationContext *ctx) = 0;
   virtual void exitDeclaration(Pcl2Parser::DeclarationContext *ctx) = 0;
 
@@ -63,6 +60,9 @@ public:
 
   virtual void enterStatement(Pcl2Parser::StatementContext *ctx) = 0;
   virtual void exitStatement(Pcl2Parser::StatementContext *ctx) = 0;
+
+  virtual void enterUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) = 0;
+  virtual void exitUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) = 0;
 
   virtual void enterAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) = 0;
   virtual void exitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) = 0;

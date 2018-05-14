@@ -32,8 +32,20 @@ const unordered_map <TypeSpec **, char> PassVisitor::letter_map =
 
 TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
 {
+    if (nullptr == lhs_type && rhs_type == nullptr)
+    {
+        return Predefined::int_type;
+    }
+    else if (nullptr == lhs_type)
+    {
+        return rhs_type;
+    }
+    else if (nullptr == rhs_type)
+    {
+        return lhs_type;
+    }
     // If any are double then result is double
-    if (Predefined::double_type == lhs_type || Predefined::double_type == rhs_type)
+    else if (Predefined::double_type == lhs_type || Predefined::double_type == rhs_type)
     {
         return Predefined::double_type;
     }
@@ -71,14 +83,27 @@ char PassVisitor::letter_map_lookup(const TypeSpec * type) const
 {
     char ret = '?';
 
+    // NULL check
+    if (nullptr == type)
+    {
+        throw InvalidType("NULL");
+    }
+
     bool found = false;
     for (auto t : letter_map)
     {
         if (*t.first == type)
         {
             ret = t.second;
+            found = true;
             break;
         }
+    }
+
+    // If not found, compilation should not continue
+    if (!found)
+    {
+        throw InvalidType(type->to_string());
     }
 
     return ret;

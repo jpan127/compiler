@@ -15,7 +15,7 @@
 using namespace wci;
 using namespace wci::intermediate;
 
-#define TESTING
+
 
 class Pass1Visitor : public PassVisitor, public Pcl2BaseVisitor
 {
@@ -33,21 +33,13 @@ private:
     /// Flag to print debug messages or not
     const bool debug_flag;
 
-    /// Type of last declaration node
-    TypeSpec * current_type;
-
     /// Name of current program
     const string program_name;
-
-    /// Just a tab character
-    static const char TAB = '\t';
-
-    string current_scope;
 
 public:
 
     /// Constructor
-    explicit Pass1Visitor(string fname, bool debug=false);
+    explicit Pass1Visitor(const string fname, const bool debug=false);
     
     /// Destructor
     ~Pass1Visitor() override;
@@ -61,28 +53,23 @@ public:
     antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context) override;
     antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) override;
 
-    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
-    antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context) override;
+    antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context);
+    antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context);
 
-    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
-    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
-    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context) override;
+    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context);
+    antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context);
+    antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
+    antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context);
     antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *context) override;
 
-    //antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
-    // antlrcpp::Any visitExternalDeclaration(Pcl2Parser::ExternalDeclarationContext *context);
-    // antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context);
-    // antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context);
-    // antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context);
-    // antlrcpp::Any visitIdentifierList(Pcl2Parser::IdentifierListContext *context);
-    // antlrcpp::Any visitBlockItemList(Pcl2Parser::BlockItemListContext *context);
-    // antlrcpp::Any visitBlockItem(Pcl2Parser::BlockItemContext *context);
-    // antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context);
-    // antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context);
-    // antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context);
-    // antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
-    // antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context);
-    // antlrcpp::Any visitParamaterTypeList(Pcl2Parser::ParamaterTypeListContext *context);
+    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context);
+    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context);
+    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context);
+    antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context);
+    antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context);
+
+    antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
+    antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context);
 
 };
 
