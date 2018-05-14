@@ -25,7 +25,11 @@ functionDefinition locals [string function_header]
     : typeSpecifier Identifier parameterTypeList compoundStatement;
 
 functionDeclaration
-    :   typeSpecifier Identifier
+    locals [
+        TypeSpec * type = nullptr,
+        char type_letter = 0
+    ]
+    :   typeSpecifier Identifier(Comma typeSpecifier Identifier)*
     ;
 
 declaration 
@@ -157,7 +161,7 @@ assignmentExpression
     ;
 
 parameterTypeList
-    :   LeftParen (functionDeclaration (Comma functionDeclaration)*)? RightParen;
+    :   LeftParen functionDeclaration? RightParen;
 
 /***************************************************
  *                                                 *

@@ -14,3 +14,13 @@
 .limit stack 1
 .end method
 
+
+; inty,intx
+
+
+; intz;
+
+.field private static z I
+.method public static func(II)I
+; intfunc(inty,intx){intz;}
+.end method

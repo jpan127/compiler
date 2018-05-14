@@ -153,10 +153,16 @@ public:
 
   class  FunctionDeclarationContext : public antlr4::ParserRuleContext {
   public:
+    TypeSpec * type = nullptr;
+    char type_letter = 0;
     FunctionDeclarationContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
-    TypeSpecifierContext *typeSpecifier();
-    antlr4::tree::TerminalNode *Identifier();
+    std::vector<TypeSpecifierContext *> typeSpecifier();
+    TypeSpecifierContext* typeSpecifier(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Identifier();
+    antlr4::tree::TerminalNode* Identifier(size_t i);
+    std::vector<antlr4::tree::TerminalNode *> Comma();
+    antlr4::tree::TerminalNode* Comma(size_t i);
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
@@ -617,10 +623,7 @@ public:
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *LeftParen();
     antlr4::tree::TerminalNode *RightParen();
-    std::vector<FunctionDeclarationContext *> functionDeclaration();
-    FunctionDeclarationContext* functionDeclaration(size_t i);
-    std::vector<antlr4::tree::TerminalNode *> Comma();
-    antlr4::tree::TerminalNode* Comma(size_t i);
+    FunctionDeclarationContext *functionDeclaration();
 
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;

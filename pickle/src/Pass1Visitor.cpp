@@ -188,11 +188,72 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     return visitChildren(context);
 }
 
+antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context)
+{
+    print_debug_context(1, context, "visitFunctionDeclaration");
+
+    // Make a comment as to what the declaration is
+    j_file << "\n; " << context->getText() << "\n" << endl;
+
+    for (int i = 0; i < context->typeSpecifier().size(); ++i) {
+
+        try {
+            if (type_map.find(context->typeSpecifier()[i]->getText()) != type_map.end()) {
+                cout << TAB << context->typeSpecifier()[i]->getText() << endl;
+                context->type = *(type_map.at(context->typeSpecifier()[i]->getText()));
+                context->type_letter = (char) toupper(context->typeSpecifier()[i]->getText()[0]);
+            } else {
+                throw InvalidType("Type not supported : " + context->getText());
+            }
+        }
+        catch (InvalidType const &error) {
+            error.print_and_exit();
+        }
+
+        string variable_name;
+        string variable_initial_value;
+
+//        context->type_letter = (char)toupper(context->typeSpecifier()[i]->getText()[0]);
+
+//        if (context->assignmentExpression(0)) {
+//            cout << TAB << "Has assignment\n";
+//            variable_name = context->assignmentExpression(0)->Identifier()->getText();
+//
+//            // Save type letter inside assignmentExpression
+//            context->assignmentExpression(0)->type_letter = context->type_letter;
+//
+//            if (context->assignmentExpression(0)->expression()) {
+//                variable_initial_value = context->assignmentExpression(0)->expression()->getText();
+//            }
+        variable_name = context->Identifier(i)->getText();
+
+        // Create a symbol table for a new declaration
+        SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
+        variable_id->set_definition((Definition) DF_VARIABLE);
+        variable_id->set_typespec(context->type);
+        cout << TAB << "Symbol table created for : " << variable_name << endl;
+
+        // Output the variable declaration leaving room for the initial value if there is one
+        // @example : .field private static c D = 0
+//        j_file << ".field private static "
+//               << variable_name
+//               << " "
+//               << context->type_letter;
+//
+//        if (!variable_initial_value.empty()) {
+//            j_file << " = "
+//                   << variable_initial_value;
+//        }
+//
+//        j_file << endl;
+    }
+    return visitChildren(context);
+}
+
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context)
 {
     print_debug_context(1, context, "visitFunctionDefinition");
 
-    std::string function_header;
     std::string function_name = context->Identifier()->toString();
     std::string function_return_type;
     function_return_type = (char)toupper(context->typeSpecifier()->getText()[0]);
@@ -204,8 +265,8 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     context->function_header = ".method public static " + context->Identifier()->toString() + "(";
 
     //add each function parameter to jasmin function header
-    for(auto variable: context->parameterTypeList()->functionDeclaration()) {
-        string var_type = variable->typeSpecifier()->getText();
+    for(auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) {
+        string var_type = variable->getText();
         context->function_header += (char)toupper(var_type[0]);
     }
 
@@ -223,7 +284,8 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
-
+    std::cout << "***** size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
+    for(auto variable:symtab_stack->get_local_symtab()->sorted_entries()){std::cout << "***" << variable->get_name();}
     //use the created symtab as the symtab for compound statement {} scope
     //symtab will be pushed back on in compound statement
     context->compoundStatement()->local_symTab = symtab_stack->pop();
@@ -508,6 +570,7 @@ antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatement
         local_name_entry->set_definition((Definition) DF_SCOPE);
     }else{
         symtab_stack->push(context->local_symTab);
+        for(auto variable:context->local_symTab->sorted_entries()){std::cout << "***" << variable->get_name();}
     }
     cout << TAB << "Symbol table created for : " << context->scope_name << endl;
 
