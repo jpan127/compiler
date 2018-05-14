@@ -79,7 +79,7 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
         j_file.open(program_name + ".j");
         if (j_file.fail())
         {
-            throw FileOpenError("Failed to open file");
+            throw FileOpenError("Failed to open file :" + program_name + ".j");
         }
     }
     catch (FileOpenError const & error)
@@ -168,7 +168,7 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     }
 
     string variable_name;
-    string variable_initial_value;
+    string variable_initial_value = "0";
 
     context->type_letter = toupper(context->typeSpecifier()->getText()[0]);
     
@@ -180,7 +180,8 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
         // Save type letter inside assignmentExpression
         context->assignmentExpression(0)->type_letter = context->type_letter;
     
-        if (context->assignmentExpression(0)->expression())
+        if (context->assignmentExpression(0)->expression() &&
+            PassVisitor::is_digit(context->assignmentExpression(0)->expression()->getText()))
         {
             variable_initial_value = context->assignmentExpression(0)->expression()->getText();
         }
@@ -204,13 +205,9 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
            << " " 
            << context->type_letter;
 
-    if (!variable_initial_value.empty())
-    {
-        j_file  << " = "
-                << variable_initial_value;
-    }
-
-    j_file << endl;
+    // j_file  << " = "
+    //         << variable_initial_value
+    //         << endl;
 
     return visitChildren(context);
 }

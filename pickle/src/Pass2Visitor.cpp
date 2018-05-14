@@ -124,17 +124,17 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     j_file << context->function_header;
     if(is_main){
         // Emit the main program header
-        // j_file                                                                          << endl;
-        // j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
+        j_file                                                                          << endl;
+        j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
         j_file                                                                          << endl;
         j_file << "\tnew RunTimer"                                                      << endl;
         j_file << "\tdup"                                                               << endl;
         j_file << "\tinvokenonvirtual RunTimer/<init>()V"                               << endl;
         j_file << "\tputstatic        " << program_name << "/_runTimer LRunTimer;"      << endl;
-        j_file << "\tnew PascalTextIn"                                                  << endl;
-        j_file << "\tdup"                                                               << endl;
-        j_file << "\tinvokenonvirtual PascalTextIn/<init>()V"                           << endl;
-        j_file << "\tputstatic        " + program_name << "/_standardIn LPascalTextIn;" << endl;
+        // j_file << "\tnew PascalTextIn"                                                  << endl;
+        // j_file << "\tdup"                                                               << endl;
+        // j_file << "\tinvokenonvirtual PascalTextIn/<init>()V"                           << endl;
+        // j_file << "\tputstatic        " + program_name << "/_standardIn LPascalTextIn;" << endl;
     }
     visit(context->compoundStatement());
 
@@ -490,6 +490,12 @@ antlrcpp::Any Pass2Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementCont
 {
     print_debug_context(2, context, "visitIfElseStatement");
 
+    /**
+     *  Top level if else statement node
+     *  Visits children first to get the different branches emitted
+     *  Then emit the final label that all branches will branch to
+     */
+
     visitChildren(context);
 
     // Only increment scope_counter at the end of the entire statement
@@ -512,6 +518,9 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *con
      *  Emit start of if label
      *  Visit children which will emit the instructions internal to the branch
      *  Emit a label for the end of if
+     *  @note : If condition is true continues into the branch
+     *          If condition is false, branch to next branch
+     *          At the end of the inside of the branch, jumps to end of the entire if-else statement
      */
 
     j_file << "; "
@@ -555,6 +564,9 @@ antlrcpp::Any Pass2Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementCont
      *  Emit start of else if label
      *  Visit children which will emit the instructions internal to the branch
      *  Emit a label for the end of else if
+     *  @note : If condition is true continues into the branch
+     *          If condition is false, branch to next branch
+     *          At the end of the inside of the branch, jumps to end of the entire if-else statement
      */
 
     j_file << "; "
@@ -598,6 +610,9 @@ antlrcpp::Any Pass2Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext 
      *  Emit start of else label
      *  Visit children which will emit the instructions internal to the branch
      *  Emit a label for the end of else
+     *  @note : If condition is true continues into the branch
+     *          If condition is false, branch to next branch
+     *          At the end of the inside of the branch, jumps to end of the entire if-else statement
      */
 
     j_file << "; "
