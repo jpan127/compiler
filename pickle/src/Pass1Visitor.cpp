@@ -94,20 +94,20 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
     // Emit the RunTimer and PascalTextIn fields
     j_file                                                          << endl;
     j_file << ".field private static _runTimer LRunTimer;"          << endl;
-    j_file << ".field private static _standardIn LPascalTextIn;"    << endl;
+    // j_file << ".field private static _standardIn LPascalTextIn;"    << endl;
 
-    // Emit the class constructor.
-    j_file                                                          << endl;
-    j_file << ".method public <init>()V"                            << endl;
-    j_file                                                          << endl;
-    j_file << "\taload_0"                                           << endl;
-    j_file << "\tinvokenonvirtual    java/lang/Object/<init>()V"    << endl;
-    j_file << "\treturn"                                            << endl;
-    j_file                                                          << endl;
-    j_file << ".limit locals 1"                                     << endl;
-    j_file << ".limit stack 1"                                      << endl;
-    j_file << ".end method"                                         << endl;
-    j_file                                                          << endl;
+    // // Emit the class constructor.
+    // j_file                                                          << endl;
+    // j_file << ".method public <init>()V"                            << endl;
+    // j_file                                                          << endl;
+    // j_file << "\taload_0"                                           << endl;
+    // j_file << "\tinvokenonvirtual    java/lang/Object/<init>()V"    << endl;
+    // j_file << "\treturn"                                            << endl;
+    // j_file                                                          << endl;
+    // j_file << ".limit locals 1"                                     << endl;
+    // j_file << ".limit stack 1"                                      << endl;
+    // j_file << ".end method"                                         << endl;
+    // j_file                                                          << endl;
 
     auto value = visitChildren(context);
 
@@ -273,51 +273,54 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 
     context->expression_type = expr_primary;
 
-    if (context->primaryExpression()->Identifier())
+    // If parent has not set this node's type, set it
+    if (nullptr == context->type)
     {
-        // Look up type of this expression in the symbol table stack
-        try
+        if (context->primaryExpression()->Identifier())
         {
-            const string variable = context->getText();
-
-            const SymTabEntry * entry = symtab_stack->lookup(variable);
-
-            if (!entry)
+            // Look up type of this expression in the symbol table stack
+            try
             {
-                throw MissingSymbol(variable);
+                const string variable = context->getText();
+
+                const SymTabEntry * entry = symtab_stack->lookup(variable);
+
+                if (!entry)
+                {
+                    throw MissingSymbol(variable);
+                }
+
+                TypeSpec * type = entry->get_typespec();
+
+                if (type)
+                {
+                    context->type_letter = letter_map_lookup(type);
+                    context->type = type;
+                }
+                else
+                {
+                    throw MissingSymbol("Symbol missing type : " + variable);
+                }
             }
-
-            TypeSpec * type = entry->get_typespec();
-
-            if (type)
+            catch (MissingSymbol const & error)
             {
-                context->type_letter = letter_map_lookup(type);
-                context->type = type;
-                cout << context->getText() << " : " << type << endl;
+                error.print_and_exit();
             }
-            else
+            catch (InvalidType const & error)
             {
-                throw MissingSymbol("Symbol missing type : " + variable);
+                error.print_and_exit();
             }
         }
-        catch (MissingSymbol const & error)
+        else if (context->primaryExpression()->IntegerConstant())
         {
-            error.print_and_exit();
+            context->type_letter = 'I';
+            context->type = Predefined::int_type;
         }
-        catch (InvalidType const & error)
+        else if (context->primaryExpression()->FloatConstant())
         {
-            error.print_and_exit();
-        }
-    }
-    else if (context->primaryExpression()->IntegerConstant())
-    {
-        context->type_letter = 'I';
-        context->type = Predefined::int_type;
-    }
-    else if (context->primaryExpression()->FloatConstant())
-    {
-        context->type_letter = 'F';
-        context->type = Predefined::float_type;
+            context->type_letter = 'F';
+            context->type = Predefined::float_type;
+        }        
     }
 
     visitChildren(context);
@@ -505,6 +508,8 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
         {
             context->type_letter = letter_map_lookup(type);
             context->type = type;
+            context->expression()->type = context->type;
+            context->expression()->type_letter = context->type_letter;
         }
         else
         {

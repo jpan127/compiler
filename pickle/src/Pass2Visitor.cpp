@@ -121,8 +121,12 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     print_debug_context(2, context, "visitFunctionDefinition");
     bool is_main = context->Identifier()->getText() == "main";
 
-    j_file << context->function_header;
-    if(is_main){
+    if (!is_main)
+    {
+        j_file << context->function_header << endl;
+    }
+    else
+    {
         // Emit the main program header
         j_file                                                                          << endl;
         j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
@@ -213,10 +217,34 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     else if (context->primaryExpression()->IntegerConstant() ||
             (context->primaryExpression()->FloatConstant()))
     {
-        j_file << TAB
-               << "ldc "
-               << context->primaryExpression()->IntegerConstant()->getText()
-               << endl;
+        // Doubles need to be treated differently
+        if (Predefined::double_type == context->type)
+        {
+            string double_value;
+
+            // If integer constant add decimal
+            if (context->primaryExpression()->IntegerConstant())
+            {
+                double_value += context->primaryExpression()->IntegerConstant()->getText();
+                double_value += ".0";
+            }
+            else
+            {
+                double_value += context->primaryExpression()->FloatConstant()->getText();
+            }
+
+            j_file << TAB
+                   << "ldc2_w "
+                   << double_value
+                   << endl;
+        }
+        else
+        {
+            j_file << TAB
+                   << "ldc "
+                   << context->primaryExpression()->IntegerConstant()->getText()
+                   << endl;
+        }
     }
 
     return visitChildren(context);
@@ -231,8 +259,50 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
      *  Then this node will emit an instruction using the previously pushed values
      */
 
-    visit(context->expression(0));
-    visit(context->expression(1));
+    // @TODO : Clean up
+    for (uint8_t i = 0; i < 2; i++)
+    {
+        visit(context->expression(i));
+        TypeSpec * operand_type = context->expression(i)->type;
+    
+        // Type mismatches need to be converted
+        if (context->type != operand_type)
+        {
+            if (context->type == Predefined::double_type)
+            {
+                if (operand_type == Predefined::int_type)
+                {
+                    j_file << TAB << "i2d" << endl;
+                }
+                else if (operand_type == Predefined::float_type)
+                {
+                    j_file << TAB << "f2d" << endl;
+                }
+            }
+            else if (context->type == Predefined::float_type)
+            {
+                if (operand_type == Predefined::int_type)
+                {
+                    j_file << TAB << "i2f" << endl;
+                }
+                else if (operand_type == Predefined::double_type)
+                {
+                    j_file << TAB << "d2f" << endl;
+                }
+            }
+            else if (context->type == Predefined::int_type)
+            {
+                if (operand_type == Predefined::float_type)
+                {
+                    j_file << TAB << "f2i" << endl;
+                }
+                else if (operand_type == Predefined::double_type)
+                {
+                    j_file << TAB << "d2i" << endl;
+                }
+            }
+        }
+    }
 
     string opcode;
 
@@ -340,8 +410,24 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicCondition
            << rhs_name
            << endl;
 
-    auto lhs_result = visit(context->expression(0));
-    auto rhs_result = visit(context->expression(1));
+    // Visit both operands
+    for (uint8_t i = 0; i < 2; i++)
+    {
+        visit(context->expression(i));
+        // Doubles and floats need to be converted before jump comparison instruction
+        if (Predefined::double_type == context->expression(i)->type)
+        {
+            j_file << TAB
+                   << "d2i"
+                   << endl;
+        }
+        else if (Predefined::float_type  == context->expression(i)->type)
+        {
+            j_file << TAB
+                   << "f2i"
+                   << endl;
+        }
+    }
 
     // Emit an explanation comment for exit
     j_file << TAB
@@ -707,10 +793,25 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
            << context->type_letter
            << endl;
 
-    // Load one
-    j_file << TAB
-           << "iconst_1"
-           << endl;
+    // Load one @TODO : Clean up
+    if (context->type == Predefined::double_type)
+    {
+        j_file << TAB
+               << "dconst_1"
+               << endl;
+    }
+    else if (context->type == Predefined::float_type)
+    {
+        j_file << TAB
+               << "fconst_1"
+               << endl;
+    }
+    if (context->type == Predefined::int_type)
+    {
+        j_file << TAB
+               << "iconst_1"
+               << endl;
+    }
 
     // SUB
     j_file << TAB
@@ -747,18 +848,19 @@ antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareSta
            << endl;
 
     // Get variable twice
-    for (uint8_t i = 0; i < 2; i++)
-    {
-        j_file << TAB
-               << "getstatic"
-               << TAB
-               << program_name
-               << "/"
-               << context->Identifier()->getText()
-               << " "
-               << context->type_letter
-               << endl;
-    }
+    j_file << TAB
+           << "getstatic"
+           << TAB
+           << program_name
+           << "/"
+           << context->Identifier()->getText()
+           << " "
+           << context->type_letter
+           << endl;
+
+    j_file << TAB
+           << ((context->type == Predefined::double_type) ? ("dup2") : ("dup"))
+           << endl;
 
     // Multiply
     j_file << TAB

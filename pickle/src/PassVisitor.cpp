@@ -38,7 +38,7 @@ const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
     { &Predefined::char_type   , 'i' },
     { &Predefined::int_type    , 'i' },
     { &Predefined::float_type  , 'f' },
-    { &Predefined::double_type , 'l' },
+    { &Predefined::double_type , 'd' },
 };
 
 TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)

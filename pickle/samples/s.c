@@ -13,19 +13,18 @@ void main()
     int buzz = 3;
     int fizz_buzz = fizz * buzz;
 
-    double d = 1000000;
-    double e = 2;
+    double d = 100;
+    double e = 1.1;
 
     while (d > 0)
     {
         if (d % fizz_buzz == 0)
         {
+            e**;
             fizz_counter++;
-            buzz_counter++;
         }
         else if (d % fizz == 0)
         {
-            fizz_counter++;
         }
         else if (d % buzz == 0)
         {
@@ -33,7 +32,7 @@ void main()
         }
         else
         {
-            e**;
+            /// Add something here
         }
 
         d--;
