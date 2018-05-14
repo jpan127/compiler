@@ -56,7 +56,12 @@ public:
 
     antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
     antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context) override;
-    antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) override;
+
+    antlrcpp::Any visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context) override;
+    antlrcpp::Any visitIfStatement(Pcl2Parser::IfStatementContext *context) override;
+    antlrcpp::Any visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context) override;
+    antlrcpp::Any visitElseStatement(Pcl2Parser::ElseStatementContext *context) override;
+
     antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context) override;
     antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context) override;
     antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context) override;

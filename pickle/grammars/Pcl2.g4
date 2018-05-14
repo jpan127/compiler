@@ -81,7 +81,7 @@ blockItem
 statement
     :   compoundStatement
     |   expressionStatement
-    |   selectionStatement
+    |   ifElseStatement
     |   iterationStatement
     |   assignmentStatement
     |   jumpStatement
@@ -108,9 +108,23 @@ expressionStatement
     :   expression? Semi
     ;
 
-/// If Statement
-selectionStatement
+ifElseStatement
+    : ifStatement elseIfStatement* elseStatement*
+    ;
+
+ifStatement
     : If LeftParen conditionalExpression RightParen statement
+    ;
+
+elseIfStatement
+    locals [
+        uint32_t id = 0
+    ]
+    : Else If LeftParen conditionalExpression RightParen statement
+    ;
+
+elseStatement
+    : Else statement
     ;
 
 /// While Statement

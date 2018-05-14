@@ -81,8 +81,17 @@ public:
   virtual void enterExpressionStatement(Pcl2Parser::ExpressionStatementContext * /*ctx*/) override { }
   virtual void exitExpressionStatement(Pcl2Parser::ExpressionStatementContext * /*ctx*/) override { }
 
-  virtual void enterSelectionStatement(Pcl2Parser::SelectionStatementContext * /*ctx*/) override { }
-  virtual void exitSelectionStatement(Pcl2Parser::SelectionStatementContext * /*ctx*/) override { }
+  virtual void enterIfElseStatement(Pcl2Parser::IfElseStatementContext * /*ctx*/) override { }
+  virtual void exitIfElseStatement(Pcl2Parser::IfElseStatementContext * /*ctx*/) override { }
+
+  virtual void enterIfStatement(Pcl2Parser::IfStatementContext * /*ctx*/) override { }
+  virtual void exitIfStatement(Pcl2Parser::IfStatementContext * /*ctx*/) override { }
+
+  virtual void enterElseIfStatement(Pcl2Parser::ElseIfStatementContext * /*ctx*/) override { }
+  virtual void exitElseIfStatement(Pcl2Parser::ElseIfStatementContext * /*ctx*/) override { }
+
+  virtual void enterElseStatement(Pcl2Parser::ElseStatementContext * /*ctx*/) override { }
+  virtual void exitElseStatement(Pcl2Parser::ElseStatementContext * /*ctx*/) override { }
 
   virtual void enterIterationStatement(Pcl2Parser::IterationStatementContext * /*ctx*/) override { }
   virtual void exitIterationStatement(Pcl2Parser::IterationStatementContext * /*ctx*/) override { }

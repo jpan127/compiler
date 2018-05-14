@@ -100,7 +100,19 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *ctx) override {
+  virtual antlrcpp::Any visitIfElseStatement(Pcl2Parser::IfElseStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitIfStatement(Pcl2Parser::IfStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitElseStatement(Pcl2Parser::ElseStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 

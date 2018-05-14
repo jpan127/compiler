@@ -466,6 +466,8 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
             throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
         }
 
+        context->type = resolve_expression_type(lhs_type, rhs_type);
+        
         cout << TAB
              << lhs_type 
              << " " 
@@ -616,21 +618,57 @@ antlrcpp::Any Pass1Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
      *  Sets the iteration name to while_N where N is the current scope number
      */
 
-    context->conditionalExpression()->iteration_name = "while_" + std::to_string(scope_counter++);
+    context->conditionalExpression()->iteration_name = "while_" + std::to_string(PassVisitor::scope_counter++);
 
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context)
 {
-    print_debug_context(1, context, "visitSelectionStatement");
+    print_debug_context(1, context, "visitIfElseStatement");
+
+    // Enumerate each else if statement
+    vector <Pcl2Parser::ElseIfStatementContext *> else_ifs = context->elseIfStatement();
+    for (uint32_t i = 0; i < else_ifs.size(); i++)
+    {
+        else_ifs[i]->id = i;
+    }
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *context)
+{
+    print_debug_context(1, context, "visitIfStatement");
 
     /**
      *  Sets the iteration name to if_N where N is the current scope number
      */
 
-    context->conditionalExpression()->iteration_name = "if_" + std::to_string(scope_counter++);
+    context->conditionalExpression()->iteration_name = "if_" + std::to_string(PassVisitor::scope_counter);
 
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context)
+{
+    print_debug_context(1, context, "visitElseIfStatement");
+
+    /**
+     *  Sets the iteration name to else_if_N where N is the current scope number
+     */
+
+    context->conditionalExpression()->iteration_name = "else_if_"                                 + 
+                                                       std::to_string(PassVisitor::scope_counter) +
+                                                       "_"                                        +
+                                                       std::to_string(context->id);
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext *context)
+{
+    print_debug_context(1, context, "visitElseStatement");
     return visitChildren(context);
 }
 

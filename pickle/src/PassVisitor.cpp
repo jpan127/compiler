@@ -10,7 +10,9 @@ using namespace wci::intermediate::symtabimpl;
 
 
 
-const map <string, TypeSpec **> PassVisitor::type_map =
+uint64_t PassVisitor::scope_counter = 0;
+
+const unordered_map <string, TypeSpec **> PassVisitor::type_map =
 {
     { "void"    , &Predefined::void_type   },
     { "bool"    , &Predefined::bool_type   },
@@ -75,7 +77,6 @@ void PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRule
     constexpr size_t longest_name = 30;
     const string space_padding(longest_name - rule_name.length(), ' ');
     
-    /// @TODO : Add back optional debug
     cout << "[PASS"
          << std::to_string(pass_num)
          << "][" 

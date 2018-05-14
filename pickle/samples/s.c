@@ -6,25 +6,36 @@
 void main()
 {
     /// Initialize variables first
-    bool   a = 10;
-    double b = 20;
-    int    c = a * b;   /// 200
-    float  d = c + c;   /// 400
-    float  e = 2;
+    int fizz_counter = 0;
+    int buzz_counter = 0;
 
-    int multiples_of_ten = 0;
+    int fizz = 5;
+    int buzz = 3;
+    int fizz_buzz = fizz * buzz;
 
-    /// True
-    if (d == 400)
+    double d = 1000000;
+    double e = 2;
+
+    while (d > 0)
     {
-        while (d > 0)
+        if (d % fizz_buzz == 0)
         {
-            d--;
-            if (d % 10 == 0)
-            {
-                ++multiples_of_ten;
-                e**;
-            }
+            fizz_counter++;
+            buzz_counter++;
         }
+        else if (d % fizz == 0)
+        {
+            fizz_counter++;
+        }
+        else if (d % buzz == 0)
+        {
+            buzz_counter++;
+        }
+        else
+        {
+            e**;
+        }
+
+        d--;
     }
 }

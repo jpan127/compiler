@@ -79,11 +79,7 @@ antlrcpp::Any Pass2Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
 antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitContext * context)
 {
     print_debug_context(2, context, "visitTranslationUnit");
-
-    // We want to vist the children and traverse the entire tree before printing the next epilogue
-    auto value = visitChildren(context);
-
-    return value;
+    return visitChildren(context);
 }
 
 /*////////////////////////////////////////////////////////////
@@ -128,8 +124,8 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     j_file << context->function_header;
     if(is_main){
         // Emit the main program header
-//        j_file                                                                          << endl;
-//        j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
+        // j_file                                                                          << endl;
+        // j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
         j_file                                                                          << endl;
         j_file << "\tnew RunTimer"                                                      << endl;
         j_file << "\tdup"                                                               << endl;
@@ -361,7 +357,6 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicCondition
            << context->iteration_name + "_end"
            << endl;
 
-    // return visitChildren(context);
     return nullptr;
 }
 
@@ -406,7 +401,6 @@ antlrcpp::Any Pass2Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedC
                << endl;
     }
 
-    // Return visiting the middle
     return nullptr;
 }
 
@@ -460,9 +454,13 @@ antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
      *  Emit a label for the end of loop
      */
 
-    // Emit the iteration label
     j_file << endl 
-           << context->conditionalExpression()->iteration_name 
+           << "; "
+           << context->getText()
+           << endl;
+
+    // Emit the iteration label
+    j_file << context->conditionalExpression()->iteration_name 
            << ":" 
            << endl;
 
@@ -488,15 +486,37 @@ antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
     return value;
 }
 
-antlrcpp::Any Pass2Visitor::visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context)
+antlrcpp::Any Pass2Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context)
 {
-    print_debug_context(2, context, "visitSelectionStatement");
+    print_debug_context(2, context, "visitIfElseStatement");
+
+    visitChildren(context);
+
+    // Only increment scope_counter at the end of the entire statement
+    const string end_label = "if_else_end_" + std::to_string(PassVisitor::scope_counter++);
+
+    // Add label to branch to for exiting the loop
+    j_file << end_label
+           << ":"
+           << endl
+           << endl;
+
+    return nullptr;
+}
+
+antlrcpp::Any Pass2Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *context)
+{
+    print_debug_context(2, context, "visitIfStatement");
 
     /**
      *  Emit start of if label
      *  Visit children which will emit the instructions internal to the branch
      *  Emit a label for the end of if
      */
+
+    j_file << "; "
+           << context->getText()
+           << endl;
 
     // Emit start label
     j_file << context->conditionalExpression()->iteration_name
@@ -509,6 +529,14 @@ antlrcpp::Any Pass2Visitor::visitSelectionStatement(Pcl2Parser::SelectionStateme
     // Visit children inside the if block
     visit(context->statement());
 
+    j_file << TAB
+           << "; Exit if-else statement"
+           << endl
+           << TAB
+           << "goto "
+           << "if_else_end_" + std::to_string(PassVisitor::scope_counter)
+           << endl;
+
     // Emit end label
     j_file << context->conditionalExpression()->iteration_name
            << "_end"
@@ -519,10 +547,87 @@ antlrcpp::Any Pass2Visitor::visitSelectionStatement(Pcl2Parser::SelectionStateme
     return nullptr;
 }
 
+antlrcpp::Any Pass2Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context)
+{
+    print_debug_context(2, context, "visitElseIfStatement");
+
+    /**
+     *  Emit start of else if label
+     *  Visit children which will emit the instructions internal to the branch
+     *  Emit a label for the end of else if
+     */
+
+    j_file << "; "
+           << context->getText()
+           << endl;
+
+    // Emit start label
+    j_file << context->conditionalExpression()->iteration_name
+           << ":"
+           << endl;
+
+    // Visit expression child first
+    visit(context->conditionalExpression());
+
+    // Visit children inside the if block
+    visit(context->statement());
+
+    j_file << TAB
+           << "; Exit if-else statement"
+           << endl
+           << TAB
+           << "goto "
+           << "if_else_end_" + std::to_string(PassVisitor::scope_counter)
+           << endl;
+
+    // Emit end label
+    j_file << context->conditionalExpression()->iteration_name
+           << "_end"
+           << ":"
+           << endl
+           << endl;
+
+    return nullptr;
+}
+
+antlrcpp::Any Pass2Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext *context)
+{
+    print_debug_context(2, context, "visitElseStatement");
+
+    /**
+     *  Emit start of else label
+     *  Visit children which will emit the instructions internal to the branch
+     *  Emit a label for the end of else
+     */
+
+    j_file << "; "
+           << context->getText()
+           << endl;
+
+    // Emit start label
+    j_file << "else_"
+           << std::to_string(scope_counter)
+           << ":"
+           << endl;
+
+    return visitChildren(context);
+}
 
 antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
 {
     print_debug_context(2, context, "visitUnaryIncrementStatement");
+
+    /**
+     *  Retrieve variable
+     *  Load a constant one
+     *  Emit an ADD instruction
+     *  Write back variable
+     */
+
+    j_file << TAB
+           << "; "
+           << context->getText()
+           << endl;
 
     // Get variable
     j_file << TAB
@@ -540,6 +645,7 @@ antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrem
            << "iconst_1"
            << endl;
 
+    // ADD
     j_file << TAB
            << resolve_expression_instruction(context->type, "+")
            << endl;
@@ -562,6 +668,19 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
 {
     print_debug_context(2, context, "visitUnaryDecrementStatement");
 
+    /**
+     *  Retrieve variable
+     *  Load a constant one
+     *  Emit a SUB instruction
+     *  Write back variable
+     *  @note : First variable pushed onto stack will be the LHS of a sub operation
+     */
+
+    j_file << TAB
+           << "; "
+           << context->getText()
+           << endl;
+
     // Get variable
     j_file << TAB
            << "getstatic"
@@ -578,6 +697,7 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
            << "iconst_1"
            << endl;
 
+    // SUB
     j_file << TAB
            << resolve_expression_instruction(context->type, "-")
            << endl;
@@ -599,6 +719,17 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
 antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context)
 {
     print_debug_context(2, context, "visitUnarySquareStatement");
+
+    /**
+     *  Retrieve variable twice
+     *  Multiply them together = square
+     *  Write back variable
+     */
+
+    j_file << TAB
+           << "; "
+           << context->getText()
+           << endl;
 
     // Get variable twice
     for (uint8_t i = 0; i < 2; i++)
@@ -632,70 +763,3 @@ antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareSta
 
     return visitChildren(context);
 }
-
-// antlrcpp::Any Pass2Visitor::visitUnaryStatement(Pcl2Parser::UnaryStatementContext *context)
-// {
-//     print_debug_context(2, context, "visitUnaryStatement");
-
-//     /**
-//      *  Loads the variable and a constant 1
-//      *  Emits an add or sub instruction
-//      *  Writes the variable back
-//      *  @note : First variable pushed onto stack will be the LHS of a sub operation
-//      */
-
-//     // Get variable
-//     j_file << TAB
-//            << "getstatic"
-//            << TAB
-//            << program_name
-//            << "/"
-//            << context->Identifier()->getText()
-//            << " "
-//            << context->type_letter
-//            << endl;
-
-//     // Load one
-//     j_file << TAB
-//            << "iconst_1"
-//            << endl;
-
-//     // Emit either add or sub instruction
-//     try
-//     {
-//         if (context->PlusPlus())
-//         {
-//             j_file << TAB
-//                    << resolve_expression_instruction(context->type, '+')
-//                    << endl;
-
-//         }
-//         else if (context->MinusMinus())
-//         {
-//             j_file << TAB
-//                    << resolve_expression_instruction(context->type, '-')
-//                    << endl;
-//         }
-//         else
-//         {
-//             throw AntlrParsedIncorrectly("[visitUnaryStatement] Missing operator");
-//         }        
-//     }
-//     catch (AntlrParsedIncorrectly const & error)
-//     {
-//         error.print_and_exit();
-//     }
-
-//     // Write back the variable
-//     j_file << TAB
-//            << "putstatic"
-//            << TAB
-//            << program_name
-//            << "/"
-//            << context->Identifier()->getText()
-//            << " "
-//            << context->type_letter
-//            << endl;
-
-//     return visitChildren(context);
-// }

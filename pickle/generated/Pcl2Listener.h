@@ -79,8 +79,17 @@ public:
   virtual void enterExpressionStatement(Pcl2Parser::ExpressionStatementContext *ctx) = 0;
   virtual void exitExpressionStatement(Pcl2Parser::ExpressionStatementContext *ctx) = 0;
 
-  virtual void enterSelectionStatement(Pcl2Parser::SelectionStatementContext *ctx) = 0;
-  virtual void exitSelectionStatement(Pcl2Parser::SelectionStatementContext *ctx) = 0;
+  virtual void enterIfElseStatement(Pcl2Parser::IfElseStatementContext *ctx) = 0;
+  virtual void exitIfElseStatement(Pcl2Parser::IfElseStatementContext *ctx) = 0;
+
+  virtual void enterIfStatement(Pcl2Parser::IfStatementContext *ctx) = 0;
+  virtual void exitIfStatement(Pcl2Parser::IfStatementContext *ctx) = 0;
+
+  virtual void enterElseIfStatement(Pcl2Parser::ElseIfStatementContext *ctx) = 0;
+  virtual void exitElseIfStatement(Pcl2Parser::ElseIfStatementContext *ctx) = 0;
+
+  virtual void enterElseStatement(Pcl2Parser::ElseStatementContext *ctx) = 0;
+  virtual void exitElseStatement(Pcl2Parser::ElseStatementContext *ctx) = 0;
 
   virtual void enterIterationStatement(Pcl2Parser::IterationStatementContext *ctx) = 0;
   virtual void exitIterationStatement(Pcl2Parser::IterationStatementContext *ctx) = 0;

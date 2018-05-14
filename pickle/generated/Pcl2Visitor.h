@@ -64,7 +64,13 @@ public:
 
     virtual antlrcpp::Any visitExpressionStatement(Pcl2Parser::ExpressionStatementContext *context) = 0;
 
-    virtual antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) = 0;
+    virtual antlrcpp::Any visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitIfStatement(Pcl2Parser::IfStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitElseStatement(Pcl2Parser::ElseStatementContext *context) = 0;
 
     virtual antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) = 0;
 
