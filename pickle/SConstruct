@@ -15,7 +15,7 @@ DefaultEnvironment(
 
 GENERATED_DIR     = "generated"
 GRAMMAR_FILE_NAME = "C"
-ANLTR_STATIC_LIB  = "antlr-runtime-bryan" # Change me!
+ANLTR_STATIC_LIB  = "antlr-runtime-jp" # Change me!
 ANTLR_LIB_DIR     = Dir("antlr")
 COMPILE           = ARGUMENTS.get("run", None)
 

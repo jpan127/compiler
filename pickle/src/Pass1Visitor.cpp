@@ -262,10 +262,12 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     //create a header for pass2visitor to use when creating the method
     context->function_header = ".method public static " + context->Identifier()->toString() + "(";
 
-    //add each function parameter to jasmin function header
-    for(auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) {
-        string var_type = variable->getText();
-        context->function_header += (char)toupper(var_type[0]);
+    if (context->parameterTypeList()->functionDeclaration()) {
+        //add each function parameter to jasmin function header
+        for(auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) {
+            string var_type = variable->getText();
+            context->function_header += (char)toupper(var_type[0]);
+        }
     }
 
     //close parameter parenthesis and declare function return type

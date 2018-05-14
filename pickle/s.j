@@ -139,51 +139,6 @@ while_0_end:
 	getstatic     s/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V
 
-print_results:
-
-    getstatic java/lang/System/out Ljava/io/PrintStream;
-    ldc "Start:%f d:%f e:%f fizz_counter:%d buzz_counter:%d fizzbuzz:%d"
-    ldc 6
-    anewarray java/lang/Object
-
-    dup
-    iconst_0
-    ldc2_w 100.0
-    invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
-    aastore
-
-    dup
-    iconst_1
-    getstatic s/d D
-    invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
-    aastore
-
-    dup
-    iconst_2
-    getstatic s/e D
-    invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
-    aastore
-
-    dup
-    iconst_3
-    getstatic s/fizz_counter I
-    invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-    aastore
-
-    dup
-    iconst_4
-    getstatic s/buzz_counter I
-    invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-    aastore
-
-    dup
-    iconst_5
-    getstatic s/fizz_buzz I
-    invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-    aastore
-
-    invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
-
 	return
 
 .limit locals 16
