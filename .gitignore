@@ -7,3 +7,5 @@
 generated/*
 
 build/*
+
+pickle/antlr4-runtime/temp/*

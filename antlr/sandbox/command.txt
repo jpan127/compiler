@@ -1,1 +1,0 @@
-g++ -std=c++11 -I../antlr4-runtime -I../antlr4-runtime/atn -I../antlr4-runtime/dfa -I../antlr4-runtime/misc -I../antlr4-runtime/support -I../antlr4-runtime/tree -I../antlr4-runtime/tree/pattern -I../antlr4-runtime/tree/xpath -I. -L../antlr -lantlr4-runtime -lantlr4-runtime.dll -w CBaseListener.o CLexer.o CListener.o CParser.o main.o -o JP

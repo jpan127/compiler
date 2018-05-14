@@ -85,6 +85,8 @@ relationalExpression
 
 equalityExpression
     :   relationalExpression
+    |   equalityExpression 'is' relationalExpression
+    |   equalityExpression 'is not' relationalExpression
     |   equalityExpression '==' relationalExpression
     |   equalityExpression '!=' relationalExpression
     ;
@@ -107,11 +109,13 @@ inclusiveOrExpression
 logicalAndExpression
     :   inclusiveOrExpression
     |   logicalAndExpression '&&' inclusiveOrExpression
+    |   logicalAndExpression 'and' inclusiveOrExpression
     ;
 
 logicalOrExpression
     :   logicalAndExpression
     |   logicalOrExpression '||' logicalAndExpression
+    |   logicalOrExpression 'or' logicalAndExpression
     ;
 
 conditionalExpression
@@ -125,7 +129,7 @@ assignmentExpression
     ;
 
 assignmentOperator
-    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|='
+    :   '=' | '*=' | '/=' | '%=' | '+=' | '-=' | '<<=' | '>>=' | '&=' | '^=' | '|=' | NegateAssign
     ;
 
 expression
@@ -185,6 +189,8 @@ typeSpecifier
     |   'double'
     |   'signed'
     |   'unsigned'
+    |   'uint32_t'
+    |   'int32_t'
     )
     ;
 
@@ -695,6 +701,7 @@ Div              : '/';
 Mod              : '%';
 And              : '&';
 Or               : '|';
+Negate           : '~';
 Caret            : '^';
 Question         : '?';
 Colon            : ':';
@@ -711,10 +718,10 @@ RightShiftAssign : '>>=';
 AndAssign        : '&=';
 XorAssign        : '^=';
 OrAssign         : '|=';
+NegateAssign     : '~=';
 Arrow            : '->';
 Dot              : '.';
 Ellipsis         : '...';
-Tilde            : '~';
 
 AndAnd 
     : '&&'
