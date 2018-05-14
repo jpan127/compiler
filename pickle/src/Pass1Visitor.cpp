@@ -36,6 +36,33 @@ ofstream & Pass1Visitor::get_assembly_file()
     return j_file; 
 }
 
+void Pass1Visitor::lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter)
+{
+    try
+    {
+        const SymTabEntry * entry = symtab_stack->lookup(variable);
+
+        if (!entry)
+        {
+            throw MissingSymbol(variable);
+        }
+
+        *type = entry->get_typespec();
+
+        if (nullptr == *type)
+        {
+            cerr << "Missing type : " << variable << endl;
+            exit(-1);
+        }
+
+        type_letter = letter_map_lookup(*type);
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
+    }
+}
+
 /*////////////////////////////////////////////////////////////
  *                                                           *
  *                   C O M P I L A T I O N                   *
@@ -226,6 +253,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     //use the created symtab as the symtab for compound statement {} scope
     //symtab will be pushed back on in compound statement
+    cout << "POP GOES THE WEASEL\n";
     context->compoundStatement()->local_symTab = symtab_stack->pop();
 
     return visit(context->compoundStatement());
@@ -264,8 +292,20 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 
             TypeSpec * type = entry->get_typespec();
 
-            context->type_letter = letter_map_lookup(type);
-            context->type = type;
+            if (type)
+            {
+                context->type_letter = letter_map_lookup(type);
+                context->type = type;
+                cout << context->getText() << " : " << type << endl;
+            }
+            else
+            {
+                throw MissingSymbol("Symbol missing type : " + variable);
+            }
+        }
+        catch (MissingSymbol const & error)
+        {
+            error.print_and_exit();
         }
         catch (InvalidType const & error)
         {
@@ -275,7 +315,7 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     else if (context->primaryExpression()->IntegerConstant())
     {
         context->type_letter = 'I';
-        context->type = Predefined::integer_type;
+        context->type = Predefined::int_type;
     }
     else if (context->primaryExpression()->FloatConstant())
     {
@@ -290,6 +330,11 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 
 antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *context)
 {
+    static const set <string> operator_set = 
+    {
+        "*", "/", "%"
+    };
+
     print_debug_context(1, context, "visitMulDivExpr");
 
     /**
@@ -302,23 +347,13 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 
     try
     {
-        if (nullptr != context->opr)
+        if (operator_set.find(context->opr->getText()) != operator_set.end())
         {
-            switch (context->opr->getText()[0])
-            {
-                case '*': /// No break
-                case '/': /// No break
-                case '%':
-                    context->expr_operator = context->opr->getText()[0];
-                    break;
-                default:
-                    throw InvalidOperator("MulDivExpr received impossible operator : " + context->opr->getText()[0]);
-                    break;
-            }
+            context->expr_operator = context->opr->getText();
         }
         else
         {
-            throw InvalidOperator("MulDivExpr missing operator");
+            throw InvalidOperator("Operator does not match : " + context->opr->getText());
         }
     }
     catch (InvalidOperator const & error)
@@ -328,6 +363,8 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 
     TypeSpec * lhs_type = static_cast <TypeSpec *> (visit(context->expression(0)));
     TypeSpec * rhs_type = static_cast <TypeSpec *> (visit(context->expression(1)));
+
+    context->type = resolve_expression_type(lhs_type, rhs_type);
 
     cout << TAB
          << lhs_type 
@@ -340,6 +377,11 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 
 antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *context)
 {
+    static const set <string> operator_set = 
+    {
+        "+", "-"
+    };
+
     print_debug_context(1, context, "visitAddminExpr");
 
     /**
@@ -352,22 +394,13 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
 
     try
     {
-        if (nullptr != context->opr)
+        if (operator_set.find(context->opr->getText()) != operator_set.end())
         {
-            switch (context->opr->getText()[0])
-            {
-                case '+': /// No break
-                case '-':
-                    context->expr_operator = context->opr->getText()[0];
-                    break;
-                default:
-                    throw InvalidOperator("[visitAddminExpr] Received impossible operator : " + context->opr->getText()[0]);
-                    break;
-            }
+            context->expr_operator = context->opr->getText();
         }
         else
         {
-            throw InvalidOperator("[visitAddminExpr] Missing operator");
+            throw InvalidOperator("Operator does not match : " + context->opr->getText());
         }
     }
     catch (InvalidOperator const & error)
@@ -378,11 +411,71 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
     TypeSpec * lhs_type = static_cast <TypeSpec *> (visit(context->expression(0)));
     TypeSpec * rhs_type = static_cast <TypeSpec *> (visit(context->expression(1)));
 
+    context->type = resolve_expression_type(lhs_type, rhs_type);
+
     cout << TAB
          << lhs_type 
          << " " 
          << rhs_type 
          << endl;
+
+    return nullptr;
+}
+
+antlrcpp::Any Pass1Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
+{
+    static const set <string> operator_set = 
+    {
+        "<<" , ">>" , "&"  , "|"  , "~"  , "^" 
+    };
+
+    print_debug_context(1, context, "visitBitExpr");
+
+    /**
+     *  Determines the expression operator
+     *  Determines the type of the resulting expression
+     *  Stores it for pass 2
+     */
+
+    context->expression_type = expr_add_min;
+
+    try
+    {
+        if (operator_set.find(context->opr->getText()) != operator_set.end())
+        {
+            context->expr_operator = context->opr->getText();
+        }
+        else
+        {
+            throw InvalidOperator("Operator does not match : " + context->opr->getText());
+        }
+    }
+    catch (InvalidOperator const & error)
+    {
+        error.print_and_exit();
+    }
+
+    try
+    {
+        TypeSpec * lhs_type = static_cast <TypeSpec *> (visit(context->expression(0)));
+        TypeSpec * rhs_type = static_cast <TypeSpec *> (visit(context->expression(1)));
+
+        if ((Predefined::float_type == lhs_type) ||
+            (Predefined::float_type == rhs_type))
+        {
+            throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
+        }
+
+        cout << TAB
+             << lhs_type 
+             << " " 
+             << rhs_type 
+             << endl;
+    }
+    catch (CompilerError const & error)
+    {
+        error.print_and_exit();
+    }
 
     return nullptr;
 }
@@ -506,10 +599,11 @@ antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatement
         context->local_symTab = symtab_stack->push();
         SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
         local_name_entry->set_definition((Definition) DF_SCOPE);
+        cout << TAB << "Symbol created : " << context->scope_name << endl;
     }else{
         symtab_stack->push(context->local_symTab);
+        cout << TAB << "Symbol table created for : " << context->getText() << endl;
     }
-    cout << TAB << "Symbol table created for : " << context->scope_name << endl;
 
     return visitChildren(context);
 }
@@ -546,5 +640,35 @@ antlrcpp::Any Pass1Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext 
         visit(context->expression());
 
     }
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
+{
+    print_debug_context(1, context, "visitUnaryIncrementStatement");
+
+    // Look up type of this expression in the symbol table stack
+    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context)
+{
+    print_debug_context(1, context, "visitUnaryDecrementStatement");
+
+    // Look up type of this expression in the symbol table stack
+    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context)
+{
+    print_debug_context(1, context, "visitUnarySquareStatement");
+
+    // Look up type of this expression in the symbol table stack
+    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+
     return visitChildren(context);
 }

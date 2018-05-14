@@ -54,7 +54,11 @@ public:
 
     virtual antlrcpp::Any visitStatement(Pcl2Parser::StatementContext *context) = 0;
 
-    virtual antlrcpp::Any visitUnaryStatement(Pcl2Parser::UnaryStatementContext *context) = 0;
+    virtual antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context) = 0;
+
+    virtual antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context) = 0;
 
     virtual antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context) = 0;
 
@@ -65,6 +69,8 @@ public:
     virtual antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) = 0;
 
     virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *context) = 0;
+
+    virtual antlrcpp::Any visitBitExpr(Pcl2Parser::BitExprContext *context) = 0;
 
     virtual antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) = 0;
 

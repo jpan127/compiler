@@ -1,6 +1,8 @@
 #pragma once
 
 #include <iostream>
+#include <set>
+#include <map>
 
 #include "wci/intermediate/SymTabStack.h"
 #include "wci/intermediate/SymTabEntry.h"
@@ -32,11 +34,15 @@ protected:
 
     static const unordered_map <TypeSpec **, char> letter_map;
 
+    static const unordered_map <TypeSpec **, char> instruction_prefix_map;
+
     uint64_t scope_counter;
 
     TypeSpec * resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type);
 
     char letter_map_lookup(const TypeSpec * type) const;
+
+    char instruction_prefix_map_lookup(const TypeSpec * type) const;
 
     /**
      *  Prints the current visit context information if [debug_flag] is true

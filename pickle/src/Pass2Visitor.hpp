@@ -20,18 +20,18 @@ class Pass2Visitor : public PassVisitor, public Pcl2BaseVisitor
 {
 private:
 
-	  string program_name;
+    string program_name;
 
-	  ofstream & j_file;
+    ofstream & j_file;
 
     const bool debug_flag;
 
-    string resolve_expression_instruction(TypeSpec * type, const char opr);
+    string resolve_expression_instruction(TypeSpec * type, string const & opr);
 
 public:
 
     /// Constructor
-	Pass2Visitor(const string fname, ofstream & j_file, const bool debug=false);
+    Pass2Visitor(const string fname, ofstream & j_file, const bool debug=false);
 
     /// Destructor
     virtual ~Pass2Visitor();
@@ -46,6 +46,7 @@ public:
     antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
     antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
     antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context) override;
+    antlrcpp::Any visitBitExpr(Pcl2Parser::BitExprContext *context) override;
 
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
     antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *context) override;
@@ -56,6 +57,9 @@ public:
     antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
     antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context) override;
     antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) override;
+    antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context) override;
+    antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context) override;
+    antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context) override;
 
 };
 

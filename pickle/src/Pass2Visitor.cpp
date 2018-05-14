@@ -14,7 +14,11 @@ using namespace wci::intermediate::symtabimpl;
 
 
 
-/// @NOTE : good resource for Jasmin instructions except this https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html
+/**
+ *  @note:
+ *      Good resource for Jasmin instructions except this https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html
+ *      XSUB instructions will subtract bottom operand - top operand, with bottom operand as the first operand pushed onto the stack
+ */
 
 Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : PassVisitor(), program_name(fname), j_file(j_file), debug_flag(debug)
 {
@@ -27,45 +31,34 @@ Pass2Visitor::~Pass2Visitor()
     j_file.close();
 }
 
-string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, const char opr)
+string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, string const & opr)
 {
-    string opcode;
+    static const map <const string, const string> operator_to_opcode_map =
+    {
+        { "*"  , "mul" },
+        { "/"  , "div" },
+        { "%"  , "rem" },
+        { "+"  , "add" },
+        { "-"  , "sub" },
+        { "<<" , "shl" },
+        { ">>" , "shr" },
+        { "&"  , "and" },
+        { "|"  , "or"  },
+        { "~"  , "neg" },
+        { "^"  , "xor" },
+    };
 
-    if (Predefined::double_type == type)
+    // Get opcode prefix
+    string opcode(1, instruction_prefix_map_lookup(type));
+
+    // Get opcode
+    if (operator_to_opcode_map.find(opr) != operator_to_opcode_map.end())
     {
-        switch (opr)
-        {
-            case '*': opcode = "lmul";             break;
-            case '/': opcode = "ldiv";             break;
-            case '%': opcode = "lrem";             break;
-            case '+': opcode = "ladd";             break;
-            case '-': opcode = "lsub";             break;
-            default : throw InvalidOperator(&opr); break;
-        }
-    }
-    else if (Predefined::float_type == type)
-    {
-        switch (opr)
-        {
-            case '*': opcode = "fmul";             break;
-            case '/': opcode = "fdiv";             break;
-            case '%': opcode = "frem";             break;
-            case '+': opcode = "fadd";             break;
-            case '-': opcode = "fsub";             break;
-            default : throw InvalidOperator(&opr); break;
-        }
+        opcode += operator_to_opcode_map.at(opr);
     }
     else
     {
-        switch (opr)
-        {
-            case '*': opcode = "imul";             break;
-            case '/': opcode = "idiv";             break;
-            case '%': opcode = "irem";             break;
-            case '+': opcode = "iadd";             break;
-            case '-': opcode = "isub";             break;
-            default : throw InvalidOperator(&opr); break;
-        }            
+        throw InvalidOperator(opr);
     }
 
     return opcode;
@@ -249,13 +242,11 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 
     try
     {
-        switch (context->expr_operator)
-        {
-            case '*': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            case '/': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            case '%': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            default : throw InvalidOperator(&context->expr_operator);                                 break;
-        }
+        opcode = resolve_expression_instruction(context->type, context->expr_operator);
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
     }
     catch (InvalidOperator const & error)
     {
@@ -283,12 +274,43 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
 
     try
     {
-        switch (context->expr_operator)
-        {
-            case '+': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            case '-': opcode = resolve_expression_instruction(context->type, context->expr_operator); break;
-            default : throw InvalidOperator(&context->expr_operator);                                 break;
-        }
+        opcode = resolve_expression_instruction(context->type, context->expr_operator);
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
+    }
+    catch (InvalidOperator const & error)
+    {
+        error.print_and_exit();
+    }
+
+    j_file << "\t" << opcode << endl;
+
+    return nullptr;
+}
+
+antlrcpp::Any Pass2Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
+{
+    print_debug_context(2, context, "visitBitExpr");
+
+    /**
+     *  Visits children expressions first which will push to stack
+     *  Then this node will emit an instruction using the previously pushed values
+     */
+
+    visit(context->expression(0));
+    visit(context->expression(1));
+
+    string opcode;
+
+    try
+    {
+        opcode = resolve_expression_instruction(context->type, context->expr_operator);
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
     }
     catch (InvalidOperator const & error)
     {
@@ -496,3 +518,184 @@ antlrcpp::Any Pass2Visitor::visitSelectionStatement(Pcl2Parser::SelectionStateme
 
     return nullptr;
 }
+
+
+antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
+{
+    print_debug_context(2, context, "visitUnaryIncrementStatement");
+
+    // Get variable
+    j_file << TAB
+           << "getstatic"
+           << TAB
+           << program_name
+           << "/"
+           << context->Identifier()->getText()
+           << " "
+           << context->type_letter
+           << endl;
+
+    // Load one
+    j_file << TAB
+           << "iconst_1"
+           << endl;
+
+    j_file << TAB
+           << resolve_expression_instruction(context->type, "+")
+           << endl;
+
+    // Write back the variable
+    j_file << TAB
+           << "putstatic"
+           << TAB
+           << program_name
+           << "/"
+           << context->Identifier()->getText()
+           << " "
+           << context->type_letter
+           << endl;
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context)
+{
+    print_debug_context(2, context, "visitUnaryDecrementStatement");
+
+    // Get variable
+    j_file << TAB
+           << "getstatic"
+           << TAB
+           << program_name
+           << "/"
+           << context->Identifier()->getText()
+           << " "
+           << context->type_letter
+           << endl;
+
+    // Load one
+    j_file << TAB
+           << "iconst_1"
+           << endl;
+
+    j_file << TAB
+           << resolve_expression_instruction(context->type, "-")
+           << endl;
+
+    // Write back the variable
+    j_file << TAB
+           << "putstatic"
+           << TAB
+           << program_name
+           << "/"
+           << context->Identifier()->getText()
+           << " "
+           << context->type_letter
+           << endl;
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context)
+{
+    print_debug_context(2, context, "visitUnarySquareStatement");
+
+    // Get variable twice
+    for (uint8_t i = 0; i < 2; i++)
+    {
+        j_file << TAB
+               << "getstatic"
+               << TAB
+               << program_name
+               << "/"
+               << context->Identifier()->getText()
+               << " "
+               << context->type_letter
+               << endl;
+    }
+
+    // Multiply
+    j_file << TAB
+           << resolve_expression_instruction(context->type, "*")
+           << endl;
+
+    // Write back the variable
+    j_file << TAB
+           << "putstatic"
+           << TAB
+           << program_name
+           << "/"
+           << context->Identifier()->getText()
+           << " "
+           << context->type_letter
+           << endl;
+
+    return visitChildren(context);
+}
+
+// antlrcpp::Any Pass2Visitor::visitUnaryStatement(Pcl2Parser::UnaryStatementContext *context)
+// {
+//     print_debug_context(2, context, "visitUnaryStatement");
+
+//     /**
+//      *  Loads the variable and a constant 1
+//      *  Emits an add or sub instruction
+//      *  Writes the variable back
+//      *  @note : First variable pushed onto stack will be the LHS of a sub operation
+//      */
+
+//     // Get variable
+//     j_file << TAB
+//            << "getstatic"
+//            << TAB
+//            << program_name
+//            << "/"
+//            << context->Identifier()->getText()
+//            << " "
+//            << context->type_letter
+//            << endl;
+
+//     // Load one
+//     j_file << TAB
+//            << "iconst_1"
+//            << endl;
+
+//     // Emit either add or sub instruction
+//     try
+//     {
+//         if (context->PlusPlus())
+//         {
+//             j_file << TAB
+//                    << resolve_expression_instruction(context->type, '+')
+//                    << endl;
+
+//         }
+//         else if (context->MinusMinus())
+//         {
+//             j_file << TAB
+//                    << resolve_expression_instruction(context->type, '-')
+//                    << endl;
+//         }
+//         else
+//         {
+//             throw AntlrParsedIncorrectly("[visitUnaryStatement] Missing operator");
+//         }        
+//     }
+//     catch (AntlrParsedIncorrectly const & error)
+//     {
+//         error.print_and_exit();
+//     }
+
+//     // Write back the variable
+//     j_file << TAB
+//            << "putstatic"
+//            << TAB
+//            << program_name
+//            << "/"
+//            << context->Identifier()->getText()
+//            << " "
+//            << context->type_letter
+//            << endl;
+
+//     return visitChildren(context);
+// }

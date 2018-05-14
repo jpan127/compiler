@@ -64,8 +64,14 @@ public:
   virtual void enterStatement(Pcl2Parser::StatementContext *ctx) = 0;
   virtual void exitStatement(Pcl2Parser::StatementContext *ctx) = 0;
 
-  virtual void enterUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) = 0;
-  virtual void exitUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) = 0;
+  virtual void enterUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *ctx) = 0;
+  virtual void exitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *ctx) = 0;
+
+  virtual void enterUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *ctx) = 0;
+  virtual void exitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *ctx) = 0;
+
+  virtual void enterUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *ctx) = 0;
+  virtual void exitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *ctx) = 0;
 
   virtual void enterAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) = 0;
   virtual void exitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *ctx) = 0;
@@ -81,6 +87,9 @@ public:
 
   virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
   virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) = 0;
+
+  virtual void enterBitExpr(Pcl2Parser::BitExprContext *ctx) = 0;
+  virtual void exitBitExpr(Pcl2Parser::BitExprContext *ctx) = 0;
 
   virtual void enterPrimExpr(Pcl2Parser::PrimExprContext *ctx) = 0;
   virtual void exitPrimExpr(Pcl2Parser::PrimExprContext *ctx) = 0;

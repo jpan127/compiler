@@ -7,3 +7,4 @@ std::ostream & operator << (std::ostream & out, const InvalidOperator & e)      
 std::ostream & operator << (std::ostream & out, const MissingSymbol & e)          { out << "[MissingSymbol] "          << e.error; return out; }
 std::ostream & operator << (std::ostream & out, const InvalidType & e)            { out << "[InvalidType] "            << e.error; return out; }
 std::ostream & operator << (std::ostream & out, const AntlrParsedIncorrectly & e) { out << "[AntlrParsedIncorrectly] " << e.error; return out; }
+std::ostream & operator << (std::ostream & out, const CompilerError & e)          { out << "[CompilerError] "          << e.error; return out; }

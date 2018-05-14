@@ -30,6 +30,15 @@ const unordered_map <TypeSpec **, char> PassVisitor::letter_map =
     { &Predefined::double_type , 'D' },
 };
 
+const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
+{
+    { &Predefined::bool_type   , 'i' },
+    { &Predefined::char_type   , 'i' },
+    { &Predefined::int_type    , 'i' },
+    { &Predefined::float_type  , 'f' },
+    { &Predefined::double_type , 'l' },
+};
+
 TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
 {
     if (nullptr == lhs_type && rhs_type == nullptr)
@@ -86,7 +95,7 @@ char PassVisitor::letter_map_lookup(const TypeSpec * type) const
     // NULL check
     if (nullptr == type)
     {
-        throw InvalidType("NULL");
+        throw InvalidType("[letter_map_lookup] NULL");
     }
 
     bool found = false;
@@ -103,7 +112,37 @@ char PassVisitor::letter_map_lookup(const TypeSpec * type) const
     // If not found, compilation should not continue
     if (!found)
     {
-        throw InvalidType(type->to_string());
+        throw InvalidType("[letter_map_lookup] Type not found : " + type->to_string());
+    }
+
+    return ret;
+}
+
+char PassVisitor::instruction_prefix_map_lookup(const TypeSpec * type) const
+{
+    char ret = '?';
+
+    // NULL check
+    if (nullptr == type)
+    {
+        throw InvalidType("[instruction_prefix_map_lookup] NULL");
+    }
+
+    bool found = false;
+    for (auto t : instruction_prefix_map)
+    {
+        if (*t.first == type)
+        {
+            ret = t.second;
+            found = true;
+            break;
+        }
+    }
+
+    // If not found, compilation should not continue
+    if (!found)
+    {
+        throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + type->to_string());
     }
 
     return ret;

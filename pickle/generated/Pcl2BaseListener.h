@@ -66,8 +66,14 @@ public:
   virtual void enterStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
   virtual void exitStatement(Pcl2Parser::StatementContext * /*ctx*/) override { }
 
-  virtual void enterUnaryStatement(Pcl2Parser::UnaryStatementContext * /*ctx*/) override { }
-  virtual void exitUnaryStatement(Pcl2Parser::UnaryStatementContext * /*ctx*/) override { }
+  virtual void enterUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext * /*ctx*/) override { }
+  virtual void exitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext * /*ctx*/) override { }
+
+  virtual void enterUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext * /*ctx*/) override { }
+  virtual void exitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext * /*ctx*/) override { }
+
+  virtual void enterUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext * /*ctx*/) override { }
+  virtual void exitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext * /*ctx*/) override { }
 
   virtual void enterAssignmentStatement(Pcl2Parser::AssignmentStatementContext * /*ctx*/) override { }
   virtual void exitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * /*ctx*/) override { }
@@ -83,6 +89,9 @@ public:
 
   virtual void enterPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
   virtual void exitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext * /*ctx*/) override { }
+
+  virtual void enterBitExpr(Pcl2Parser::BitExprContext * /*ctx*/) override { }
+  virtual void exitBitExpr(Pcl2Parser::BitExprContext * /*ctx*/) override { }
 
   virtual void enterPrimExpr(Pcl2Parser::PrimExprContext * /*ctx*/) override { }
   virtual void exitPrimExpr(Pcl2Parser::PrimExprContext * /*ctx*/) override { }

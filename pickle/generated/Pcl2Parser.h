@@ -358,17 +358,53 @@ public:
 
   class  UnaryStatementContext : public antlr4::ParserRuleContext {
   public:
+    TypeSpec * type = nullptr;
+    char type_letter = '?';
     UnaryStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
-    virtual size_t getRuleIndex() const override;
-    antlr4::tree::TerminalNode *PlusPlus();
-    antlr4::tree::TerminalNode *Identifier();
-    antlr4::tree::TerminalNode *MinusMinus();
+   
+    UnaryStatementContext() : antlr4::ParserRuleContext() { }
+    void copyFrom(UnaryStatementContext *context);
+    using antlr4::ParserRuleContext::copyFrom;
 
+    virtual size_t getRuleIndex() const override;
+
+   
+  };
+
+  class  UnaryDecrementStatementContext : public UnaryStatementContext {
+  public:
+    UnaryDecrementStatementContext(UnaryStatementContext *ctx);
+
+    antlr4::tree::TerminalNode *MinusMinus();
+    antlr4::tree::TerminalNode *Identifier();
     virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
     virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
 
     virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
-   
+  };
+
+  class  UnaryIncrementStatementContext : public UnaryStatementContext {
+  public:
+    UnaryIncrementStatementContext(UnaryStatementContext *ctx);
+
+    antlr4::tree::TerminalNode *PlusPlus();
+    antlr4::tree::TerminalNode *Identifier();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
+  };
+
+  class  UnarySquareStatementContext : public UnaryStatementContext {
+  public:
+    UnarySquareStatementContext(UnaryStatementContext *ctx);
+
+    antlr4::tree::TerminalNode *Identifier();
+    antlr4::tree::TerminalNode *Power();
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   UnaryStatementContext* unaryStatement();
@@ -467,7 +503,7 @@ public:
   class  ExpressionContext : public antlr4::ParserRuleContext {
   public:
     TypeSpec * type = nullptr;
-    char expr_operator = 0;
+    string expr_operator;
     char type_letter = '?';
     expression_type_E expression_type;
     ExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
@@ -479,6 +515,19 @@ public:
     virtual size_t getRuleIndex() const override;
 
    
+  };
+
+  class  BitExprContext : public ExpressionContext {
+  public:
+    BitExprContext(ExpressionContext *ctx);
+
+    antlr4::Token *opr = nullptr;
+    std::vector<ExpressionContext *> expression();
+    ExpressionContext* expression(size_t i);
+    virtual void enterRule(antlr4::tree::ParseTreeListener *listener) override;
+    virtual void exitRule(antlr4::tree::ParseTreeListener *listener) override;
+
+    virtual antlrcpp::Any accept(antlr4::tree::ParseTreeVisitor *visitor) override;
   };
 
   class  PrimExprContext : public ExpressionContext {

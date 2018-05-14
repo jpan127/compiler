@@ -1,7 +1,7 @@
-void foo(int bar)
-{
-    bar = 5;
-}
+// void foo(int bar)
+// {
+//     bar = 5;
+// }
 
 void main()
 {
@@ -10,7 +10,7 @@ void main()
     double b = 20;
     int    c = a * b;   /// 200
     float  d = c + c;   /// 400
-    float  e = d * 5;
+    float  e = 2;
 
     int multiples_of_ten = 0;
 
@@ -19,10 +19,11 @@ void main()
     {
         while (d > 0)
         {
-            d = d - 1;
+            d--;
             if (d % 10 == 0)
             {
-                multiples_of_ten = multiples_of_ten + 1;
+                ++multiples_of_ten;
+                e**;
             }
         }
     }

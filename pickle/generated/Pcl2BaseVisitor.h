@@ -80,7 +80,15 @@ public:
     return visitChildren(ctx);
   }
 
-  virtual antlrcpp::Any visitUnaryStatement(Pcl2Parser::UnaryStatementContext *ctx) override {
+  virtual antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 
@@ -101,6 +109,10 @@ public:
   }
 
   virtual antlrcpp::Any visitPrimaryExpression(Pcl2Parser::PrimaryExpressionContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitBitExpr(Pcl2Parser::BitExprContext *ctx) override {
     return visitChildren(ctx);
   }
 
