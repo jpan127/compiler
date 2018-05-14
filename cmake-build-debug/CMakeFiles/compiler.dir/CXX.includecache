@@ -1145,6 +1145,8 @@ XPathElement.h
 ../pickle/antlr4-runtime/tree/xpath/XPathElement.h
 
 ../pickle/generated/Pcl2BaseVisitor.h
+wci/intermediate/symtab.h
+../pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 ../pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
@@ -1153,18 +1155,24 @@ Pcl2Visitor.h
 ../pickle/generated/Pcl2Visitor.h
 
 ../pickle/generated/Pcl2Lexer.h
+wci/intermediate/symtab.h
+../pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 ../pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
 ../pickle/generated/antlr4-runtime.h
 
 ../pickle/generated/Pcl2Parser.h
+wci/intermediate/symtab.h
+../pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 ../pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
 ../pickle/generated/antlr4-runtime.h
 
 ../pickle/generated/Pcl2Visitor.h
+wci/intermediate/symtab.h
+../pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 ../pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
@@ -1213,6 +1221,12 @@ symtabimpl/Predefined.h
 ../pickle/src/wci/intermediate/symtabimpl/Predefined.h
 SymTabEntry.h
 ../pickle/src/wci/intermediate/SymTabEntry.h
+
+../pickle/src/wci/intermediate/symtab.h
+string
+-
+vector
+-
 
 ../pickle/src/wci/intermediate/symtabimpl/Predefined.h
 vector
@@ -3365,12 +3379,16 @@ XPathElement.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/antlr4-runtime/tree/xpath/XPathElement.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2BaseListener.cpp
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 Pcl2BaseListener.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2BaseListener.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2BaseListener.h
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
@@ -3379,12 +3397,16 @@ Pcl2Listener.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Listener.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2BaseVisitor.cpp
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 Pcl2BaseVisitor.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2BaseVisitor.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2BaseVisitor.h
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
@@ -3393,24 +3415,32 @@ Pcl2Visitor.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Visitor.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Lexer.cpp
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 Pcl2Lexer.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Lexer.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Lexer.h
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/antlr4-runtime.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Listener.cpp
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 Pcl2Listener.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Listener.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Listener.h
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
@@ -3419,6 +3449,8 @@ Pcl2Parser.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.cpp
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 Pcl2Listener.h
@@ -3429,18 +3461,24 @@ Pcl2Parser.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/antlr4-runtime.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Visitor.cpp
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 Pcl2Visitor.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Visitor.h
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Visitor.h
+wci/intermediate/symtab.h
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/symtab.h
 wci/intermediate/TypeSpec.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/wci/intermediate/TypeSpec.h
 antlr4-runtime.h
@@ -3543,6 +3581,16 @@ antlr4-runtime.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/antlr4-runtime.h
 Pcl2Visitor.h
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pcl2Visitor.h
+common.hpp
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/common.hpp
+
+C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/common.hpp
+iostream
+-
+fstream
+-
+exception
+-
 
 C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/main.cpp
 iostream
