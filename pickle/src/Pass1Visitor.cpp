@@ -15,10 +15,7 @@ using namespace wci::util;
 
 
 
-Pass1Visitor::~Pass1Visitor() 
-{
-    /// Empty
-}
+Pass1Visitor::~Pass1Visitor() = default;
 
 Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : program_name(fname), program_id(nullptr), j_file(nullptr), debug_flag(debug)
 {
@@ -132,7 +129,7 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
         {
             cout << TAB << context->typeSpecifier()->getText() << endl;
             context->type = *(type_map.at(context->typeSpecifier()->getText()));
-            context->type_letter = toupper(context->typeSpecifier()->getText()[0]);
+            context->type_letter = (char)toupper(context->typeSpecifier()->getText()[0]);
         }
         else
         {
@@ -181,7 +178,7 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
            << " " 
            << context->type_letter;
 
-    if ("" != variable_initial_value)
+    if (!variable_initial_value.empty())
     {
         j_file  << " = "
                 << variable_initial_value;

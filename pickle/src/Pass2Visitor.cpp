@@ -40,7 +40,7 @@ string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, const char 
             case '%': opcode = "lrem";          break;
             case '+': opcode = "ladd";          break;
             case '-': opcode = "lsub";          break;
-            default : throw out_of_range(&opr); break;
+            default : throw out_of_range(&opr);
         }
     }
     else if (Predefined::float_type == type)
@@ -52,7 +52,7 @@ string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, const char 
             case '%': opcode = "frem";          break;
             case '+': opcode = "fadd";          break;
             case '-': opcode = "fsub";          break;
-            default : throw out_of_range(&opr); break;
+            default : throw out_of_range(&opr);
         }
     }
     else
@@ -150,7 +150,6 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
         j_file                                                                          << endl;
         j_file << ".limit locals 16"                                                    << endl;
         j_file << ".limit stack 16"                                                     << endl;
-       // j_file << ".end method"                                                         << endl;
     }
     j_file << ".end method" << endl;
 
