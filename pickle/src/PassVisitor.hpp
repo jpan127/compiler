@@ -25,8 +25,6 @@ protected:
 
     virtual ~PassVisitor() { }
 
-
-
     /// Just a tab character
     static const char TAB = '\t';
 
@@ -35,8 +33,6 @@ protected:
     static const unordered_map <TypeSpec **, char> letter_map;
 
     uint64_t scope_counter;
-
-
 
     TypeSpec * resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type);
 

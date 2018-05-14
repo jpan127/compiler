@@ -14,7 +14,7 @@ using namespace wci::intermediate::symtabimpl;
 
 
 
-/// @NOTE : There's no fucking good resources for Jasmin instructions except this https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html
+/// @NOTE : good resource for Jasmin instructions except this https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html
 
 Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : PassVisitor(), program_name(fname), j_file(j_file), debug_flag(debug)
 {
@@ -87,32 +87,8 @@ antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
 {
     print_debug_context(2, context, "visitTranslationUnit");
 
-    // Emit the main program header
-    j_file                                                                          << endl;
-    j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
-    j_file                                                                          << endl;
-    j_file << "\tnew RunTimer"                                                      << endl;
-    j_file << "\tdup"                                                               << endl;
-    j_file << "\tinvokenonvirtual RunTimer/<init>()V"                               << endl;
-    j_file << "\tputstatic        " << program_name << "/_runTimer LRunTimer;"      << endl;
-    j_file << "\tnew PascalTextIn"                                                  << endl;
-    j_file << "\tdup"                                                               << endl;
-    j_file << "\tinvokenonvirtual PascalTextIn/<init>()V"                           << endl;
-    j_file << "\tputstatic        " + program_name << "/_standardIn LPascalTextIn;" << endl;
-    j_file                                                                          << endl;
-
     // We want to vist the children and traverse the entire tree before printing the next epilogue
     auto value = visitChildren(context);
-
-    // Emit the main program epilogue
-    j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
-    j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
-    j_file                                                                          << endl;
-    j_file << "\treturn"                                                            << endl;
-    j_file                                                                          << endl;
-    j_file << ".limit locals 16"                                                    << endl;
-    j_file << ".limit stack 16"                                                     << endl;
-    j_file << ".end method"                                                         << endl;
 
     return value;
 }
@@ -154,12 +130,41 @@ antlrcpp::Any Pass2Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
 antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
 {
     print_debug_context(2, context, "visitFunctionDefinition");
+    bool is_main = context->Identifier()->getText() == "main";
 
-    /**
-     *  Nothing yet
-     */
+    j_file << context->function_header;
+    if(is_main){
+        // Emit the main program header
+//        j_file                                                                          << endl;
+//        j_file << ".method public static main([Ljava/lang/String;)V"                    << endl;
+        j_file                                                                          << endl;
+        j_file << "\tnew RunTimer"                                                      << endl;
+        j_file << "\tdup"                                                               << endl;
+        j_file << "\tinvokenonvirtual RunTimer/<init>()V"                               << endl;
+        j_file << "\tputstatic        " << program_name << "/_runTimer LRunTimer;"      << endl;
+        j_file << "\tnew PascalTextIn"                                                  << endl;
+        j_file << "\tdup"                                                               << endl;
+        j_file << "\tinvokenonvirtual PascalTextIn/<init>()V"                           << endl;
+        j_file << "\tputstatic        " + program_name << "/_standardIn LPascalTextIn;" << endl;
+    }
+    visit(context->compoundStatement());
 
-    return visitChildren(context);
+    if(is_main){
+
+        // Emit the main program epilogue
+        j_file                                                                          << endl;
+        j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
+        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
+        j_file                                                                          << endl;
+        j_file << "\treturn"                                                            << endl;
+        j_file                                                                          << endl;
+        j_file << ".limit locals 16"                                                    << endl;
+        j_file << ".limit stack 16"                                                     << endl;
+    }
+    j_file << ".end method" << endl;
+
+    //return visitChildren(context); todo: double check return, nothing else has to be done
+    return nullptr;
 }
 
 /*////////////////////////////////////////////////////////////

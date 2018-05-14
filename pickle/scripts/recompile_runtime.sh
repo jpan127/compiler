@@ -1,7 +1,7 @@
 set -x
 
 RED='\033[0;31m'
-RUNTIME_ROOT_DIR="C:/Users/JP/Desktop/compiler/pickle/antlr4-runtime"
+RUNTIME_ROOT_DIR="../antlr4-runtime"
 
 COMPILE="g++ -std=c++11                           \
             -I.                                   \

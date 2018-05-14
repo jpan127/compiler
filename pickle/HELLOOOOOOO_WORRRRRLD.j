@@ -14,6 +14,8 @@
 .limit stack 1
 .end method
 
+.method public static main()I
+; intmain(){}
 
 ; boola=10;
 

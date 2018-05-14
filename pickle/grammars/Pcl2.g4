@@ -1,6 +1,7 @@
 grammar Pcl2;
 
 @header {
+#include "wci/intermediate/symtab.h"
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
 }
@@ -20,8 +21,12 @@ externalDeclaration
     |   Semi
     ;
 
-functionDefinition
+functionDefinition locals [string function_header]
     : typeSpecifier Identifier parameterTypeList compoundStatement;
+
+functionDeclaration
+    :   typeSpecifier Identifier
+    ;
 
 declaration 
     locals [
@@ -50,11 +55,16 @@ functionReturn
     : Identifier LeftParen identifierList? RightParen
     ;
 
+jumpStatement
+    :      Return expression? Semi
+    ;
+
 identifierList
     : Identifier (Comma Identifier)*
     ;
 
-compoundStatement locals [ string scope_name = "Anonymous" ]
+compoundStatement locals [ string scope_name = "Anonymous",
+                            SymTab * local_symTab = nullptr]
     :   LeftBrace blockItemList? RightBrace
     ;
 
@@ -74,6 +84,7 @@ statement
     |   selectionStatement
     |   iterationStatement
     |   assignmentStatement
+    |   jumpStatement
     |   unaryStatement Semi
     ;
 
@@ -146,8 +157,7 @@ assignmentExpression
     ;
 
 parameterTypeList
-    :   LeftParen (declaration)* RightParen;
-
+    :   LeftParen (functionDeclaration (Comma functionDeclaration)*)? RightParen;
 
 /***************************************************
  *                                                 *

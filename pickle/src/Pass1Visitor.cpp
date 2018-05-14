@@ -15,10 +15,7 @@ using namespace wci::util;
 
 
 
-Pass1Visitor::~Pass1Visitor() 
-{
-    /// Empty
-}
+Pass1Visitor::~Pass1Visitor() = default;
 
 Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : PassVisitor(), program_name(fname), program_id(nullptr), j_file(nullptr), debug_flag(debug)
 {
@@ -131,6 +128,7 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
         {
             cout << TAB << context->typeSpecifier()->getText() << endl;
             context->type = *(type_map.at(context->typeSpecifier()->getText()));
+            context->type_letter = (char)toupper(context->typeSpecifier()->getText()[0]);
         }
         else
         {
@@ -179,7 +177,7 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
            << " " 
            << context->type_letter;
 
-    if ("" != variable_initial_value)
+    if (!variable_initial_value.empty())
     {
         j_file  << " = "
                 << variable_initial_value;
@@ -190,14 +188,62 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     return visitChildren(context);
 }
 
+antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext * context)
+{
+    print_debug_context(1, context, "visitCompoundStatement");
+
+    if(context->local_symTab == nullptr) {
+        context->local_symTab = symtab_stack->push();
+        SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
+        local_name_entry->set_definition((Definition) DF_SCOPE);
+    }else{
+        symtab_stack->push(context->local_symTab);
+    }
+    cout << TAB << "Symbol table created for : " << context->scope_name << endl;
+
+    return visitChildren(context);
+}
+
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context)
 {
     print_debug_context(1, context, "visitFunctionDefinition");
 
+    std::string function_header;
+    std::string function_name = context->Identifier()->toString();
+    std::string function_return_type;
+    function_return_type = (char)toupper(context->typeSpecifier()->getText()[0]);
+
     // Set the compound statement's scope name as the function name
     context->compoundStatement()->scope_name = context->Identifier()->getText();
 
-    return visitChildren(context);
+    //create a header for pass2visitor to use when creating the method
+    context->function_header = ".method public static " + context->Identifier()->toString() + "(";
+
+    //add each function parameter to jasmin function header
+    for(auto variable: context->parameterTypeList()->functionDeclaration()) {
+        string var_type = variable->typeSpecifier()->getText();
+        context->function_header += (char)toupper(var_type[0]);
+    }
+
+    //close parameter parenthesis and declare function return type
+    context->function_header += ")" + function_return_type;
+
+    //add comment of function signature for jasmin file
+    context->function_header += "\n; " + context->getText() + "\n";
+
+    //create a local symbal table for the function
+    SymTab *local_symTab = symtab_stack->push();
+    SymTabEntry *local_name_entry = local_symTab->enter(context->Identifier()->toString());
+    local_name_entry->set_definition((Definition) DF_FUNCTION);
+
+    //allow parameterTypeList to add function parameters to symtab
+    visit(context->parameterTypeList());
+
+    //use the created symtab as the symtab for compound statement {} scope
+    //symtab will be pushed back on in compound statement
+    context->compoundStatement()->local_symTab = symtab_stack->pop();
+
+    return visit(context->compoundStatement());
 }
 
 /*////////////////////////////////////////////////////////////
@@ -250,10 +296,6 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     {
         context->type_letter = 'F';
         context->type = Predefined::float_type;
-    }
-    else
-    {
-        exit(-1);
     }
 
     visitChildren(context);
@@ -308,33 +350,6 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
          << rhs_type 
          << endl;
 
-    // const string lhs_name = context->expression(0)->getText();
-    // const string rhs_name = context->expression(1)->getText();
-
-    // try
-    // {
-    //     auto lhs_id = symtab_stack->lookup(lhs_name);
-    //     auto rhs_id = symtab_stack->lookup(rhs_name);
-
-    //     if (!lhs_id)
-    //     {
-    //         throw MissingSymbol("[visitMulDivExpr] Could not find symbol : " + lhs_name);
-    //     }
-
-    //     if (!rhs_id)
-    //     {
-    //         throw MissingSymbol("[visitMulDivExpr] Could not find symbol : " + rhs_name);
-    //     }
-
-    //     context->type = resolve_expression_type(lhs_id->get_typespec(), rhs_id->get_typespec());
-    // }
-    // catch (MissingSymbol const & error)
-    // {
-    //     error.print_and_exit();
-    // }
-
-    // cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
-
     return visitChildren(context);   
 }
 
@@ -383,52 +398,6 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
          << " " 
          << rhs_type 
          << endl;
-
-    // const string lhs_name = context->expression(0)->getText();
-    // const string rhs_name = context->expression(1)->getText();
-
-    // try
-    // {
-    //     // Lookup both operands in symbol table
-    //     const SymTabEntry * lhs_entry = symtab_stack->lookup(lhs_name);
-    //     const SymTabEntry * rhs_entry = symtab_stack->lookup(rhs_name);
-
-    //     TypeSpec * lhs_type = nullptr;
-    //     TypeSpec * rhs_type = nullptr;
-
-    //     // If the left operand is an identifier and is not in symbol table, throw, otherwise get type
-    //     if (context->expression(0)->primaryExpression() &&
-    //         context->expression(0)->primaryExpression()->Identifier())
-    //     {
-    //         if (!lhs_entry)
-    //         {
-    //             throw MissingSymbol("[visitAddminExpr] Could not find LHS symbol : " + lhs_name);
-    //         }
-
-    //         lhs_type = lhs_entry->get_typespec();
-    //     }
-
-    //     // If the right operand is an identifier and is not in symbol table, throw, otherwise get type
-    //     if (context->expression(1)->primaryExpression() &&
-    //         context->expression(1)->primaryExpression()->Identifier())
-    //     {
-    //         if (!rhs_entry)
-    //         {
-    //             throw MissingSymbol("[visitAddminExpr] Could not find RHS symbol : " + rhs_name);
-    //         }
-         
-    //         rhs_type = rhs_entry->get_typespec();
-    //     }
-
-    //     // Determine type of this expression
-    //     context->type = resolve_expression_type(lhs_type, rhs_type);
-    // }
-    // catch (MissingSymbol const & error)
-    // {
-    //     error.print_and_exit();
-    // }
-
-    // cout << TAB << lhs_name << context->opr->getText() << rhs_name << endl;
 
     return nullptr;
 }
@@ -583,5 +552,14 @@ antlrcpp::Any Pass1Visitor::visitSelectionStatement(Pcl2Parser::SelectionStateme
 
     context->conditionalExpression()->iteration_name = "if_" + std::to_string(scope_counter++);
 
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
+
+    if(context->Return()){//jump is return statement
+        visit(context->expression());
+
+    }
     return visitChildren(context);
 }

@@ -28,6 +28,7 @@ ostream & operator << (ostream & out, const TypeSpec * other)
             else if (other->get_identifier() == symtabimpl::Predefined::signed_type->get_identifier()   ) { output = "signed_type"  ; }
             else if (other->get_identifier() == symtabimpl::Predefined::unsigned_type->get_identifier() ) { output = "unsigned_type"; }
             else if (other->get_identifier() == symtabimpl::Predefined::uint32_t_type->get_identifier() ) { output = "uint32_t_type"; }
+            else if (other->get_identifier() == symtabimpl::Predefined::int32_t_type->get_identifier()  ) { output = "int32_t_type" ; }
             else if (other->get_identifier() == symtabimpl::Predefined::integer_type->get_identifier()  ) { output = "integer_type" ; }
             else                                                                                          { output = "???"          ; }
         }

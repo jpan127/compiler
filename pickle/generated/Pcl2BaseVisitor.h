@@ -1,4 +1,5 @@
 
+#include "wci/intermediate/symtab.h"
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
 
@@ -48,6 +49,10 @@ public:
   }
 
   virtual antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
+  virtual antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *ctx) override {
     return visitChildren(ctx);
   }
 

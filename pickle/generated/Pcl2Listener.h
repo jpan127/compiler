@@ -1,4 +1,5 @@
 
+#include "wci/intermediate/symtab.h"
 #include "wci/intermediate/TypeSpec.h"
 using namespace wci::intermediate;
 
@@ -41,6 +42,9 @@ public:
 
   virtual void enterFunctionReturn(Pcl2Parser::FunctionReturnContext *ctx) = 0;
   virtual void exitFunctionReturn(Pcl2Parser::FunctionReturnContext *ctx) = 0;
+
+  virtual void enterJumpStatement(Pcl2Parser::JumpStatementContext *ctx) = 0;
+  virtual void exitJumpStatement(Pcl2Parser::JumpStatementContext *ctx) = 0;
 
   virtual void enterIdentifierList(Pcl2Parser::IdentifierListContext *ctx) = 0;
   virtual void exitIdentifierList(Pcl2Parser::IdentifierListContext *ctx) = 0;
