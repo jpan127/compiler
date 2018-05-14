@@ -139,6 +139,8 @@ public:
   class  FunctionDefinitionContext : public antlr4::ParserRuleContext {
   public:
     string function_header;
+    uint32_t num_local_vars = 0;
+    size_t stack_size = 0;
     FunctionDefinitionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     TypeSpecifierContext *typeSpecifier();
@@ -296,7 +298,6 @@ public:
   class  CompoundStatementContext : public antlr4::ParserRuleContext {
   public:
     string scope_name = "Anonymous";
-    SymTab * local_symTab = nullptr;
     CompoundStatementContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *LeftBrace();
@@ -548,6 +549,7 @@ public:
   class  PrimaryExpressionContext : public antlr4::ParserRuleContext {
   public:
     char type_letter = '?';
+    uint32_t current_nesting_level = 0;
     PrimaryExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Identifier();
@@ -710,6 +712,7 @@ public:
   public:
     TypeSpec * type = nullptr;
     char type_letter = 0;
+    uint32_t current_nesting_level = 0;
     AssignmentExpressionContext(antlr4::ParserRuleContext *parent, size_t invokingState);
     virtual size_t getRuleIndex() const override;
     antlr4::tree::TerminalNode *Identifier();

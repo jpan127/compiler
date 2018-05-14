@@ -75,6 +75,7 @@ public:
     antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context) override;
     antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context) override;
     antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context) override;
+    antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * context) override;
 
     antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
     antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;

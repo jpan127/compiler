@@ -26,7 +26,11 @@ private:
 
     const bool debug_flag;
 
+    vector <string> instruction_buffer;
+
     string resolve_expression_instruction(TypeSpec * type, string const & opr);
+
+    void emit_symbol_table();
 
 public:
 

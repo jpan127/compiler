@@ -21,13 +21,18 @@ externalDeclaration
     |   Semi
     ;
 
-functionDefinition locals [string function_header]
+functionDefinition 
+    locals [
+        string function_header,
+        uint32_t num_local_vars = 0,
+        size_t stack_size = 0,
+    ]
     : typeSpecifier Identifier parameterTypeList compoundStatement;
 
 functionDeclaration
     locals [
         TypeSpec * type = nullptr,
-        char type_letter = 0
+        char type_letter = 0,
     ]
     :   typeSpecifier Identifier(Comma typeSpecifier Identifier)*
     ;
@@ -67,8 +72,7 @@ identifierList
     : Identifier (Comma Identifier)*
     ;
 
-compoundStatement locals [ string scope_name = "Anonymous",
-                            SymTab * local_symTab = nullptr]
+compoundStatement locals [ string scope_name = "Anonymous" ]
     :   LeftBrace blockItemList? RightBrace
     ;
 
@@ -138,7 +142,8 @@ iterationStatement
 
 primaryExpression
     locals [
-        char type_letter = '?'
+        char type_letter = '?',
+        uint32_t current_nesting_level = 0
     ]
     :   Identifier
     |   IntegerConstant
@@ -174,7 +179,8 @@ conditionalExpression
 assignmentExpression
     locals [
         TypeSpec * type = nullptr, 
-        char type_letter = 0
+        char type_letter = 0,
+        uint32_t current_nesting_level = 0
     ]
     :   Identifier Assign expression
     |   Identifier Assign functionReturn

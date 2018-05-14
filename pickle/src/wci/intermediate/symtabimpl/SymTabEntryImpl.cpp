@@ -65,7 +65,7 @@ void SymTabEntryImpl::initialize()
 }
 
 SymTabEntryImpl::SymTabEntryImpl(const string name, SymTab *symtab)
-    : name(name), definition((Definition) -1), symtab(symtab),
+    : SymTabEntry(), name(name), definition((Definition) -1), symtab(symtab),
       typespec(nullptr)
 {
     initialize();

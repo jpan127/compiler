@@ -1,9 +1,17 @@
 // void foo(int bar)
 // {
-//     bar = 5;
+//     int bar = 5;
+
+//     {
+//         int x = a;
+//     }
 // }
 
-void main()
+int bryan = 0;
+int cole = 1;
+int jp = 2;
+
+void main(double x)
 {
     /// Initialize variables first
     int fizz_counter = 0;
@@ -13,7 +21,7 @@ void main()
     int buzz = 3;
     int fizz_buzz = fizz * buzz;
 
-    double d = 100;
+    double d = 1500;
     double e = 1.1;
 
     while (d > 0)
@@ -21,10 +29,10 @@ void main()
         if (d % fizz_buzz == 0)
         {
             e**;
-            fizz_counter++;
         }
         else if (d % fizz == 0)
         {
+            fizz_counter++;
         }
         else if (d % buzz == 0)
         {

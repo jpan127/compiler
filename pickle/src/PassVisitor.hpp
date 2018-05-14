@@ -41,6 +41,10 @@ protected:
     /// Maps a pointer to the typespec to the instruction prefix
     static const unordered_map <TypeSpec **, char> instruction_prefix_map;
 
+    static unordered_map <string, unordered_map <string, uint32_t>> variable_id_map;
+
+    static string current_function;
+
     /// Counts up for each compound statement
     static uint64_t scope_counter;
 
@@ -85,4 +89,8 @@ protected:
     {
         return std::isdigit(identifier[0]);
     }
+
+    string create_get_variable_instruction(const string program_name, const string variable, const char type_letter);
+    string create_put_variable_instruction(const string program_name, const string variable, const char type_letter);
+
 };

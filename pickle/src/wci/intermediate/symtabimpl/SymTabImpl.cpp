@@ -32,9 +32,24 @@ int SymTabImpl::get_nesting_level() const { return nesting_level; }
 SymTabEntry *SymTabImpl::enter(string name)
 {
     SymTabEntry *entry = SymTabFactory::create_symtab_entry(name, this);
+    // Enumeration of the current entry inside the current symbol table
+    entry->id = contents.size() + 1;
     contents[name] = (SymTabEntryImpl *) entry;
 
     return entry;
+}
+
+uint32_t SymTabImpl::lookup_id(const string name)
+{
+    SymTabEntry * entry = lookup(name);
+    if (nullptr != entry)
+    {
+        return entry->id;
+    }
+    else
+    {
+        return static_cast<uint32_t>(-1);
+    }
 }
 
 SymTabEntry *SymTabImpl::lookup(const string name)

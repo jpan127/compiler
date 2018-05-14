@@ -146,9 +146,6 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
 {
     print_debug_context(1, context, "visitDeclaration"); 
 
-    // Make a comment as to what the declaration is
-    j_file << "\n; " << context->getText() << "\n" << endl;
-
     try
     { 
         if (type_map.find(context->typeSpecifier()->getText()) != type_map.end())
@@ -196,18 +193,50 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     SymTabEntry * variable_id = symtab_stack->enter_local(variable_name);
     variable_id->set_definition((Definition) DF_VARIABLE);
     variable_id->set_typespec(context->type);
+
+    if (Predefined::double_type == context->type)
+    {
+        // Create a symbol table for a dummy for the second symbol asdfakfds;ksad;fasdf
+        SymTabEntry *variable_id = symtab_stack->enter_local(variable_name + "_dummy");
+        variable_id->set_definition((Definition) DF_VARIABLE);
+        variable_id->set_typespec(context->type);
+    }
+
+    try
+    {
+        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
+        {
+            throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
+        }
+        else
+        {
+            PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = variable_id->id;
+        }
+    }
+    catch (MissingSymbol const & error)
+    {
+        error.print_and_exit();
+    }
+
     cout << TAB << "Symbol table created for : " << variable_name << endl;
 
-    // Output the variable declaration leaving room for the initial value if there is one
-    // @example : .field private static c D = 0
-    j_file << ".field private static "
-           << variable_name
-           << " " 
-           << context->type_letter;
+    // Determine if current symbol table is global
+    SymTab * const local_symbol_table = symtab_stack->get_local_symtab();
+    // Depending which scope this is in, emit declaration
+    if (local_symbol_table->get_nesting_level() == 1)
+    {
+        // Make a comment as to what the declaration is
+        j_file << "\n; " << context->getText() << endl;
 
-    // j_file  << " = "
-    //         << variable_initial_value
-    //         << endl;
+        // Output the variable declaration
+        // @example : .field private static c D = 0
+        j_file << ".field private static "
+               << variable_name
+               << " " 
+               << context->type_letter
+               << endl
+               << endl;
+    }
 
     return visitChildren(context);
 }
@@ -219,13 +248,14 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
     // Make a comment as to what the declaration is
     j_file << "\n; " << context->getText() << "\n" << endl;
 
-    for (int i = 0; i < context->typeSpecifier().size(); ++i) {
+    vector <Pcl2Parser::TypeSpecifierContext *> type_specifiers = context->typeSpecifier();
+    for (int i = 0; i < type_specifiers.size(); ++i) {
 
         try {
-            if (type_map.find(context->typeSpecifier()[i]->getText()) != type_map.end()) {
-                cout << TAB << context->typeSpecifier()[i]->getText() << endl;
-                context->type = *(type_map.at(context->typeSpecifier()[i]->getText()));
-                context->type_letter = (char) toupper(context->typeSpecifier()[i]->getText()[0]);
+            if (type_map.find(type_specifiers[i]->getText()) != type_map.end()) {
+                cout << TAB << type_specifiers[i]->getText() << endl;
+                context->type = *(type_map.at(type_specifiers[i]->getText()));
+                context->type_letter = (char) toupper(type_specifiers[i]->getText()[0]);
             } else {
                 throw InvalidType("Type not supported : " + context->getText());
             }
@@ -243,8 +273,34 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
         SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
         variable_id->set_definition((Definition) DF_VARIABLE);
         variable_id->set_typespec(context->type);
+
+        if (Predefined::double_type == context->type)
+        {
+            // Create a symbol table for a dummy for the second symbol asdfakfds;ksad;fasdf
+            SymTabEntry *variable_id = symtab_stack->enter_local(variable_name + "_dummy");
+            variable_id->set_definition((Definition) DF_VARIABLE);
+            variable_id->set_typespec(context->type);
+        }
+
+        try
+        {
+            if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
+            {
+                throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
+            }
+            else
+            {
+                PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = variable_id->id;
+            }
+        }
+        catch (MissingSymbol const & error)
+        {
+            error.print_and_exit();
+        }
+
         cout << TAB << "Symbol table created for : " << variable_name << endl;
     }
+
     return visitChildren(context);
 }
 
@@ -255,6 +311,24 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     std::string function_name = context->Identifier()->toString();
     std::string function_return_type;
     function_return_type = (char)toupper(context->typeSpecifier()->getText()[0]);
+
+    PassVisitor::current_function = function_name;
+
+    try
+    {
+        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) != PassVisitor::variable_id_map.end())
+        {
+            throw CompilerError("Function already defined : " + PassVisitor::current_function);
+        }
+        else
+        {
+            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map <string, uint32_t>();
+        }
+    }
+    catch (CompilerError const & error)
+    {
+        error.print_and_exit();
+    }
 
     // Set the compound statement's scope name as the function name
     context->compoundStatement()->scope_name = context->Identifier()->getText();
@@ -284,14 +358,20 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
+
     std::cout << "***** size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
     for(auto variable:symtab_stack->get_local_symtab()->sorted_entries()){std::cout << "***" << variable->get_name();}
-    //use the created symtab as the symtab for compound statement {} scope
-    //symtab will be pushed back on in compound statement
-    cout << "POP GOES THE WEASEL\n";
-    context->compoundStatement()->local_symTab = symtab_stack->pop();
 
-    return visit(context->compoundStatement());
+    visit(context->compoundStatement());
+
+    context->num_local_vars = symtab_stack->get_local_symtab()->get_size() - 1;
+    context->stack_size = context->num_local_vars * 8;
+
+    symtab_stack->pop();
+
+    PassVisitor::current_function = "global";
+
+    return nullptr;
 }
 
 /*////////////////////////////////////////////////////////////
@@ -362,6 +442,8 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     }
 
     visitChildren(context);
+
+    context->primaryExpression()->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
 
     return context->type;
 }
@@ -563,6 +645,8 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
         error.print_and_exit();
     }
 
+    context->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
+
     return visitChildren(context);
 }
 
@@ -633,19 +717,25 @@ antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedC
  *                                                           *
  */////////////////////////////////////////////////////////////
 
+antlrcpp::Any Pass1Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * context)
+{
+    print_debug_context(1, context, "visitAssignmentStatement");
+    return visitChildren(context);
+}
+
 antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext * context)
 {
     print_debug_context(1, context, "visitCompoundStatement");
 
-    if(context->local_symTab == nullptr) {
-        context->local_symTab = symtab_stack->push();
-        SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
-        local_name_entry->set_definition((Definition) DF_SCOPE);
-        cout << TAB << "Symbol created : " << context->scope_name << endl;
-    }else{
-        symtab_stack->push(context->local_symTab);
-        for(auto variable:context->local_symTab->sorted_entries()){std::cout << "***" << variable->get_name();}
-    }
+    // if(context->local_symTab == nullptr) {
+    //     context->local_symTab = symtab_stack->push();
+    //     SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
+    //     local_name_entry->set_definition((Definition) DF_SCOPE);
+    //     cout << TAB << "Symbol created : " << context->scope_name << endl;
+    // }else{
+    //     symtab_stack->push(context->local_symTab);
+    //     for(auto variable:context->local_symTab->sorted_entries()){std::cout << "***" << variable->get_name();}
+    // }
 
     return visitChildren(context);
 }

@@ -3,70 +3,73 @@
 
 .field private static _runTimer LRunTimer;
 
-; intfizz_counter=0;
+; intbryan=0;
+.field private static bryan I
 
-.field private static fizz_counter I
-; intbuzz_counter=0;
 
-.field private static buzz_counter I
-; intfizz=5;
+; intcole=1;
+.field private static cole I
 
-.field private static fizz I
-; intbuzz=3;
 
-.field private static buzz I
-; intfizz_buzz=fizz*buzz;
+; intjp=2;
+.field private static jp I
 
-.field private static fizz_buzz I
-; doubled=100;
 
-.field private static d D
-; doublee=1.1;
+; doublex
 
-.field private static e D
+
 .method public static main([Ljava/lang/String;)V
 
 	new RunTimer
 	dup
 	invokenonvirtual RunTimer/<init>()V
 	putstatic        s/_runTimer LRunTimer;
+	; bryan=0
+	ldc 0
+	putstatic	s/bryan I
+	; cole=1
+	ldc 1
+	putstatic	s/cole I
+	; jp=2
+	ldc 2
+	putstatic	s/jp I
 	; fizz_counter=0
 	ldc 0
-	putstatic	s/fizz_counter I
+	istore 4
 	; buzz_counter=0
 	ldc 0
-	putstatic	s/buzz_counter I
+	istore 5
 	; fizz=5
 	ldc 5
-	putstatic	s/fizz I
+	istore 6
 	; buzz=3
 	ldc 3
-	putstatic	s/buzz I
+	istore 7
 	; fizz_buzz=fizz*buzz
-	getstatic	s/fizz I
-	getstatic	s/buzz I
+	iload 6
+	iload 7
 	imul
-	putstatic	s/fizz_buzz I
-	; d=100
-	ldc2_w 100.0
-	putstatic	s/d D
+	istore 8
+	; d=1500
+	ldc2_w 1500.0
+	dstore 9
 	; e=1.1
 	ldc2_w 1.1
-	putstatic	s/e D
+	dstore 11
 
-; while(d>0){if(d%fizz_buzz==0){e**;fizz_counter++;}elseif(d%fizz==0){}elseif(d%buzz==0){buzz_counter++;}else{}d--;}
+; while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{}d--;}
 while_0:
 	; d > 0
-	getstatic	s/d D
+	dload 9
 	d2i
 	ldc 0
 	; Exit [while_0] condition
 	if_icmple while_0_end
-; if(d%fizz_buzz==0){e**;fizz_counter++;}
+; if(d%fizz_buzz==0){e**;}
 if_1:
 	; d%fizz_buzz == 0
-	getstatic	s/d D
-	getstatic	s/fizz_buzz I
+	dload 9
+	iload 8
 	i2d
 	drem
 	d2i
@@ -74,30 +77,30 @@ if_1:
 	; Exit [if_1] condition
 	if_icmpne if_1_end
 	; e**
-	getstatic	s/e D
+	dload 11
 	dup2
 	dmul
-	putstatic	s/e D
-	; fizz_counter++
-	getstatic	s/fizz_counter I
-	iconst_1
-	iadd
-	putstatic	s/fizz_counter I
+	dstore 11
 	; Exit if-else statement
 	goto if_else_end_1
 if_1_end:
 
-; elseif(d%fizz==0){}
+; elseif(d%fizz==0){fizz_counter++;}
 else_if_1_0:
 	; d%fizz == 0
-	getstatic	s/d D
-	getstatic	s/fizz I
+	dload 9
+	iload 6
 	i2d
 	drem
 	d2i
 	ldc 0
 	; Exit [else_if_1_0] condition
 	if_icmpne else_if_1_0_end
+	; fizz_counter++
+	iload 4
+	iconst_1
+	iadd
+	istore 4
 	; Exit if-else statement
 	goto if_else_end_1
 else_if_1_0_end:
@@ -105,8 +108,8 @@ else_if_1_0_end:
 ; elseif(d%buzz==0){buzz_counter++;}
 else_if_1_1:
 	; d%buzz == 0
-	getstatic	s/d D
-	getstatic	s/buzz I
+	dload 9
+	iload 7
 	i2d
 	drem
 	d2i
@@ -114,10 +117,10 @@ else_if_1_1:
 	; Exit [else_if_1_1] condition
 	if_icmpne else_if_1_1_end
 	; buzz_counter++
-	getstatic	s/buzz_counter I
+	iload 5
 	iconst_1
 	iadd
-	putstatic	s/buzz_counter I
+	istore 5
 	; Exit if-else statement
 	goto if_else_end_1
 else_if_1_1_end:
@@ -127,10 +130,10 @@ else_1:
 if_else_end_1:
 
 	; d--
-	getstatic	s/d D
+	dload 9
 	dconst_1
 	dsub
-	putstatic	s/d D
+	dstore 9
 	; Jump to start of loop
 	goto while_0
 while_0_end:
@@ -141,6 +144,6 @@ while_0_end:
 
 	return
 
-.limit locals 16
-.limit stack 16
+.limit locals 22
+.limit stack 88
 .end method

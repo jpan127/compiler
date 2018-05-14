@@ -88,7 +88,14 @@ struct EntryValue
 
 class SymTabEntry
 {
+protected:
+
+    SymTabEntry() : id(0) { }
+    
 public:
+
+    uint32_t id;
+
     /**
      * Destructor.
      */

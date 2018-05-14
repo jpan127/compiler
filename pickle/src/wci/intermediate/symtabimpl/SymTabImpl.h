@@ -56,6 +56,7 @@ public:
      * @return the entry, or null if it does not exist.
      */
     SymTabEntry *lookup(const string name);
+    uint32_t lookup_id(const string name);
 
     /**
      * Return a vector of entries sorted by key.
@@ -63,6 +64,11 @@ public:
      * @return a list of symbol table entries sorted by name.
      */
     vector<SymTabEntry *> sorted_entries();
+
+    uint32_t get_size() const
+    {
+        return contents.size();
+    }
 
 private:
     int nesting_level;  // scope nesting level

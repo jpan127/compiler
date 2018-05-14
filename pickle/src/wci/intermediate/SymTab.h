@@ -54,6 +54,8 @@ public:
      * @return a list of symbol table entries sorted by name.
      */
     virtual vector<SymTabEntry *> sorted_entries() = 0;
+
+    virtual uint32_t get_size() const = 0;
 };
 
 }} // namespace wci::intermediate

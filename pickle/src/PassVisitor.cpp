@@ -41,6 +41,13 @@ const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
     { &Predefined::double_type , 'd' },
 };
 
+unordered_map <string, unordered_map <string, uint32_t>> PassVisitor::variable_id_map =
+{
+    { "global" , unordered_map<string, uint32_t>() },
+};
+
+string PassVisitor::current_function = "global";
+
 TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
 {
     if (nullptr == lhs_type && rhs_type == nullptr)
@@ -147,4 +154,72 @@ char PassVisitor::instruction_prefix_map_lookup(const TypeSpec * type) const
     }
 
     return ret;
+}
+
+string PassVisitor::create_get_variable_instruction(const string program_name, const string variable, const char type_letter)
+{
+    string instruction = "\t";
+
+    for (auto function : variable_id_map)
+    {
+        for (auto symbols : function.second)
+        {
+            if (symbols.first == variable)
+            {
+                if (function.first == "global")
+                {
+                    instruction += "getstatic\t" + program_name + "/" + variable + " " + type_letter;
+                }
+                else
+                {
+                    switch (type_letter)
+                    {
+                        case 'I': instruction += "iload " + std::to_string(symbols.second); break;
+                        case 'F': instruction += "fload " + std::to_string(symbols.second); break;
+                        case 'D': instruction += "dload " + std::to_string(symbols.second); break;
+                        case 'L': instruction += "lload " + std::to_string(symbols.second); break;
+                        default : 
+                            throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    return instruction;
+}
+
+string PassVisitor::create_put_variable_instruction(const string program_name, const string variable, const char type_letter)
+{
+    string instruction = "\t";
+
+    for (auto function : variable_id_map)
+    {
+        for (auto symbols : function.second)
+        {
+            if (symbols.first == variable)
+            {
+                if (function.first == "global")
+                {
+                    instruction += "putstatic\t" + program_name + "/" + variable + " " + type_letter;
+                }
+                else
+                {
+                    switch (type_letter)
+                    {
+                        case 'I': instruction += "istore " + std::to_string(symbols.second); break;
+                        case 'F': instruction += "fstore " + std::to_string(symbols.second); break;
+                        case 'D': instruction += "dstore " + std::to_string(symbols.second); break;
+                        case 'L': instruction += "lstore " + std::to_string(symbols.second); break;
+                        default : 
+                            throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+    return instruction;
 }
