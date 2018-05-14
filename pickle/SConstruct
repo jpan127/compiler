@@ -15,9 +15,31 @@ DefaultEnvironment(
 
 GENERATED_DIR     = "generated"
 GRAMMAR_FILE_NAME = "C"
-ANLTR_STATIC_LIB  = "antlr-runtime2"
+ANLTR_STATIC_LIB  = "antlr-runtime-jp" # Change me!
 ANTLR_LIB_DIR     = Dir("antlr")
 COMPILE           = ARGUMENTS.get("run", None)
+
+# Make sure to change this to point to your own static library
+if ANLTR_STATIC_LIB == "antlr-runtime-jp":
+    print("""
+     _    _   _ _____ _     ____            _ ____  
+    / \  | \ | |_   _| |   |  _ \   _      | |  _ \ 
+   / _ \ |  \| | | | | |   | |_) | (_)  _  | | |_) |
+  / ___ \| |\  | | | | |___|  _ <   _  | |_| |  __/ 
+ /_/   \_\_| \_| |_| |_____|_| \_\ (_)  \___/|_|    
+                                                    
+""")
+elif ANLTR_STATIC_LIB == "antlr-runtime-bryan":
+    print("""
+     _    _   _ _____ _     ____        ____  ______   __ _    _   _ 
+    / \  | \ | |_   _| |   |  _ \   _  | __ )|  _ \ \ / // \  | \ | |
+   / _ \ |  \| | | | | |   | |_) | (_) |  _ \| |_) \ V // _ \ |  \| |
+  / ___ \| |\  | | | | |___|  _ <   _  | |_) |  _ < | |/ ___ \| |\  |
+ /_/   \_\_| \_| |_| |_____|_| \_\ (_) |____/|_| \_\|_/_/   \_\_| \_|
+                                                                     
+""")
+else:
+    raise Exception("No antlr runtime static library found!")
 
 #=======================================================#
 #                   Helper Functions                    #

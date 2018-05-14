@@ -43,13 +43,16 @@ public:
     antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) override;
     antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
 
+    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
+    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
+    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context) override;
+
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
     antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *context) override;
     antlrcpp::Any visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context) override;
     antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *context) override;
     antlrcpp::Any visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context) override;
 
-    antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
     antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
     antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context) override;
     antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) override;

@@ -27,41 +27,41 @@ protected:
 class InvalidCase : public CustomException
 {
 public:
-    InvalidCase(const std::string msg) : CustomException("[InvalidCase]" + msg) { }
+    InvalidCase(const std::string msg) : CustomException("[InvalidCase] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const InvalidCase & e);
 };
 
 class FileOpenError : public CustomException
 {
 public:
-    FileOpenError(const std::string msg) : CustomException("[FileOpenError]" + msg) { }
+    FileOpenError(const std::string msg) : CustomException("[FileOpenError] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const FileOpenError & e);
 };
 
 class InvalidOperator : public CustomException
 {
 public:
-    InvalidOperator(const std::string msg) : CustomException("[InvalidOperator]" + msg) { }
+    InvalidOperator(const std::string msg) : CustomException("[InvalidOperator] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const InvalidOperator & e);
 };
 
 class MissingSymbol : public CustomException
 {
 public:
-    MissingSymbol(const std::string msg) : CustomException("[MissingSymbol]" + msg) { }
+    MissingSymbol(const std::string msg) : CustomException("[MissingSymbol] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const MissingSymbol & e);
 };
 
 class InvalidType : public CustomException
 {
 public:
-    InvalidType(const std::string msg) : CustomException("[InvalidType]" + msg) { }
+    InvalidType(const std::string msg) : CustomException("[InvalidType] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const InvalidType & e);
 };
 
 class AntlrParsedIncorrectly : public CustomException
 {
 public:
-    AntlrParsedIncorrectly(const std::string msg) : CustomException("[AntlrParsedIncorrectly]" + msg) { }
+    AntlrParsedIncorrectly(const std::string msg) : CustomException("[AntlrParsedIncorrectly] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const AntlrParsedIncorrectly & e);
 };

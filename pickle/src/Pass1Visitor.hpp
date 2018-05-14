@@ -42,7 +42,7 @@ public:
     explicit Pass1Visitor(const string fname, const bool debug=false);
     
     /// Destructor
-    ~Pass1Visitor() override;
+    ~Pass1Visitor();
 
     /// Returns the output file
     ofstream & get_assembly_file();
@@ -53,23 +53,19 @@ public:
     antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context) override;
     antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) override;
 
-    antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context);
-    antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context);
-
-    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context);
-    antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context);
-    antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context);
-    antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context);
+    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
+    antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context) override;
+    antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) override;
+    antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
     antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *context) override;
 
-    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context);
-    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context);
-    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context);
-    antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context);
-    antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context);
+    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
+    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
+    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context) override;
+    antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context) override;
+    antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context) override;
 
-    antlrcpp::Any visitConditionalExpression(Pcl2Parser::ConditionalExpressionContext *context);
-    antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context);
+    antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
 
 };
 

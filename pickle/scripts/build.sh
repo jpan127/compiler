@@ -25,7 +25,21 @@ COMPILE=false
 #                     Variable Paths                   #
 #======================================================#
 
-JAVA_JDK_PATH="C:/Program Files/Java/jdk1.8.0_161/bin"
+# Grabs branch name
+GIT_BRANCH_NAME="$(git rev-parse --abbrev-ref HEAD)"
+JAVA_JDK_PATH=""
+
+# If known branch choose path
+if [ "$GIT_BRANCH_NAME" == "dev/b" ]; then
+    JAVA_JDK_PATH="C:/Program Files/Java/jdk1.8.0_161/bin"
+elif [ "$GIT_BRANCH_NAME" == "dev/jp" ]; then
+    JAVA_JDK_PATH="C:/Program Files/Java/jdk-9/bin"
+else
+    echo -e "${RED}[ERROR] Unrecognized branch=$GIT_BRANCH_NAME, only recognize [dev/b] or [dev/jp]"
+    echo -e "${NO_COLOR} Defaulting to JP's JDK path"
+    JAVA_JDK_PATH="C:/Program Files/Java/jdk-9/bin"
+fi
+
 ANTLR_JAR_PATH="antlr"
 ANTLR_JAR_FILE_NAME="antlr-4.7-complete.jar"
 GRAMMAR_PATH="grammars"

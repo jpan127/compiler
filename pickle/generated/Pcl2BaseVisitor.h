@@ -36,6 +36,10 @@ public:
     return visitChildren(ctx);
   }
 
+  virtual antlrcpp::Any visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *ctx) override {
+    return visitChildren(ctx);
+  }
+
   virtual antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *ctx) override {
     return visitChildren(ctx);
   }

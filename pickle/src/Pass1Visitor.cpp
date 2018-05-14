@@ -188,22 +188,6 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext * context)
-{
-    print_debug_context(1, context, "visitCompoundStatement");
-
-    if(context->local_symTab == nullptr) {
-        context->local_symTab = symtab_stack->push();
-        SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
-        local_name_entry->set_definition((Definition) DF_SCOPE);
-    }else{
-        symtab_stack->push(context->local_symTab);
-    }
-    cout << TAB << "Symbol table created for : " << context->scope_name << endl;
-
-    return visitChildren(context);
-}
-
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context)
 {
     print_debug_context(1, context, "visitFunctionDefinition");
@@ -235,6 +219,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     SymTab *local_symTab = symtab_stack->push();
     SymTabEntry *local_name_entry = local_symTab->enter(context->Identifier()->toString());
     local_name_entry->set_definition((Definition) DF_FUNCTION);
+    cout << TAB << "Symbol table created for : " << context->Identifier()->toString() << endl;
 
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
@@ -419,7 +404,7 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
         if (!entry)
         {
-            throw MissingSymbol(variable);
+            throw MissingSymbol("Missing symbol table : " + variable);
         }
 
         TypeSpec * type = entry->get_typespec();
@@ -431,7 +416,7 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
         }
         else
         {
-            throw MissingSymbol("Missing symbol table : " + variable);
+            throw MissingSymbol("Symbol missing type : " + variable);
         }
     }
     catch (InvalidType const & error)
@@ -517,13 +502,13 @@ antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatement
 {
     print_debug_context(1, context, "visitCompoundStatement");
 
-    /**
-     *  Creates a new symbol table for this scope
-     */
-
-    SymTab * function_symtab = symtab_stack->push();
-    SymTabEntry * function_name_entry = function_symtab->enter(context->scope_name);
-    function_name_entry->set_definition((Definition) DF_FUNCTION);
+    if(context->local_symTab == nullptr) {
+        context->local_symTab = symtab_stack->push();
+        SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
+        local_name_entry->set_definition((Definition) DF_SCOPE);
+    }else{
+        symtab_stack->push(context->local_symTab);
+    }
     cout << TAB << "Symbol table created for : " << context->scope_name << endl;
 
     return visitChildren(context);

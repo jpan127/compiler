@@ -1,0 +1,26 @@
+001 BEGIN
+002     WHEN
+003         i := 3 => k > 5;
+            ^
+*** Undefined identifier [at "i"]
+              ^
+*** WHEN statements should have a boolean condition on the LHS of the allow '=>' operator [at ":="]
+              ^
+*** Error parsing a WHEN statement, skipping to next statement [at ":="]
+004         m = n  :  m := 2*n;
+            ^
+*** Undefined identifier [at "m"]
+                ^
+*** Undefined identifier [at "n"]
+                   ^
+*** Unexpected token [at ":"]
+                      ^
+*** Missing => [at "m"]
+005     END;
+        ^
+*** Missing OTHERWISE [at "END"]
+006 END.
+
+                   6 source lines.
+                   8 syntax errors.
+                0.00 seconds total parsing time.

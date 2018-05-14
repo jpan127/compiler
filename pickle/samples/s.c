@@ -1,3 +1,8 @@
+void foo(int bar)
+{
+    bar = 5;
+}
+
 void main()
 {
     /// Initialize variables first

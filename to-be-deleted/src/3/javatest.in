@@ -1,0 +1,32 @@
+/* This is a comment. */
+// So is this.
+
+/* Here's a comment
+   that spans several
+   source lines. */
+
+Two/*comments in*//***a row***/ here.
+/* This is /* not a nested comment. */
+// Nor is /* this */ one.
+
+{ Not a comment. }
+
+// Word tokens
+Hello world
+Abstract abstract ABSTRACT aBsTrAcT
+What?
+
+// Character tokens
+'x' 'A' '\'' 'a' '\n' '\t' '\\'
+
+// String tokens
+"Hello, world."
+"Hello,\tworld!"
+"Hello,\n\"world!\""
+"It's Friday!"
+""  "\""
+
+// Special symbol tokens
++ - * / := . , ; : = <> < <= >= > ( ) [ ] { } } ^ ..
+<<=  >>=
+:=<>=<==>>===
