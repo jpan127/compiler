@@ -81,7 +81,7 @@ blockItem
 statement
     :   compoundStatement
     |   expressionStatement
-    |   selectionStatement
+    |   ifElseStatement
     |   iterationStatement
     |   assignmentStatement
     |   jumpStatement
@@ -89,10 +89,15 @@ statement
     ;
 
 unaryStatement
-    :   PlusPlus Identifier
-    |   MinusMinus Identifier
-    |   Identifier PlusPlus
-    |   Identifier MinusMinus
+    locals [
+        TypeSpec * type = nullptr,
+        char type_letter = '?'
+    ]
+    :   PlusPlus   Identifier  # unaryIncrementStatement
+    |   MinusMinus Identifier  # unaryDecrementStatement
+    |   Identifier PlusPlus    # unaryIncrementStatement
+    |   Identifier MinusMinus  # unaryDecrementStatement
+    |   Identifier Power       # unarySquareStatement
     ;
 
 assignmentStatement
@@ -103,9 +108,23 @@ expressionStatement
     :   expression? Semi
     ;
 
-/// If Statement
-selectionStatement
+ifElseStatement
+    : ifStatement elseIfStatement* elseStatement*
+    ;
+
+ifStatement
     : If LeftParen conditionalExpression RightParen statement
+    ;
+
+elseIfStatement
+    locals [
+        uint32_t id = 0
+    ]
+    : Else If LeftParen conditionalExpression RightParen statement
+    ;
+
+elseStatement
+    : Else statement
     ;
 
 /// While Statement
@@ -126,13 +145,14 @@ primaryExpression
 expression 
     locals [
         TypeSpec * type = nullptr,
-        char expr_operator = 0,
+        string expr_operator,
         char type_letter = '?',
         expression_type_E expression_type
     ]
-    :   expression opr=('*'|'/'|'%') expression # mulDivExpr
-    |   expression opr=('+'|'-') expression     # addminExpr
-    |   primaryExpression                       # primExpr
+    :   expression opr=( '*' | '/' | '%' ) expression                       # mulDivExpr
+    |   expression opr=( '+' | '-' ) expression                             # addminExpr
+    |   expression opr=( '<<' | '>>' | '&' | '|' | '~' | '^' ) expression   # bitExpr
+    |   primaryExpression                                                   # primExpr
     ;
 
 conditionalExpression 

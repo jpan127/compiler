@@ -36,6 +36,14 @@ private:
     /// Name of current program
     const string program_name;
 
+    /**
+     *  Looks up the symbol type of context->Identifier()->getText()
+     *  Stores [context->type] and [context->type_letter]
+     *  @param context : The context object to look up and modify
+     *  @throws        : InvalidType
+     */
+    void lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter);
+
 public:
 
     /// Constructor
@@ -55,13 +63,22 @@ public:
 
     antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
     antlrcpp::Any visitCompoundStatement(Pcl2Parser::CompoundStatementContext *context) override;
-    antlrcpp::Any visitSelectionStatement(Pcl2Parser::SelectionStatementContext *context) override;
+
+    antlrcpp::Any visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context) override;
+    antlrcpp::Any visitIfStatement(Pcl2Parser::IfStatementContext *context) override;
+    antlrcpp::Any visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context) override;
+    antlrcpp::Any visitElseStatement(Pcl2Parser::ElseStatementContext *context) override;
+
     antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
     antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *context) override;
+    antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context) override;
+    antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context) override;
+    antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context) override;
 
     antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
     antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
     antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context) override;
+    antlrcpp::Any visitBitExpr(Pcl2Parser::BitExprContext *context) override;
     antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context) override;
     antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context) override;
 

@@ -65,3 +65,10 @@ public:
     AntlrParsedIncorrectly(const std::string msg) : CustomException("[AntlrParsedIncorrectly] " + msg) { }
     friend std::ostream & operator << (std::ostream & out, const AntlrParsedIncorrectly & e);
 };
+
+class CompilerError : public CustomException
+{
+public:
+    CompilerError(const std::string msg) : CustomException("[CompilerError] " + msg) { }
+    friend std::ostream & operator << (std::ostream & out, const CompilerError & e);
+};

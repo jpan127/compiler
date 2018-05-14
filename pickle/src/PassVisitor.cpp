@@ -10,7 +10,9 @@ using namespace wci::intermediate::symtabimpl;
 
 
 
-const map <string, TypeSpec **> PassVisitor::type_map =
+uint64_t PassVisitor::scope_counter = 0;
+
+const unordered_map <string, TypeSpec **> PassVisitor::type_map =
 {
     { "void"    , &Predefined::void_type   },
     { "bool"    , &Predefined::bool_type   },
@@ -28,6 +30,15 @@ const unordered_map <TypeSpec **, char> PassVisitor::letter_map =
     { &Predefined::int_type    , 'I' },
     { &Predefined::float_type  , 'F' },
     { &Predefined::double_type , 'D' },
+};
+
+const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
+{
+    { &Predefined::bool_type   , 'i' },
+    { &Predefined::char_type   , 'i' },
+    { &Predefined::int_type    , 'i' },
+    { &Predefined::float_type  , 'f' },
+    { &Predefined::double_type , 'd' },
 };
 
 TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
@@ -66,7 +77,6 @@ void PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRule
     constexpr size_t longest_name = 30;
     const string space_padding(longest_name - rule_name.length(), ' ');
     
-    /// @TODO : Add back optional debug
     cout << "[PASS"
          << std::to_string(pass_num)
          << "][" 
@@ -86,7 +96,7 @@ char PassVisitor::letter_map_lookup(const TypeSpec * type) const
     // NULL check
     if (nullptr == type)
     {
-        throw InvalidType("NULL");
+        throw InvalidType("[letter_map_lookup] NULL");
     }
 
     bool found = false;
@@ -103,7 +113,37 @@ char PassVisitor::letter_map_lookup(const TypeSpec * type) const
     // If not found, compilation should not continue
     if (!found)
     {
-        throw InvalidType(type->to_string());
+        throw InvalidType("[letter_map_lookup] Type not found : " + type->to_string());
+    }
+
+    return ret;
+}
+
+char PassVisitor::instruction_prefix_map_lookup(const TypeSpec * type) const
+{
+    char ret = '?';
+
+    // NULL check
+    if (nullptr == type)
+    {
+        throw InvalidType("[instruction_prefix_map_lookup] NULL");
+    }
+
+    bool found = false;
+    for (auto t : instruction_prefix_map)
+    {
+        if (*t.first == type)
+        {
+            ret = t.second;
+            found = true;
+            break;
+        }
+    }
+
+    // If not found, compilation should not continue
+    if (!found)
+    {
+        throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + type->to_string());
     }
 
     return ret;

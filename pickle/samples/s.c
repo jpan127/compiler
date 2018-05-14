@@ -1,29 +1,40 @@
-void foo(int bar)
-{
-    bar = 5;
-}
+// void foo(int bar)
+// {
+//     bar = 5;
+// }
 
 void main()
 {
     /// Initialize variables first
-    bool   a = 10;
-    double b = 20;
-    int    c = a * b;   /// 200
-    float  d = c + c;   /// 400
-    float  e = d * 5;
+    int fizz_counter = 0;
+    int buzz_counter = 0;
 
-    int multiples_of_ten = 0;
+    int fizz = 5;
+    int buzz = 3;
+    int fizz_buzz = fizz * buzz;
 
-    /// True
-    if (d == 400)
+    double d = 100;
+    double e = 1.1;
+
+    while (d > 0)
     {
-        while (d > 0)
+        if (d % fizz_buzz == 0)
         {
-            d = d - 1;
-            if (d % 10 == 0)
-            {
-                multiples_of_ten = multiples_of_ten + 1;
-            }
+            e**;
+            fizz_counter++;
         }
+        else if (d % fizz == 0)
+        {
+        }
+        else if (d % buzz == 0)
+        {
+            buzz_counter++;
+        }
+        else
+        {
+            /// Add something here
+        }
+
+        d--;
     }
 }

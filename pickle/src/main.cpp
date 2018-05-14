@@ -55,7 +55,10 @@ int main(int argc, const char *args[])
 
     cout << pass1_msg << endl;
 
-    const string program_name = "HELLOOOOOOO_WORRRRRLD";
+    string file_name = args[1];
+    file_name = file_name.substr(0, file_name.find("."));
+    file_name = file_name.substr(file_name.find("/") + 1);
+    const string program_name = file_name;
 
     /// First Pass
     Pass1Visitor *pass1 = new Pass1Visitor(program_name, true);
