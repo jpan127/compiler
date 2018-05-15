@@ -204,19 +204,8 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     }
     visit(context->compoundStatement());
 
-    if(is_main){
-
-        // Emit the main program epilogue
-        j_file                                                                          << endl;
-        j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
-        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
-
-        j_file                                                                          << endl;
-        j_file << "\treturn"                                                            << endl;
-        j_file                                                                          << endl;
-        j_file << ".limit locals " << context->num_local_vars * 2                       << endl;
-        j_file << ".limit stack " << context->stack_size                                << endl;
-    }
+    j_file << ".limit locals " << context->num_local_vars * 2                       << endl;
+    j_file << ".limit stack " << context->stack_size                                << endl;
     j_file << ".end method" << endl;
 
     //return visitChildren(context); todo: double check return, nothing else has to be done
@@ -606,11 +595,30 @@ antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::Parent
     return visitChildren(context);
 }
 
+
+
 /*////////////////////////////////////////////////////////////
  *                                                           *
  *                     S T A T E M E N T S                   *
  *                                                           *
  */////////////////////////////////////////////////////////////
+
+antlrcpp::Any Pass2Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
+    if( PassVisitor::current_function == "main"){
+        // Emit the main program epilogue
+        j_file                                                                          << endl;
+        j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
+        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
+
+    }
+
+    if (context->expression()) visit(context->expression());
+    j_file  << TAB                                                                  << endl;
+    if (context->expression()) j_file << context->expression()->type->to_string()[0];
+    j_file << "return"                                                              << endl;
+    j_file                                                                          << endl;
+    return nullptr;
+}
 
 antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context)
 {

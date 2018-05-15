@@ -13,125 +13,13 @@
   <component name="ChangeListManager">
     <list default="true" id="fef5fbeb-a377-4e1f-b6d0-619af358397c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/1" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/10" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/11" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/12" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/13" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/14" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/15" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/16" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/17" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/18" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/19" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/2" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/20" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/21" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/22" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/23" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/24" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/25" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/26" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/27" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/28" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/29" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/3" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/30" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/31" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/32" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/33" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/34" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/35" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/36" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/37" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/38" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/39" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/4" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/40" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/41" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/42" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/43" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/44" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/45" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/46" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/47" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/48" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/49" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/5" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/50" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/51" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/52" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/53" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/54" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/55" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/56" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/57" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/58" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/59" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/6" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/60" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/61" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/62" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/63" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/64" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/65" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/66" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/67" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/68" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/69" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/7" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/70" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/71" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/72" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/73" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/74" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/75" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/76" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/77" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/78" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/79" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/8" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/80" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/81" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/82" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/83" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/84" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/85" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Progress/9" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/depend.make" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2BaseListener.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2BaseListener.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2BaseVisitor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2BaseVisitor.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Lexer.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Lexer.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Listener.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Listener.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Parser.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Parser.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Visitor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/generated/Pcl2Visitor.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/Pass1Visitor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/Pass1Visitor.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/Pass2Visitor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/Pass2Visitor.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/PassVisitor.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/PassVisitor.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/main.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/main.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/ICodeFactory.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/ICodeFactory.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/SymTabFactory.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/SymTabFactory.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/TypeFactory.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/TypeFactory.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/TypeSpec.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/TypeSpec.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/icodeimpl/ICodeImpl.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/icodeimpl/ICodeImpl.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/icodeimpl/ICodeNodeImpl.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/icodeimpl/ICodeNodeImpl.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/Predefined.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/Predefined.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/SymTabImpl.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/SymTabImpl.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/SymTabStackImpl.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/symtabimpl/SymTabStackImpl.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/typeimpl/TypeChecker.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/typeimpl/TypeChecker.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/typeimpl/TypeSpecImpl.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/intermediate/typeimpl/TypeSpecImpl.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/util/CrossReferencer.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/util/CrossReferencer.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/util/ParseTreePrinter.cpp.obj" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/compiler.dir/pickle/src/wci/util/ParseTreePrinter.cpp.obj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/HELLOOOOOOO_WORRRRRLD.j" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/HELLOOOOOOO_WORRRRRLD.j" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/clion-log.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pickle/SConstruct" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/SConstruct" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -143,7 +31,7 @@
   </component>
   <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.66696036">
+    <splitter split-orientation="horizontal" split-proportion="0.5758693">
       <split-first>
         <leaf>
           <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
@@ -157,21 +45,15 @@
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Pass1Visitor.cpp" pinned="false" current-in-tab="true">
+          <file leaf-file-name="Pass1Visitor.cpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="-4984">
-                  <caret line="224" column="36" selection-start-line="224" selection-start-column="36" selection-end-line="224" selection-end-column="36" />
+                <state relative-caret-position="257">
+                  <caret line="802" column="1" selection-start-line="802" selection-start-column="1" selection-end-line="802" selection-end-column="1" />
                   <folding>
-                    <element signature="e#416#1052#0" />
+                    <element signature="e#0#19#0" expanded="true" />
                     <element signature="e#1054#1123#0" />
-                    <element signature="e#1125#1380#0" />
-                    <element signature="e#1442#3416#0" />
-                    <element signature="e#3418#3611#0" />
-                    <element signature="e#3613#3868#0" />
-                    <element signature="e#3930#4117#0" />
-                    <element signature="e#4119#4374#0" />
-                    <element signature="e#4436#6763#0" />
+                    <element signature="e#1125#1704#0" />
                   </folding>
                 </state>
               </provider>
@@ -180,10 +62,34 @@
           <file leaf-file-name="Pass1Visitor.hpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="187">
-                  <caret line="53" column="67" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
+                <state relative-caret-position="465">
+                  <caret line="72" column="99" selection-start-line="72" selection-start-column="99" selection-end-line="72" selection-end-column="99" />
                   <folding>
                     <element signature="e#49#68#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Pass2Visitor.hpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="469">
+                  <caret line="59" column="4" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="85" />
+                  <folding>
+                    <element signature="e#49#68#0" expanded="true" />
+                  </folding>
+                </state>
+              </provider>
+            </entry>
+          </file>
+          <file leaf-file-name="Pass2Visitor.cpp" pinned="false" current-in-tab="true">
+            <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
+              <provider selected="true" editor-type-id="text-editor">
+                <state relative-caret-position="434">
+                  <caret line="615" column="18" selection-start-line="615" selection-start-column="18" selection-end-line="615" selection-end-column="18" />
+                  <folding>
+                    <element signature="e#0#19#0" expanded="true" />
                   </folding>
                 </state>
               </provider>
@@ -192,46 +98,19 @@
           <file leaf-file-name="Pcl2BaseVisitor.h" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="199">
-                  <caret line="38" column="102" selection-start-line="38" selection-start-column="2" selection-end-line="38" selection-end-column="102" />
-                  <folding>
-                    <element signature="e#1#37#0" expanded="true" />
-                    <element signature="e#178#205#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="291">
+                  <caret line="38" column="24" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
                 </state>
               </provider>
             </entry>
           </file>
-          <file leaf-file-name="Pcl2Visitor.h" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Visitor.h">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file leaf-file-name="Pcl2Visitor.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Visitor.cpp">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file leaf-file-name="Pass2Visitor.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
+          <file leaf-file-name="PassVisitor.cpp" pinned="false" current-in-tab="false">
+            <entry file="file://$PROJECT_DIR$/pickle/src/PassVisitor.cpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="1765">
-                  <caret line="479" column="32" selection-start-line="479" selection-start-column="32" selection-end-line="479" selection-end-column="32" />
-                  <folding>
-                    <element signature="e#0#19#0" expanded="true" />
-                  </folding>
+                <state relative-caret-position="-2391">
+                  <caret line="12" column="40" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
                 </state>
               </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="common.cpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/src/common.cpp">
-              <provider selected="true" editor-type-id="text-editor" />
-            </entry>
-          </file>
-          <file leaf-file-name="common.hpp" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/pickle/src/common.hpp">
-              <provider selected="true" editor-type-id="text-editor" />
             </entry>
           </file>
         </leaf>
@@ -241,8 +120,8 @@
           <file leaf-file-name="Pcl2.g4" pinned="false" current-in-tab="true">
             <entry file="file://$PROJECT_DIR$/pickle/grammars/Pcl2.g4">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="314">
-                  <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+                <state relative-caret-position="87">
+                  <caret line="66" column="4" selection-start-line="66" selection-end-line="66" selection-end-column="4" />
                   <folding>
                     <element signature="e#15#141#1" expanded="true" />
                   </folding>
@@ -256,9 +135,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>brea</find>
-      <find>block</find>
-      <find>jump</find>
       <find>decl</find>
       <find>functionDef</find>
       <find>statement</find>
@@ -285,6 +161,9 @@
       <find>compoundStatem</find>
       <find>functionDe</find>
       <find>functionDec</find>
+      <find>jump</find>
+      <find>expression</find>
+      <find>parenthi</find>
       <find>function</find>
     </findStrings>
   </component>
@@ -297,10 +176,11 @@
         <option value="$PROJECT_DIR$/jasmin_emitter.cpp" />
         <option value="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.h" />
         <option value="$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.cpp" />
-        <option value="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" />
-        <option value="$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp" />
         <option value="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" />
+        <option value="$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp" />
         <option value="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" />
+        <option value="$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp" />
+        <option value="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" />
       </list>
     </option>
   </component>
@@ -310,6 +190,7 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="OCFindUsagesOptions" text="false" ivars="false" properties="false" derivedClasses="false" />
   <component name="ProjectFrameBounds" extendedState="6">
     <option name="x" value="-10" />
     <option name="y" value="-10" />
@@ -337,12 +218,6 @@
               <item name="compiler" type="b2602c69:ProjectViewProjectNode" />
               <item name="compiler" type="462c0819:PsiDirectoryNode" />
               <item name="pickle" type="462c0819:PsiDirectoryNode" />
-              <item name="generated" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="compiler" type="b2602c69:ProjectViewProjectNode" />
-              <item name="compiler" type="462c0819:PsiDirectoryNode" />
-              <item name="pickle" type="462c0819:PsiDirectoryNode" />
               <item name="grammars" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -350,6 +225,13 @@
               <item name="compiler" type="462c0819:PsiDirectoryNode" />
               <item name="pickle" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="compiler" type="b2602c69:ProjectViewProjectNode" />
+              <item name="compiler" type="462c0819:PsiDirectoryNode" />
+              <item name="pickle" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="wci" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -359,7 +241,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="pop()&#9;ACTION&#9;EditorPopupMenu1" />
+    <property name="SearchEverywhereHistoryKey" value="visitprim&#9;null&#9;null&#10;visitfundef&#9;null&#9;null&#10;visijum&#9;null&#9;null&#10;visitfunctiondef&#9;null&#9;null&#10;visitjump&#9;null&#9;null&#10;visitfuncdef&#9;null&#9;null&#10;visitfunction&#9;null&#9;null&#10;pass2&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;pass1h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass1Visitor.hpp&#10;visitprimex&#9;null&#9;null&#10;Passvisi&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;visitju&#9;null&#9;null&#10;visitaddmin&#9;null&#9;null&#10;visitmuldiv&#9;null&#9;null&#10;visitmulexp&#9;null&#9;null&#10;pass2c&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;pass&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.hpp&#10;visitjum&#9;null&#9;null&#10;pop()&#9;ACTION&#9;EditorPopupMenu1" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -404,33 +286,45 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="38180000" />
+    <option name="totallyTimeSpent" value="43203000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Tool Output" weight="0.32909605" />
       <window_info anchor="bottom" id="Messages" weight="0.32909605" />
-      <window_info anchor="bottom" id="CMake" />
+      <window_info anchor="bottom" id="CMake" weight="0.32909605" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Run" order="2" />
-      <window_info anchor="bottom" id="Version Control" />
+      <window_info anchor="bottom" id="Version Control" weight="0.1680791" />
       <window_info anchor="bottom" id="Terminal" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
-      <window_info anchor="bottom" id="ANTLR Preview" weight="0.1440678" />
+      <window_info content_ui="combo" id="Project" order="0" weight="0.19915701" />
+      <window_info anchor="bottom" id="ANTLR Preview" weight="0.19588745" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info id="Favorites" side_tool="true" />
-      <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="9" visible="true" weight="0.1680791" />
+      <window_info anchor="bottom" id="Tool Output" order="9" weight="0.32909605" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24983476" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
-      <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="ANTLR Preview" order="9" weight="0.1440678" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Messages" order="9" weight="0.32909605" />
+      <window_info anchor="bottom" id="Terminal" order="9" />
+      <window_info anchor="bottom" id="Event Log" order="9" side_tool="true" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="CMake" order="9" weight="0.32909605" />
+      <window_info id="Favorites" order="4" side_tool="true" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,8 +344,51 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor" />
+    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="872" column="65" selection-start-line="872" selection-start-column="65" selection-end-line="872" selection-end-column="65" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/grammars/Pcl2.g4">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-151">
+          <caret line="138" column="12" selection-start-line="138" selection-start-column="8" selection-end-line="138" selection-end-column="12" />
+          <folding>
+            <element signature="e#15#141#1" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Parser.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="153" column="9" selection-start-line="153" selection-start-column="9" selection-end-line="153" selection-end-column="9" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="12" column="26" selection-start-line="12" selection-start-column="26" selection-end-line="12" selection-end-column="26" />
+          <folding>
+            <element signature="e#49#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="543" column="50" selection-start-line="543" selection-start-column="50" selection-end-line="543" selection-end-column="50" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1054#1123#0" />
+            <element signature="e#1125#1704#0" />
+          </folding>
+        </state>
+      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/pickle/antlr4-runtime/tree/ParseTree.cpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -529,9 +466,6 @@
           <caret line="25" column="51" selection-start-line="25" selection-start-column="51" selection-end-line="25" selection-end-column="51" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabImpl.h">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/wci/util/CrossReferencer.cpp">
       <provider selected="true" editor-type-id="text-editor">
@@ -590,19 +524,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/common.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/common.hpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="153">
@@ -613,37 +534,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="17" lean-forward="true" selection-start-line="12" selection-start-column="17" selection-end-line="12" selection-end-column="17" />
-          <folding>
-            <element signature="e#1#37#0" expanded="true" />
-            <element signature="e#178#205#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Visitor.cpp">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Visitor.h">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h" />
     <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4165">
           <caret line="245" column="35" selection-start-line="245" selection-start-column="35" selection-end-line="245" selection-end-column="35" />
           <folding>
-            <element signature="e#416#1052#0" />
+            <element signature="e#0#19#0" expanded="true" />
             <element signature="e#1054#1123#0" />
-            <element signature="e#1125#1380#0" />
-            <element signature="e#1442#3416#0" />
-            <element signature="e#3418#3611#0" />
-            <element signature="e#3613#3868#0" />
-            <element signature="e#3930#4117#0" />
-            <element signature="e#4119#4374#0" />
-            <element signature="e#4436#6763#0" />
+            <element signature="e#1125#1704#0" />
           </folding>
         </state>
       </provider>
@@ -685,8 +584,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabEntryImpl.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="497">
-          <caret line="76" column="73" selection-start-line="76" selection-start-column="73" selection-end-line="76" selection-end-column="73" />
+        <state relative-caret-position="388">
+          <caret line="206" column="7" selection-start-line="206" selection-start-column="7" selection-end-line="206" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -720,15 +619,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/PassVisitor.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="289">
-          <caret line="25" column="51" selection-start-line="25" selection-start-column="51" selection-end-line="25" selection-end-column="51" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/PassVisitor.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-700">
-          <caret line="12" column="45" selection-start-line="12" selection-start-column="45" selection-end-line="12" selection-end-column="45" />
+        <state relative-caret-position="170">
+          <caret line="10" column="22" selection-start-line="10" selection-start-column="22" selection-end-line="10" selection-end-column="22" />
         </state>
       </provider>
     </entry>
@@ -753,41 +645,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1765">
-          <caret line="479" column="32" selection-start-line="479" selection-start-column="32" selection-end-line="479" selection-end-column="32" />
-          <folding>
-            <element signature="e#0#19#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-16">
           <caret line="233" selection-start-line="233" selection-end-line="233" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="38" column="102" selection-start-line="38" selection-start-column="2" selection-end-line="38" selection-end-column="102" />
-          <folding>
-            <element signature="e#1#37#0" expanded="true" />
-            <element signature="e#178#205#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="53" column="67" selection-start-line="53" selection-start-column="67" selection-end-line="53" selection-end-column="67" />
-          <folding>
-            <element signature="e#49#68#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -800,30 +661,82 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabImpl.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="219">
+          <caret line="20" column="12" selection-start-line="20" selection-start-column="12" selection-end-line="20" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/wci/intermediate/symtabimpl/SymTabImpl.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-25">
+          <caret line="28" column="4" selection-start-line="28" selection-start-column="4" selection-end-line="28" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/PassVisitor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2391">
+          <caret line="12" column="40" selection-start-line="12" selection-start-column="40" selection-end-line="12" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="257">
+          <caret line="802" column="1" selection-start-line="802" selection-start-column="1" selection-end-line="802" selection-end-column="1" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
+            <element signature="e#1054#1123#0" />
+            <element signature="e#1125#1704#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="465">
+          <caret line="72" column="99" selection-start-line="72" selection-start-column="99" selection-end-line="72" selection-end-column="99" />
+          <folding>
+            <element signature="e#49#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pickle/grammars/Pcl2.g4">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="314">
-          <caret line="30" column="5" selection-start-line="30" selection-start-column="5" selection-end-line="30" selection-end-column="5" />
+        <state relative-caret-position="87">
+          <caret line="66" column="4" selection-start-line="66" selection-end-line="66" selection-end-column="4" />
           <folding>
             <element signature="e#15#141#1" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
+    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-4984">
-          <caret line="224" column="36" selection-start-line="224" selection-start-column="36" selection-end-line="224" selection-end-column="36" />
+        <state relative-caret-position="291">
+          <caret line="38" column="24" selection-start-line="38" selection-start-column="24" selection-end-line="38" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="469">
+          <caret line="59" column="4" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="85" />
           <folding>
-            <element signature="e#416#1052#0" />
-            <element signature="e#1054#1123#0" />
-            <element signature="e#1125#1380#0" />
-            <element signature="e#1442#3416#0" />
-            <element signature="e#3418#3611#0" />
-            <element signature="e#3613#3868#0" />
-            <element signature="e#3930#4117#0" />
-            <element signature="e#4119#4374#0" />
-            <element signature="e#4436#6763#0" />
+            <element signature="e#49#68#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="434">
+          <caret line="615" column="18" selection-start-line="615" selection-start-column="18" selection-end-line="615" selection-end-column="18" />
+          <folding>
+            <element signature="e#0#19#0" expanded="true" />
           </folding>
         </state>
       </provider>

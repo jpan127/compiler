@@ -802,15 +802,6 @@ antlrcpp::Any Pass1Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext 
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
-
-    if(context->Return()){//jump is return statement
-        visit(context->expression());
-
-    }
-    return visitChildren(context);
-}
-
 antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
 {
     print_debug_context(1, context, "visitUnaryIncrementStatement");
