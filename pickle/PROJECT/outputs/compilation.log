@@ -1,0 +1,314 @@
+------------------------------------------------
+                   P A S S  1                   
+------------------------------------------------
+
+Pass1Visitor: symtab stack initialized
+[PASS1][2] visitCompilationUnit           : intmak1=128;intmak2=256;intmak3=1;intmak4=-1;voidmain(doublex){intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}<EOF>
+[PASS1][2] visitTranslationUnit           : intmak1=128;intmak2=256;intmak3=1;intmak4=-1;voidmain(doublex){intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}
+[PASS1][2] visitTranslationUnit           : intmak1=128;intmak2=256;intmak3=1;intmak4=-1;
+[PASS1][2] visitTranslationUnit           : intmak1=128;intmak2=256;intmak3=1;
+[PASS1][2] visitTranslationUnit           : intmak1=128;intmak2=256;
+[PASS1][1] visitTranslationUnit           : intmak1=128;
+[PASS1][3] visitDeclaration               : intmak1=128;
+	int
+	Has assignment
+	Symbol table created for : mak1
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : mak1=128
+[PASS1][1] visitPrimExpr                  : 128
+[PASS1][3] visitDeclaration               : intmak2=256;
+	int
+	Has assignment
+	Symbol table created for : mak2
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : mak2=256
+[PASS1][1] visitPrimExpr                  : 256
+[PASS1][3] visitDeclaration               : intmak3=1;
+	int
+	Has assignment
+	Symbol table created for : mak3
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : mak3=1
+[PASS1][1] visitPrimExpr                  : 1
+[PASS1][3] visitDeclaration               : intmak4=-1;
+	int
+	Has assignment
+	Symbol table created for : mak4
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : mak4=-1
+[PASS1][1] visitPrimExpr                  : -1
+[PASS1][4] visitFunctionDefinition        : voidmain(doublex){intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}
+	Symbol table created for : main
+[PASS1][2] visitFunctionDeclaration       : doublex
+	double
+	Symbol table created for : x
+[PASS1][1] visitTypeSpecifier             : double
+***main
+***x
+***x_dummy
+[PASS1][3] visitCompoundStatement         : {intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}
+[PASS1][3] visitDeclaration               : intfizz_counter=0;
+	int
+	Has assignment
+	Symbol table created for : fizz_counter
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : fizz_counter=0
+[PASS1][1] visitPrimExpr                  : 0
+[PASS1][3] visitDeclaration               : intbuzz_counter=0;
+	int
+	Has assignment
+	Symbol table created for : buzz_counter
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : buzz_counter=0
+[PASS1][1] visitPrimExpr                  : 0
+[PASS1][3] visitDeclaration               : intfizz=5;
+	int
+	Has assignment
+	Symbol table created for : fizz
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : fizz=5
+[PASS1][1] visitPrimExpr                  : 5
+[PASS1][3] visitDeclaration               : intbuzz=3;
+	int
+	Has assignment
+	Symbol table created for : buzz
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : buzz=3
+[PASS1][1] visitPrimExpr                  : 3
+[PASS1][3] visitDeclaration               : intfizz_buzz=fizz*buzz;
+	int
+	Has assignment
+	Symbol table created for : fizz_buzz
+[PASS1][1] visitTypeSpecifier             : int
+[PASS1][3] visitAssignmentExpression      : fizz_buzz=fizz*buzz
+[PASS1][3] visitMulDivExpr                : fizz*buzz
+[PASS1][1] visitPrimExpr                  : fizz
+[PASS1][1] visitPrimExpr                  : buzz
+	int_type int_type
+[PASS1][1] visitPrimExpr                  : fizz
+[PASS1][1] visitPrimExpr                  : buzz
+[PASS1][3] visitDeclaration               : doubled=15;
+	double
+	Has assignment
+	Symbol table created for : d
+[PASS1][1] visitTypeSpecifier             : double
+[PASS1][3] visitAssignmentExpression      : d=15
+[PASS1][1] visitPrimExpr                  : 15
+[PASS1][3] visitDeclaration               : doublee=1.1;
+	double
+	Has assignment
+	Symbol table created for : e
+[PASS1][1] visitTypeSpecifier             : double
+[PASS1][3] visitAssignmentExpression      : e=1.1
+[PASS1][1] visitPrimExpr                  : 1.1
+[PASS1][5] visitIterationStatement        : while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
+[PASS1][3] visitBasicConditionalExpr      : d>0
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : 0
+[PASS1][3] visitCompoundStatement         : {if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
+[PASS1][4] visitIfElseStatement           : if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}
+[PASS1][5] visitIfStatement               : if(d%fizz_buzz==0){e**;}
+[PASS1][3] visitBasicConditionalExpr      : d%fizz_buzz==0
+[PASS1][3] visitMulDivExpr                : d%fizz_buzz
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : fizz_buzz
+	double_type int_type
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : fizz_buzz
+[PASS1][1] visitPrimExpr                  : 0
+[PASS1][3] visitCompoundStatement         : {e**;}
+[PASS1][2] visitUnarySquareStatement      : e**
+[PASS1][6] visitElseIfStatement           : elseif(d%fizz==0){fizz_counter++;}
+[PASS1][3] visitBasicConditionalExpr      : d%fizz==0
+[PASS1][3] visitMulDivExpr                : d%fizz
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : fizz
+	double_type int_type
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : fizz
+[PASS1][1] visitPrimExpr                  : 0
+[PASS1][3] visitCompoundStatement         : {fizz_counter++;}
+[PASS1][2] visitUnaryIncrementStatement   : fizz_counter++
+[PASS1][6] visitElseIfStatement           : elseif(d%buzz==0){buzz_counter++;}
+[PASS1][3] visitBasicConditionalExpr      : d%buzz==0
+[PASS1][3] visitMulDivExpr                : d%buzz
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : buzz
+	double_type int_type
+[PASS1][1] visitPrimExpr                  : d
+[PASS1][1] visitPrimExpr                  : buzz
+[PASS1][1] visitPrimExpr                  : 0
+[PASS1][3] visitCompoundStatement         : {buzz_counter++;}
+[PASS1][2] visitUnaryIncrementStatement   : buzz_counter++
+[PASS1][2] visitElseStatement             : else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}
+[PASS1][3] visitCompoundStatement         : {mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}
+[PASS1][2] visitAssignmentStatement       : mak1=mak1^mak2;
+[PASS1][3] visitAssignmentExpression      : mak1=mak1^mak2
+[PASS1][3] visitBitExpr                   : mak1^mak2
+[PASS1][1] visitPrimExpr                  : mak1
+[PASS1][1] visitPrimExpr                  : mak2
+	int_type int_type
+[PASS1][2] visitAssignmentStatement       : mak2=mak2&mak3;
+[PASS1][3] visitAssignmentExpression      : mak2=mak2&mak3
+[PASS1][3] visitBitExpr                   : mak2&mak3
+[PASS1][1] visitPrimExpr                  : mak2
+[PASS1][1] visitPrimExpr                  : mak3
+	int_type int_type
+[PASS1][2] visitAssignmentStatement       : mak3=mak3<<1;
+[PASS1][3] visitAssignmentExpression      : mak3=mak3<<1
+[PASS1][3] visitBitExpr                   : mak3<<1
+[PASS1][1] visitPrimExpr                  : mak3
+[PASS1][1] visitPrimExpr                  : 1
+	int_type int_type
+[PASS1][2] visitAssignmentStatement       : mak4=mak4*-2;
+[PASS1][3] visitAssignmentExpression      : mak4=mak4*-2
+[PASS1][3] visitMulDivExpr                : mak4*-2
+[PASS1][1] visitPrimExpr                  : mak4
+[PASS1][1] visitPrimExpr                  : -2
+	int_type int_type
+[PASS1][1] visitPrimExpr                  : mak4
+[PASS1][1] visitPrimExpr                  : -2
+[PASS1][2] visitUnaryDecrementStatement   : d--
+
+===== CROSS-REFERENCE TABLE =====
+---------------------------------------------------------------------
+
+*** PROGRAM s ***
+
+Identifier       Line numbers    Type specification
+----------       ------------    ------------------
+mak1            
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = int
+---------------------------------------------------------------------
+DF_VARIABLE
+not null
+mak2            
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = int
+---------------------------------------------------------------------
+DF_VARIABLE
+not null
+mak3            
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = int
+---------------------------------------------------------------------
+DF_VARIABLE
+not null
+mak4            
+                                 Defined as: variable
+                                 Scope nesting level: 1
+                                 Type form = scalar, Type id = int
+---------------------------------------------------------------------
+DF_VARIABLE
+not null
+------------------------------------------------
+                   P A S S  2                   
+------------------------------------------------
+
+[PASS2][2] visitCompilationUnit           : intmak1=128;intmak2=256;intmak3=1;intmak4=-1;voidmain(doublex){intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}<EOF>
+[PASS2][2] visitTranslationUnit           : intmak1=128;intmak2=256;intmak3=1;intmak4=-1;voidmain(doublex){intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}
+[PASS2][2] visitTranslationUnit           : intmak1=128;intmak2=256;intmak3=1;intmak4=-1;
+[PASS2][2] visitTranslationUnit           : intmak1=128;intmak2=256;intmak3=1;
+[PASS2][2] visitTranslationUnit           : intmak1=128;intmak2=256;
+[PASS2][1] visitTranslationUnit           : intmak1=128;
+[PASS2][3] visitDeclaration               : intmak1=128;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : mak1=128
+[PASS2][1] visitPrimExpr                  : 128
+[PASS2][3] visitDeclaration               : intmak2=256;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : mak2=256
+[PASS2][1] visitPrimExpr                  : 256
+[PASS2][3] visitDeclaration               : intmak3=1;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : mak3=1
+[PASS2][1] visitPrimExpr                  : 1
+[PASS2][3] visitDeclaration               : intmak4=-1;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : mak4=-1
+[PASS2][1] visitPrimExpr                  : -1
+[PASS2][4] visitFunctionDefinition        : voidmain(doublex){intfizz_counter=0;intbuzz_counter=0;intfizz=5;intbuzz=3;intfizz_buzz=fizz*buzz;doubled=15;doublee=1.1;while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}}
+[PASS2][2] visitFunctionDeclaration       : doublex
+[PASS2][1] visitTypeSpecifier             : double
+[PASS2][3] visitDeclaration               : intfizz_counter=0;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : fizz_counter=0
+[PASS2][1] visitPrimExpr                  : 0
+[PASS2][3] visitDeclaration               : intbuzz_counter=0;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : buzz_counter=0
+[PASS2][1] visitPrimExpr                  : 0
+[PASS2][3] visitDeclaration               : intfizz=5;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : fizz=5
+[PASS2][1] visitPrimExpr                  : 5
+[PASS2][3] visitDeclaration               : intbuzz=3;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : buzz=3
+[PASS2][1] visitPrimExpr                  : 3
+[PASS2][3] visitDeclaration               : intfizz_buzz=fizz*buzz;
+[PASS2][1] visitTypeSpecifier             : int
+[PASS2][3] visitAssignmentExpression      : fizz_buzz=fizz*buzz
+[PASS2][3] visitMulDivExpr                : fizz*buzz
+[PASS2][1] visitPrimExpr                  : fizz
+[PASS2][1] visitPrimExpr                  : buzz
+[PASS2][3] visitDeclaration               : doubled=15;
+[PASS2][1] visitTypeSpecifier             : double
+[PASS2][3] visitAssignmentExpression      : d=15
+[PASS2][1] visitPrimExpr                  : 15
+[PASS2][3] visitDeclaration               : doublee=1.1;
+[PASS2][1] visitTypeSpecifier             : double
+[PASS2][3] visitAssignmentExpression      : e=1.1
+[PASS2][1] visitPrimExpr                  : 1.1
+[PASS2][5] visitIterationStatement        : while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
+[PASS2][3] visitBasicConditionalExpr      : d>0
+[PASS2][1] visitPrimExpr                  : d
+[PASS2][1] visitPrimExpr                  : 0
+[PASS2][4] visitIfElseStatement           : if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){buzz_counter++;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}
+[PASS2][5] visitIfStatement               : if(d%fizz_buzz==0){e**;}
+[PASS2][3] visitBasicConditionalExpr      : d%fizz_buzz==0
+[PASS2][3] visitMulDivExpr                : d%fizz_buzz
+[PASS2][1] visitPrimExpr                  : d
+[PASS2][1] visitPrimExpr                  : fizz_buzz
+[PASS2][1] visitPrimExpr                  : 0
+[PASS2][2] visitUnarySquareStatement      : e**
+[PASS2][6] visitElseIfStatement           : elseif(d%fizz==0){fizz_counter++;}
+[PASS2][3] visitBasicConditionalExpr      : d%fizz==0
+[PASS2][3] visitMulDivExpr                : d%fizz
+[PASS2][1] visitPrimExpr                  : d
+[PASS2][1] visitPrimExpr                  : fizz
+[PASS2][1] visitPrimExpr                  : 0
+[PASS2][2] visitUnaryIncrementStatement   : fizz_counter++
+[PASS2][6] visitElseIfStatement           : elseif(d%buzz==0){buzz_counter++;}
+[PASS2][3] visitBasicConditionalExpr      : d%buzz==0
+[PASS2][3] visitMulDivExpr                : d%buzz
+[PASS2][1] visitPrimExpr                  : d
+[PASS2][1] visitPrimExpr                  : buzz
+[PASS2][1] visitPrimExpr                  : 0
+[PASS2][2] visitUnaryIncrementStatement   : buzz_counter++
+[PASS2][2] visitElseStatement             : else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}
+[PASS2][2] visitAssignmentStatement       : mak1=mak1^mak2;
+[PASS2][3] visitAssignmentExpression      : mak1=mak1^mak2
+[PASS2][3] visitBitExpr                   : mak1^mak2
+[PASS2][1] visitPrimExpr                  : mak1
+[PASS2][1] visitPrimExpr                  : mak2
+[PASS2][2] visitAssignmentStatement       : mak2=mak2&mak3;
+[PASS2][3] visitAssignmentExpression      : mak2=mak2&mak3
+[PASS2][3] visitBitExpr                   : mak2&mak3
+[PASS2][1] visitPrimExpr                  : mak2
+[PASS2][1] visitPrimExpr                  : mak3
+[PASS2][2] visitAssignmentStatement       : mak3=mak3<<1;
+[PASS2][3] visitAssignmentExpression      : mak3=mak3<<1
+[PASS2][3] visitBitExpr                   : mak3<<1
+[PASS2][1] visitPrimExpr                  : mak3
+[PASS2][1] visitPrimExpr                  : 1
+[PASS2][2] visitAssignmentStatement       : mak4=mak4*-2;
+[PASS2][3] visitAssignmentExpression      : mak4=mak4*-2
+[PASS2][3] visitMulDivExpr                : mak4*-2
+[PASS2][1] visitPrimExpr                  : mak4
+[PASS2][1] visitPrimExpr                  : -2
+[PASS2][2] visitUnaryDecrementStatement   : d--
