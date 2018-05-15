@@ -69,7 +69,7 @@ jumpStatement
     ;
 
 identifierList
-    : Identifier (Comma Identifier)*
+    : expression (Comma expression)*
     ;
 
 compoundStatement locals [ string scope_name = "Anonymous" ]
@@ -84,6 +84,7 @@ blockItemList
 blockItem
     :   statement
     |   declaration
+    |   functionCall
     ;
 
 statement
