@@ -66,62 +66,62 @@ string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, string cons
 
 void Pass2Visitor::emit_symbol_table()
 {
-    // j_file                                                                          << endl;
-    // j_file << "; Printing results of the program below" << endl;
-    // j_file << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
-    // j_file << "print_results:" << endl << endl;
-    // j_file << TAB << "getstatic java/lang/System/out Ljava/io/PrintStream;" << endl;
+    j_file                                                                                       << endl;
+    j_file << "; Printing results of the program below"                                          << endl;
+    j_file << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
+    j_file << "print_results:"                                                                   << endl << endl;
+    j_file << TAB << "getstatic java/lang/System/out Ljava/io/PrintStream;"                      << endl;
 
-    // for (auto function : PassVisitor::variable_id_map)
-    // {
-    //     for (auto symbol : function.second)
-    //     {
-    //         j_file << TAB << "ldc \"" + symbol.first << " : " << 
-    //     }
-    // }
+    j_file << TAB << "dup"                                                                       << endl;
+    j_file << TAB << "ldc \"-----------------------------------------------------------------\"" << endl;
+    j_file << TAB << "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V"            << endl;
+    j_file                                                                                       << endl;
 
-    // j_file << TAB << "ldc \"Start:%f d:%f e:%f fizz_counter:%d buzz_counter:%d fizz_buzz:%d\"" << endl;
-    // j_file << TAB << "ldc 6" << endl;
-    // j_file << TAB << "anewarray java/lang/Object" << endl << endl;
+    for (auto function : PassVisitor::variable_id_map)
+    {
+        for (auto symbol : function.second)
+        {
+            j_file << TAB << "; Printing symbol - " << symbol.first << endl;
+            j_file << TAB << "ldc \"" + symbol.first << " : ";
 
-    // j_file << TAB << "dup" << endl;
-    // j_file << TAB << "iconst_0" << endl;
-    // j_file << TAB << "ldc2_w 100.0" << endl;
-    // j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;" << endl;
-    // j_file << TAB << "aastore" << endl << endl;
+            switch (symbol.second.type_letter)
+            {
+                case 'F': j_file << "%f\\n\"" << endl; break;
+                case 'D': j_file << "%f\\n\"" << endl; break;
+                case 'I': j_file << "%d\\n\"" << endl; break;
+                case 'L': j_file << "%d\\n\"" << endl; break;
+                default :
+                    throw InvalidType("Invalid type letter found : " + symbol.second.type_letter);
+            }
 
-    // j_file << TAB << "dup" << endl;
-    // j_file << TAB << "iconst_1" << endl;
-    // j_file << TAB << "dload 9" << endl;
-    // j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;" << endl;
-    // j_file << TAB << "aastore" << endl << endl;
+            j_file << TAB << "ldc 1"                      << endl;
+            j_file << TAB << "anewarray java/lang/Object" << endl;
+            j_file << TAB << "dup"                        << endl;
+            j_file << TAB << "iconst_0"                   << endl;
 
-    // j_file << TAB << "dup" << endl;
-    // j_file << TAB << "iconst_2" << endl;
-    // j_file << TAB << "dload 11" << endl;
-    // j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;" << endl;
-    // j_file << TAB << "aastore" << endl << endl;
+            j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second.type_letter) << endl;
 
-    // j_file << TAB << "dup" << endl;
-    // j_file << TAB << "iconst_3" << endl;
-    // j_file << TAB << "iload 4" << endl;
-    // j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl;
-    // j_file << TAB << "aastore" << endl << endl;
+            switch (symbol.second.type_letter)
+            {
+                case 'F': j_file << TAB << "invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;"     << endl; break;
+                case 'D': j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;"   << endl; break;
+                case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
+                case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
+                default : 
+                    throw InvalidType("Invalid type letter found - " + symbol.second.type_letter);
+            }
 
-    // j_file << TAB << "dup" << endl;
-    // j_file << TAB << "iconst_4" << endl;
-    // j_file << TAB << "iload 5" << endl;
-    // j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl;
-    // j_file << TAB << "aastore" << endl << endl;
+            j_file << TAB << "aastore" << endl;
+            j_file << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << endl;
+            j_file << endl;
+        }
+    }
 
-    // j_file << TAB << "dup" << endl;
-    // j_file << TAB << "iconst_5" << endl;
-    // j_file << TAB << "iload 8" << endl;
-    // j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl;
-    // j_file << TAB << "aastore" << endl << endl;
-
-    // j_file << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << endl << endl;
-    // j_file << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
+    j_file << TAB << "dup"                                                                       << endl;
+    j_file << TAB << "ldc \"-----------------------------------------------------------------\"" << endl;
+    j_file << TAB << "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V"            << endl;
+    j_file                                                                                       << endl;
+    j_file << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
 }
 
 /*////////////////////////////////////////////////////////////
@@ -176,6 +176,40 @@ antlrcpp::Any Pass2Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     return visitChildren(context);
 }
 
+antlrcpp::Any Pass2Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context)
+{
+    print_debug_context(2, context, "visitFunctionDeclaration");
+
+    string instruction;
+
+    const vector <Pcl2Parser::TypeSpecifierContext *> type_specifiers = context->typeSpecifier();
+    const vector <antlr4::tree::TerminalNode *> identifiers = context->Identifier();
+    
+    for (uint32_t i = 0; i < type_specifiers.size(); ++i)
+    {
+        TypeSpec * type = *(type_map.at(type_specifiers[i]->getText()));
+
+        instruction += "\t; Initializing argument to zero - " + identifiers[i]->getText() + "\n";
+
+        if (Predefined::double_type == type)
+        {
+            instruction += "\tldc2_w 0.0\n";
+            instruction += "\tdstore " + std::to_string(get_variable_id(identifiers[i]->getText()));
+        }
+        else
+        {
+            instruction += "\tldc 0\n";
+            instruction += "\tistore " + std::to_string(get_variable_id(identifiers[i]->getText()));
+        }
+
+        instruction += "\n";
+    }
+
+    j_file << instruction;
+
+    return visitChildren(context);
+}
+
 antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
 {
     print_debug_context(2, context, "visitFunctionDefinition");
@@ -202,15 +236,18 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
             j_file << instruction << endl;
         }
     }
+
+    visit(context->parameterTypeList());
     visit(context->compoundStatement());
 
     if(is_main){
+
+        emit_symbol_table();
 
         // Emit the main program epilogue
         j_file                                                                          << endl;
         j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
         j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
-
         j_file                                                                          << endl;
         j_file << "\treturn"                                                            << endl;
         j_file                                                                          << endl;
@@ -256,14 +293,6 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
     instruction += create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
 
-    // // Emit a field put instruction
-    // instruction += "\tputstatic\t";
-    // instruction += program_name;
-    // instruction += "/";
-    // instruction += context->Identifier()->toString();
-    // instruction += " ";
-    // instruction += context->type_letter;
-
     if (context->current_nesting_level == 1)
     {
         instruction_buffer.push_back(instruction);
@@ -291,15 +320,6 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     if (context->primaryExpression()->Identifier())
     {
         instruction += create_get_variable_instruction(program_name, context->primaryExpression()->Identifier()->getText(), context->type_letter);
-
-        // instruction += "\t";
-        // instruction += "getstatic";
-        // instruction += "\t";
-        // instruction += program_name;
-        // instruction += "/";
-        // instruction += context->primaryExpression()->Identifier()->getText();
-        // instruction += " ";
-        // instruction += context->type_letter;
     }
     else if (context->primaryExpression()->IntegerConstant() ||
             (context->primaryExpression()->FloatConstant()))
@@ -826,17 +846,6 @@ antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrem
 
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
-    // // Get variable
-    // j_file << TAB
-    //        << "getstatic"
-    //        << TAB
-    //        << program_name
-    //        << "/"
-    //        << context->Identifier()->getText()
-    //        << " "
-    //        << context->type_letter
-    //        << endl;
-
     // Load one
     j_file << TAB
            << "iconst_1"
@@ -848,17 +857,6 @@ antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrem
            << endl;
 
     j_file << create_put_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
-
-    // // Write back the variable
-    // j_file << TAB
-    //        << "putstatic"
-    //        << TAB
-    //        << program_name
-    //        << "/"
-    //        << context->Identifier()->getText()
-    //        << " "
-    //        << context->type_letter
-    //        << endl;
 
     return visitChildren(context);
 }
@@ -881,17 +879,6 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
            << endl;
 
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
-
-    // // Get variable
-    // j_file << TAB
-    //        << "getstatic"
-    //        << TAB
-    //        << program_name
-    //        << "/"
-    //        << context->Identifier()->getText()
-    //        << " "
-    //        << context->type_letter
-    //        << endl;
 
     // Load one @TODO : Clean up
     if (context->type == Predefined::double_type)
@@ -920,17 +907,6 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
 
     j_file << create_put_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
-    // // Write back the variable
-    // j_file << TAB
-    //        << "putstatic"
-    //        << TAB
-    //        << program_name
-    //        << "/"
-    //        << context->Identifier()->getText()
-    //        << " "
-    //        << context->type_letter
-    //        << endl;
-
     return visitChildren(context);
 }
 
@@ -951,17 +927,6 @@ antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareSta
 
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
-    // // Get variable twice
-    // j_file << TAB
-    //        << "getstatic"
-    //        << TAB
-    //        << program_name
-    //        << "/"
-    //        << context->Identifier()->getText()
-    //        << " "
-    //        << context->type_letter
-    //        << endl;
-
     j_file << TAB
            << ((context->type == Predefined::double_type) ? ("dup2") : ("dup"))
            << endl;
@@ -972,17 +937,6 @@ antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareSta
            << endl;
 
     j_file << create_put_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
-
-    // // Write back the variable
-    // j_file << TAB
-    //        << "putstatic"
-    //        << TAB
-    //        << program_name
-    //        << "/"
-    //        << context->Identifier()->getText()
-    //        << " "
-    //        << context->type_letter
-    //        << endl;
 
     return visitChildren(context);
 }

@@ -41,9 +41,9 @@ const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
     { &Predefined::double_type , 'd' },
 };
 
-unordered_map <string, unordered_map <string, uint32_t>> PassVisitor::variable_id_map =
+unordered_map <string, unordered_map <string, PassVisitor::symbol_S>> PassVisitor::variable_id_map =
 {
-    { "global" , unordered_map<string, uint32_t>() },
+    { "global" , unordered_map<string, PassVisitor::symbol_S>() },
 };
 
 string PassVisitor::current_function = "global";
@@ -174,10 +174,10 @@ string PassVisitor::create_get_variable_instruction(const string program_name, c
                 {
                     switch (type_letter)
                     {
-                        case 'I': instruction += "iload " + std::to_string(symbols.second); break;
-                        case 'F': instruction += "fload " + std::to_string(symbols.second); break;
-                        case 'D': instruction += "dload " + std::to_string(symbols.second); break;
-                        case 'L': instruction += "lload " + std::to_string(symbols.second); break;
+                        case 'I': instruction += "iload " + std::to_string(symbols.second.id); break;
+                        case 'F': instruction += "fload " + std::to_string(symbols.second.id); break;
+                        case 'D': instruction += "dload " + std::to_string(symbols.second.id); break;
+                        case 'L': instruction += "lload " + std::to_string(symbols.second.id); break;
                         default : 
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
@@ -208,10 +208,10 @@ string PassVisitor::create_put_variable_instruction(const string program_name, c
                 {
                     switch (type_letter)
                     {
-                        case 'I': instruction += "istore " + std::to_string(symbols.second); break;
-                        case 'F': instruction += "fstore " + std::to_string(symbols.second); break;
-                        case 'D': instruction += "dstore " + std::to_string(symbols.second); break;
-                        case 'L': instruction += "lstore " + std::to_string(symbols.second); break;
+                        case 'I': instruction += "istore " + std::to_string(symbols.second.id); break;
+                        case 'F': instruction += "fstore " + std::to_string(symbols.second.id); break;
+                        case 'D': instruction += "dstore " + std::to_string(symbols.second.id); break;
+                        case 'L': instruction += "lstore " + std::to_string(symbols.second.id); break;
                         default : 
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
@@ -222,4 +222,33 @@ string PassVisitor::create_put_variable_instruction(const string program_name, c
     }
 
     return instruction;
+}
+
+uint32_t PassVisitor::get_variable_id(const string variable) const
+{
+    for (auto function : variable_id_map)
+    {
+        for (auto symbols : function.second)
+        {
+            if (symbols.first == variable)
+            {
+                return symbols.second.id;
+            }
+        }
+    }
+
+    return static_cast <uint32_t> (-1);
+}
+
+bool PassVisitor::is_global(const string variable) const
+{
+    for (auto symbols : variable_id_map["global"])
+    {
+        if (symbols.first == variable)
+        {
+            return true;
+        }
+    }
+
+    return false;
 }

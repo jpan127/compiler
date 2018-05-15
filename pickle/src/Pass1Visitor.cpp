@@ -204,13 +204,20 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
 
     try
     {
+        // Find function in map
         if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
         {
             throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
         }
         else
         {
-            PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = variable_id->id;
+            const PassVisitor::symbol_S symbol = 
+            {
+                .id = variable_id->id,
+                .type_letter = context->type_letter,
+                .type = context->type,
+            };
+            PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = symbol;
         }
     }
     catch (MissingSymbol const & error)
@@ -290,7 +297,13 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
             }
             else
             {
-                PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = variable_id->id;
+                const PassVisitor::symbol_S symbol = 
+                {
+                    .id = variable_id->id,
+                    .type_letter = context->type_letter,
+                    .type = context->type,
+                };
+                PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = symbol;
             }
         }
         catch (MissingSymbol const & error)
@@ -322,7 +335,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
         }
         else
         {
-            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map <string, uint32_t>();
+            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map <string, PassVisitor::symbol_S>();
         }
     }
     catch (CompilerError const & error)
@@ -359,8 +372,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
 
-    std::cout << "***** size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
-    for(auto variable:symtab_stack->get_local_symtab()->sorted_entries()){std::cout << "***" << variable->get_name();}
+    for(auto variable:symtab_stack->get_local_symtab()->sorted_entries()){std::cout << "***" << variable->get_name() << endl;}
 
     visit(context->compoundStatement());
 

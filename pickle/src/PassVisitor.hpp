@@ -23,6 +23,14 @@ class PassVisitor
 {
 protected:
 
+    /// Symbol information
+    typedef struct
+    {
+        uint32_t id;
+        char type_letter;
+        TypeSpec * type;
+    } symbol_S;
+
     /// Protected constructor
     PassVisitor() { }
 
@@ -41,7 +49,7 @@ protected:
     /// Maps a pointer to the typespec to the instruction prefix
     static const unordered_map <TypeSpec **, char> instruction_prefix_map;
 
-    static unordered_map <string, unordered_map <string, uint32_t>> variable_id_map;
+    static unordered_map <string, unordered_map <string, PassVisitor::symbol_S>> variable_id_map;
 
     static string current_function;
 
@@ -92,5 +100,9 @@ protected:
 
     string create_get_variable_instruction(const string program_name, const string variable, const char type_letter);
     string create_put_variable_instruction(const string program_name, const string variable, const char type_letter);
+
+    uint32_t get_variable_id(const string variable) const;
+
+    bool is_global(const string variable) const;
 
 };

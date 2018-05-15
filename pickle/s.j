@@ -33,6 +33,9 @@
 	; jp=2
 	ldc 2
 	putstatic	s/jp I
+	; Initializing argument to zero - x
+	ldc2_w 0.0
+	dstore 2
 	; fizz_counter=0
 	ldc 0
 	istore 4
@@ -138,6 +141,142 @@ if_else_end_1:
 	goto while_0
 while_0_end:
 
+
+; Printing results of the program below
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+print_results:
+
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	dup
+	ldc "-----------------------------------------------------------------"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+
+	; Printing symbol - e
+	ldc "e : %f\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	dload 11
+	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - d
+	ldc "d : %f\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	dload 9
+	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - fizz_counter
+	ldc "fizz_counter : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 4
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - x
+	ldc "x : %f\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	dload 2
+	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - fizz_buzz
+	ldc "fizz_buzz : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 8
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - buzz_counter
+	ldc "buzz_counter : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 5
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - fizz
+	ldc "fizz : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 6
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - buzz
+	ldc "buzz : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 7
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - jp
+	ldc "jp : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	getstatic	s/jp I
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - bryan
+	ldc "bryan : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	getstatic	s/bryan I
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - cole
+	ldc "cole : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	getstatic	s/cole I
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	dup
+	ldc "-----------------------------------------------------------------"
+	invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 	getstatic     s/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V

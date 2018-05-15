@@ -46,6 +46,7 @@ public:
     antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context) override;
     antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) override;
     antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
+    antlrcpp::Any visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context) override;
 
     antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
     antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
