@@ -213,6 +213,8 @@ antlrcpp::Any Pass2Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
 antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
 {
     print_debug_context(2, context, "visitFunctionDefinition");
+    current_function = context->Identifier()->toString();
+
     bool is_main = context->Identifier()->getText() == "main";
 
     if (!is_main)
@@ -249,6 +251,7 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     j_file << ".limit stack " << context->stack_size                                << endl;
     j_file << ".end method" << endl;
 
+    current_function = "global";
     return nullptr;
 }
 
@@ -406,7 +409,7 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     }
 
     instruction += "\n";
-    
+
     if (context->primaryExpression()->current_nesting_level == 1)
     {
         instruction_buffer.push_back(instruction);

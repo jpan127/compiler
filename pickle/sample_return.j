@@ -23,6 +23,9 @@
 	iload 2
 
 	invokestatic sample_return/func(I)V
+
+	getstatic     sample_return/_runTimer LRunTimer;
+	invokevirtual RunTimer.printElapsedTime()V
 	return
 
 .limit locals 22
