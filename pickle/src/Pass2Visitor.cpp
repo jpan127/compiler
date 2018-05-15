@@ -204,11 +204,26 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     }
     visit(context->compoundStatement());
 
-    j_file << ".limit locals " << context->num_local_vars * 2                       << endl;
+    j_file << ".limit locals " << (context->num_local_vars+10) * 2                  << endl;
     j_file << ".limit stack " << context->stack_size                                << endl;
     j_file << ".end method" << endl;
 
     //return visitChildren(context); todo: double check return, nothing else has to be done
+    return nullptr;
+}
+
+antlrcpp::Any Pass2Visitor::visitFunctionCall(Pcl2Parser::FunctionCallContext *context){
+    print_debug_context(2, context, "visitFunctionCall");
+
+    if (context->identifierList())
+    {
+        visit(context->identifierList());
+    }
+
+
+    j_file << TAB << "invokestatic " << program_name << "/";
+    j_file << PassVisitor::function_definition_map[context->Identifier()->toString()] << endl;
+
     return nullptr;
 }
 
@@ -243,7 +258,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
     string instruction;
 
-    instruction += create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
+    instruction += create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter) + "\n";
 
     // // Emit a field put instruction
     // instruction += "\tputstatic\t";
@@ -320,6 +335,10 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
             instruction += context->primaryExpression()->IntegerConstant()->getText();
         }
     }
+
+    instruction += "\n";
+
+    cout << context->getText() << "****** current nesting level is " << context->primaryExpression()->current_nesting_level << endl;
 
     if (context->primaryExpression()->current_nesting_level == 1)
     {
@@ -613,7 +632,7 @@ antlrcpp::Any Pass2Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext 
     }
 
     if (context->expression()) visit(context->expression());
-    j_file  << TAB                                                                  << endl;
+    j_file  << TAB                                                                  ;
     if (context->expression()) j_file << context->expression()->type->to_string()[0];
     j_file << "return"                                                              << endl;
     j_file                                                                          << endl;

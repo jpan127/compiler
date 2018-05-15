@@ -1,11 +1,12 @@
-int main(){
+void main(){
 	int x;
 	x=2;
-	return x;
+	func(x);
+	return;
 
 }
 
-void func(){
+void func(int q){
 	int y;
 	y=3;
 	return;

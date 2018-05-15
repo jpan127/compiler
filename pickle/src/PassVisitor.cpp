@@ -46,6 +46,8 @@ unordered_map <string, unordered_map <string, uint32_t>> PassVisitor::variable_i
     { "global" , unordered_map<string, uint32_t>() },
 };
 
+unordered_map <string, string> PassVisitor::function_definition_map;
+
 string PassVisitor::current_function = "global";
 
 TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
@@ -182,12 +184,12 @@ string PassVisitor::create_get_variable_instruction(const string program_name, c
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
                 }
-                break;
+                return instruction;
             }
         }
     }
 
-    return instruction;
+    return "???????????????????????????????????";
 }
 
 string PassVisitor::create_put_variable_instruction(const string program_name, const string variable, const char type_letter)
@@ -216,10 +218,10 @@ string PassVisitor::create_put_variable_instruction(const string program_name, c
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
                 }
-                break;
+                return instruction;
             }
         }
     }
 
-    return instruction;
+    return "???????????????????????????????????";
 }
