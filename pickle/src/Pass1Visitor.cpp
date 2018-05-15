@@ -332,7 +332,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
                PassVisitor::function_definition_map.end()) {
             throw CompilerError("Function already defined : " + PassVisitor::current_function);
         } else {
-            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map<string, uint32_t>();
+            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map<string, symbol_S>();
             PassVisitor::function_definition_map[PassVisitor::current_function] = PassVisitor::current_function + "(";
         }
     }

@@ -79,41 +79,45 @@ void Pass2Visitor::emit_symbol_table()
 
     for (auto function : PassVisitor::variable_id_map)
     {
-        for (auto symbol : function.second)
+        // Only print symbols in global or main
+        if (function.first == "global" || function.first == "main")
         {
-            j_file << TAB << "; Printing symbol - " << symbol.first << endl;
-            j_file << TAB << "ldc \"" + symbol.first << " : ";
-
-            switch (symbol.second.type_letter)
+            for (auto symbol : function.second)
             {
-                case 'F': j_file << "%f\\n\"" << endl; break;
-                case 'D': j_file << "%f\\n\"" << endl; break;
-                case 'I': j_file << "%d\\n\"" << endl; break;
-                case 'L': j_file << "%d\\n\"" << endl; break;
-                default :
-                    throw InvalidType("Invalid type letter found : " + symbol.second.type_letter);
+                j_file << TAB << "; Printing symbol - " << symbol.first << endl;
+                j_file << TAB << "ldc \"" + symbol.first << " : ";
+
+                switch (symbol.second.type_letter)
+                {
+                    case 'F': j_file << "%f\\n\"" << endl; break;
+                    case 'D': j_file << "%f\\n\"" << endl; break;
+                    case 'I': j_file << "%d\\n\"" << endl; break;
+                    case 'L': j_file << "%d\\n\"" << endl; break;
+                    default :
+                        throw InvalidType("Invalid type letter found : " + symbol.second.type_letter);
+                }
+
+                j_file << TAB << "ldc 1"                      << endl;
+                j_file << TAB << "anewarray java/lang/Object" << endl;
+                j_file << TAB << "dup"                        << endl;
+                j_file << TAB << "iconst_0"                   << endl;
+
+                j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second.type_letter) << endl;
+
+                switch (symbol.second.type_letter)
+                {
+                    case 'F': j_file << TAB << "invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;"     << endl; break;
+                    case 'D': j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;"   << endl; break;
+                    case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
+                    case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
+                    default : 
+                        throw InvalidType("Invalid type letter found - " + symbol.second.type_letter);
+                }
+
+                j_file << TAB << "aastore" << endl;
+                j_file << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << endl;
+                j_file << endl;
             }
-
-            j_file << TAB << "ldc 1"                      << endl;
-            j_file << TAB << "anewarray java/lang/Object" << endl;
-            j_file << TAB << "dup"                        << endl;
-            j_file << TAB << "iconst_0"                   << endl;
-
-            j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second.type_letter) << endl;
-
-            switch (symbol.second.type_letter)
-            {
-                case 'F': j_file << TAB << "invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;"     << endl; break;
-                case 'D': j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;"   << endl; break;
-                case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
-                case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
-                default : 
-                    throw InvalidType("Invalid type letter found - " + symbol.second.type_letter);
-            }
-
-            j_file << TAB << "aastore" << endl;
-            j_file << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << endl;
-            j_file << endl;
         }
     }
 
@@ -242,11 +246,6 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     visit(context->parameterTypeList());
     visit(context->compoundStatement());
   
-    if (is_main)
-    {
-        emit_symbol_table();
-    }
-
     j_file << ".limit locals " << (context->num_local_vars+10) * 2                  << endl;
     j_file << ".limit stack " << context->stack_size                                << endl;
     j_file << ".end method" << endl;
@@ -777,11 +776,11 @@ antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::Parent
 
 antlrcpp::Any Pass2Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
     if( PassVisitor::current_function == "main"){
+        emit_symbol_table();
         // Emit the main program epilogue
         j_file                                                                          << endl;
         j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
         j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
-
     }
 
     if (context->expression()) visit(context->expression());
