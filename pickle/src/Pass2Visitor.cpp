@@ -337,9 +337,7 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     }
 
     instruction += "\n";
-
-    cout << context->getText() << "****** current nesting level is " << context->primaryExpression()->current_nesting_level << endl;
-
+    
     if (context->primaryExpression()->current_nesting_level == 1)
     {
         instruction_buffer.push_back(instruction);
