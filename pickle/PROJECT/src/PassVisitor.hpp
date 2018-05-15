@@ -51,8 +51,6 @@ protected:
 
     static unordered_map <string, unordered_map <string, PassVisitor::symbol_S>> variable_id_map;
 
-    static unordered_map <string, string> function_definition_map;
-
     static string current_function;
 
     /// Counts up for each compound statement

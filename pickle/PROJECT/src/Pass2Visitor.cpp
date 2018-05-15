@@ -239,31 +239,24 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     visit(context->parameterTypeList());
     visit(context->compoundStatement());
-  
-    if (is_main)
-    {
-        emit_symbol_table();
-    }
 
-    j_file << ".limit locals " << (context->num_local_vars+10) * 2                  << endl;
-    j_file << ".limit stack " << context->stack_size                                << endl;
+    if(is_main){
+
+        emit_symbol_table();
+
+        // Emit the main program epilogue
+        j_file                                                                          << endl;
+        j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
+        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
+        j_file                                                                          << endl;
+        j_file << "\treturn"                                                            << endl;
+        j_file                                                                          << endl;
+        j_file << ".limit locals " << context->num_local_vars * 2                       << endl;
+        j_file << ".limit stack " << context->stack_size                                << endl;
+    }
     j_file << ".end method" << endl;
 
-    return nullptr;
-}
-
-antlrcpp::Any Pass2Visitor::visitFunctionCall(Pcl2Parser::FunctionCallContext *context){
-    print_debug_context(2, context, "visitFunctionCall");
-
-    if (context->identifierList())
-    {
-        visit(context->identifierList());
-    }
-
-
-    j_file << TAB << "invokestatic " << program_name << "/";
-    j_file << PassVisitor::function_definition_map[context->Identifier()->toString()] << endl;
-
+    //return visitChildren(context); todo: double check return, nothing else has to be done
     return nullptr;
 }
 
@@ -344,7 +337,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
     string instruction;
 
-    instruction += create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter) + "\n";
+    instruction += create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
 
     if (context->current_nesting_level == 1)
     {
@@ -405,8 +398,6 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
         }
     }
 
-    instruction += "\n";
-    
     if (context->primaryExpression()->current_nesting_level == 1)
     {
         instruction_buffer.push_back(instruction);
@@ -764,30 +755,11 @@ antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::Parent
     return visitChildren(context);
 }
 
-
-
 /*////////////////////////////////////////////////////////////
  *                                                           *
  *                     S T A T E M E N T S                   *
  *                                                           *
  */////////////////////////////////////////////////////////////
-
-antlrcpp::Any Pass2Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
-    if( PassVisitor::current_function == "main"){
-        // Emit the main program epilogue
-        j_file                                                                          << endl;
-        j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
-        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
-
-    }
-
-    if (context->expression()) visit(context->expression());
-    j_file  << TAB                                                                  ;
-    if (context->expression()) j_file << context->expression()->type->to_string()[0];
-    j_file << "return"                                                              << endl;
-    j_file                                                                          << endl;
-    return nullptr;
-}
 
 antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context)
 {

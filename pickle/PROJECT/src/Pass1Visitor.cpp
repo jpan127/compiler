@@ -317,26 +317,29 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context) {
+antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context)
+{
     print_debug_context(1, context, "visitFunctionDefinition");
 
     std::string function_name = context->Identifier()->toString();
-    std::string function_return_type, function_parameters;
-    function_return_type = (char) toupper(context->typeSpecifier()->getText()[0]);
+    std::string function_return_type;
+    function_return_type = (char)toupper(context->typeSpecifier()->getText()[0]);
 
     PassVisitor::current_function = function_name;
 
-    try {
-        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) != PassVisitor::variable_id_map.end()
-            && PassVisitor::function_definition_map.find(PassVisitor::current_function) !=
-               PassVisitor::function_definition_map.end()) {
+    try
+    {
+        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) != PassVisitor::variable_id_map.end())
+        {
             throw CompilerError("Function already defined : " + PassVisitor::current_function);
-        } else {
-            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map<string, uint32_t>();
-            PassVisitor::function_definition_map[PassVisitor::current_function] = PassVisitor::current_function + "(";
+        }
+        else
+        {
+            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map <string, PassVisitor::symbol_S>();
         }
     }
-    catch (CompilerError const &error) {
+    catch (CompilerError const & error)
+    {
         error.print_and_exit();
     }
 
@@ -344,23 +347,19 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     context->compoundStatement()->scope_name = context->Identifier()->getText();
 
     //create a header for pass2visitor to use when creating the method
-    context->function_header = ".method public static " + function_name + "(";
+    context->function_header = ".method public static " + context->Identifier()->toString() + "(";
 
     if (context->parameterTypeList()->functionDeclaration()) {
         //add each function parameter to jasmin function header
-        for (auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) {
+        for(auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) {
             string var_type = variable->getText();
-            function_parameters += (char) toupper(var_type[0]);
+            context->function_header += (char)toupper(var_type[0]);
         }
     }
 
     //close parameter parenthesis and declare function return type
-    context->function_header += function_parameters + ")" + function_return_type;
-    if(PassVisitor::current_function!= "main")
-        PassVisitor::function_definition_map[PassVisitor::current_function] += function_parameters + ")" + function_return_type;
-    else{
-        PassVisitor::function_definition_map[PassVisitor::current_function] += "[Ljava/lang/String;)";
-    }
+    context->function_header += ")" + function_return_type;
+
     //add comment of function signature for jasmin file
     context->function_header += "\n; " + context->getText() + "\n";
 
@@ -373,10 +372,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
 
-    std::cout << "***** size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
-    for (auto variable:symtab_stack->get_local_symtab()->sorted_entries()) {
-        std::cout << "***" << variable->get_name();
-    }
+    for(auto variable:symtab_stack->get_local_symtab()->sorted_entries()){std::cout << "***" << variable->get_name() << endl;}
 
     visit(context->compoundStatement());
 
@@ -815,6 +811,15 @@ antlrcpp::Any Pass1Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementCont
 antlrcpp::Any Pass1Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext *context)
 {
     print_debug_context(1, context, "visitElseStatement");
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext *context){
+
+    if(context->Return()){//jump is return statement
+        visit(context->expression());
+
+    }
     return visitChildren(context);
 }
 
