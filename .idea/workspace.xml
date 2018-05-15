@@ -13,16 +13,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fef5fbeb-a377-4e1f-b6d0-619af358397c" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.h" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/generated/Pcl2Parser.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/grammars/Pcl2.g4" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pickle/sample_return.j" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/sample_return.j" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/samples/sample_return.c" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/samples/sample_return.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/src/PassVisitor.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/PassVisitor.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pickle/src/PassVisitor.hpp" beforeDir="false" afterPath="$PROJECT_DIR$/pickle/src/PassVisitor.hpp" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -52,7 +44,7 @@
             <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="463">
-                  <caret line="348" column="80" selection-start-line="348" selection-start-column="80" selection-end-line="348" selection-end-column="80" />
+                  <caret line="361" column="80" selection-start-line="361" selection-start-column="80" selection-end-line="361" selection-end-column="80" />
                   <folding>
                     <element signature="e#0#19#0" expanded="true" />
                     <element signature="e#1054#1123#0" />
@@ -77,8 +69,8 @@
           <file leaf-file-name="Pass2Visitor.hpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="162">
-                  <caret line="42" column="43" selection-start-line="42" selection-start-column="43" selection-end-line="42" selection-end-column="43" />
+                <state relative-caret-position="282">
+                  <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
                   <folding>
                     <element signature="e#49#68#0" expanded="true" />
                   </folding>
@@ -90,7 +82,7 @@
             <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="311">
-                  <caret line="206" column="84" selection-start-line="206" selection-start-column="84" selection-end-line="206" selection-end-column="84" />
+                  <caret line="43" column="13" selection-start-line="43" selection-start-column="13" selection-end-line="43" selection-end-column="13" />
                   <folding>
                     <element signature="e#0#19#0" expanded="true" />
                   </folding>
@@ -101,8 +93,8 @@
           <file leaf-file-name="PassVisitor.hpp" pinned="false" current-in-tab="false">
             <entry file="file://$PROJECT_DIR$/pickle/src/PassVisitor.hpp">
               <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="124">
-                  <caret line="34" column="54" selection-start-line="34" selection-start-column="54" selection-end-line="34" selection-end-column="54" />
+                <state relative-caret-position="260">
+                  <caret line="42" column="54" selection-start-line="42" selection-start-column="54" selection-end-line="42" selection-end-column="54" />
                   <folding>
                     <element signature="e#14#33#0" expanded="true" />
                   </folding>
@@ -123,7 +115,7 @@
             <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
               <provider selected="true" editor-type-id="text-editor">
                 <state relative-caret-position="291">
-                  <caret line="62" column="92" selection-start-line="62" selection-start-column="2" selection-end-line="62" selection-end-column="92" />
+                  <caret line="122" column="24" selection-start-line="122" selection-start-column="24" selection-end-line="122" selection-end-column="24" />
                 </state>
               </provider>
             </entry>
@@ -156,9 +148,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>mul</find>
-      <find>express</find>
-      <find>primary</find>
       <find>compoundStatem</find>
       <find>functionDe</find>
       <find>functionDec</find>
@@ -184,8 +173,11 @@
       <find>invokestat</find>
       <find>primexpr</find>
       <find>functioncall</find>
-      <find>function</find>
       <find>num_local_var</find>
+      <find>function</find>
+      <find>current_fun</find>
+      <find>&lt;&lt;&lt;&lt;</find>
+      <find>&gt;&gt;&gt;&gt;</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -264,7 +256,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="visprimex&#9;null&#9;null&#10;visitpr&#9;null&#9;null&#10;visitid&#9;null&#9;null&#10;visijump&#9;null&#9;null&#10;visfuncal&#9;null&#9;null&#10;visitide&#9;null&#9;null&#10;pcl2&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h&#10;pcl2parser.h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h&#10;visfundef&#9;null&#9;null&#10;visitpri&#9;null&#9;null&#10;visitfuncal&#9;null&#9;null&#10;passvi&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;&quot;istore&quot;&#9;null&#9;null&#10;visitprime&#9;null&#9;null&#10;visfunca&#9;null&#9;null&#10;visitfunc&#9;null&#9;null&#10;visitfuca&#9;null&#9;null&#10;pass&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;create_put&#9;null&#9;null&#10;visitfunccall&#9;null&#9;null&#10;visitfun&#9;null&#9;null&#10;passvisitor.cpp&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;pass1&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass1Visitor.cpp&#10;passvisitor.h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.hpp&#10;visitfunctiondef&#9;null&#9;null&#10;visitfu&#9;null&#9;null&#10;visitju&#9;null&#9;null&#10;pas&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.hpp&#10;visitfunctioncall&#9;null&#9;null&#10;visitprim&#9;null&#9;null&#10;visitfundef&#9;null&#9;null&#10;visijum&#9;null&#9;null&#10;visitjump&#9;null&#9;null&#10;visitfuncdef&#9;null&#9;null&#10;visitfunction&#9;null&#9;null&#10;pass2&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;pass1h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass1Visitor.hpp&#10;visitprimex&#9;null&#9;null&#10;Passvisi&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;visitaddmin&#9;null&#9;null&#10;visitmuldiv&#9;null&#9;null&#10;visitmulexp&#9;null&#9;null&#10;pass2c&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;visitjum&#9;null&#9;null&#10;pop()&#9;ACTION&#9;EditorPopupMenu1" />
+    <property name="SearchEverywhereHistoryKey" value="visitfuncdef&#9;null&#9;null&#10;visitjum&#9;null&#9;null&#10;visitfun&#9;null&#9;null&#10;visprimex&#9;null&#9;null&#10;visitpr&#9;null&#9;null&#10;visitid&#9;null&#9;null&#10;visijump&#9;null&#9;null&#10;visfuncal&#9;null&#9;null&#10;visitide&#9;null&#9;null&#10;pcl2&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h&#10;pcl2parser.h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/generated/Pcl2Parser.h&#10;visfundef&#9;null&#9;null&#10;visitpri&#9;null&#9;null&#10;visitfuncal&#9;null&#9;null&#10;passvi&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;&quot;istore&quot;&#9;null&#9;null&#10;visitprime&#9;null&#9;null&#10;visfunca&#9;null&#9;null&#10;visitfunc&#9;null&#9;null&#10;visitfuca&#9;null&#9;null&#10;pass&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;create_put&#9;null&#9;null&#10;visitfunccall&#9;null&#9;null&#10;passvisitor.cpp&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;pass1&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass1Visitor.cpp&#10;passvisitor.h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.hpp&#10;visitfunctiondef&#9;null&#9;null&#10;visitfu&#9;null&#9;null&#10;visitju&#9;null&#9;null&#10;pas&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.hpp&#10;visitfunctioncall&#9;null&#9;null&#10;visitprim&#9;null&#9;null&#10;visitfundef&#9;null&#9;null&#10;visijum&#9;null&#9;null&#10;visitjump&#9;null&#9;null&#10;visitfunction&#9;null&#9;null&#10;pass2&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;pass1h&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass1Visitor.hpp&#10;visitprimex&#9;null&#9;null&#10;Passvisi&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/PassVisitor.cpp&#10;visitaddmin&#9;null&#9;null&#10;visitmuldiv&#9;null&#9;null&#10;visitmulexp&#9;null&#9;null&#10;pass2c&#9;FILE&#9;file://C:/Users/bryan/Documents/Compiler_revised/compiler/pickle/src/Pass2Visitor.cpp&#10;pop()&#9;ACTION&#9;EditorPopupMenu1" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -297,7 +289,7 @@
       <option name="presentableId" value="Default" />
       <updated>1526168759377</updated>
       <workItem from="1526168760793" duration="30186000" />
-      <workItem from="1526358141739" duration="8368000" />
+      <workItem from="1526358141739" duration="9096000" />
     </task>
     <task id="LOCAL-00001" summary="completed function definition visitor pass 1 and pass 2">
       <created>1526199736592</created>
@@ -310,7 +302,7 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="52122000" />
+    <option name="totallyTimeSpent" value="52850000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
@@ -665,7 +657,7 @@
     <entry file="file://$PROJECT_DIR$/pickle/src/Pass1Visitor.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="463">
-          <caret line="348" column="80" selection-start-line="348" selection-start-column="80" selection-end-line="348" selection-end-column="80" />
+          <caret line="361" column="80" selection-start-line="361" selection-start-column="80" selection-end-line="361" selection-end-column="80" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
             <element signature="e#1054#1123#0" />
@@ -690,8 +682,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/PassVisitor.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
-          <caret line="34" column="54" selection-start-line="34" selection-start-column="54" selection-end-line="34" selection-end-column="54" />
+        <state relative-caret-position="260">
+          <caret line="42" column="54" selection-start-line="42" selection-start-column="54" selection-end-line="42" selection-end-column="54" />
           <folding>
             <element signature="e#14#33#0" expanded="true" />
           </folding>
@@ -712,13 +704,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="291">
-          <caret line="62" column="92" selection-start-line="62" selection-start-column="2" selection-end-line="62" selection-end-column="92" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pickle/grammars/Pcl2.g4">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="288">
@@ -726,10 +711,17 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/pickle/generated/Pcl2BaseVisitor.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="291">
+          <caret line="122" column="24" selection-start-line="122" selection-start-column="24" selection-end-line="122" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="162">
-          <caret line="42" column="43" selection-start-line="42" selection-start-column="43" selection-end-line="42" selection-end-column="43" />
+        <state relative-caret-position="282">
+          <caret line="51" column="18" selection-start-line="51" selection-start-column="18" selection-end-line="51" selection-end-column="18" />
           <folding>
             <element signature="e#49#68#0" expanded="true" />
           </folding>
@@ -739,7 +731,7 @@
     <entry file="file://$PROJECT_DIR$/pickle/src/Pass2Visitor.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
-          <caret line="206" column="84" selection-start-line="206" selection-start-column="84" selection-end-line="206" selection-end-column="84" />
+          <caret line="43" column="13" selection-start-line="43" selection-start-column="13" selection-end-line="43" selection-end-column="13" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
           </folding>
