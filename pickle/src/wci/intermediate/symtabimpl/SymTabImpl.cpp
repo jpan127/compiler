@@ -33,7 +33,7 @@ SymTabEntry *SymTabImpl::enter(string name)
 {
     SymTabEntry *entry = SymTabFactory::create_symtab_entry(name, this);
     // Enumeration of the current entry inside the current symbol table
-    entry->id = contents.size() + 1;
+    entry->id = contents.size();
     contents[name] = (SymTabEntryImpl *) entry;
 
     return entry;

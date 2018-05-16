@@ -71,7 +71,10 @@ void Pass1Visitor::lookup_symbol_type(string const & variable, TypeSpec ** type,
 
 antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context)
 {
-    print_debug_context(1, context, "visitCompilationUnit");
+    if (!print_debug_context(1, context, "visitCompilationUnit"))
+    {
+        return nullptr;
+    }
 
     // Open output stream file
     try
@@ -90,24 +93,8 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
     // Emit the program header
     j_file << ".class public " << program_name                      << endl;
     j_file << ".super java/lang/Object"                             << endl;
-
-    // Emit the RunTimer and PascalTextIn fields
     j_file                                                          << endl;
     j_file << ".field private static _runTimer LRunTimer;"          << endl;
-    // j_file << ".field private static _standardIn LPascalTextIn;"    << endl;
-
-    // // Emit the class constructor.
-    // j_file                                                          << endl;
-    // j_file << ".method public <init>()V"                            << endl;
-    // j_file                                                          << endl;
-    // j_file << "\taload_0"                                           << endl;
-    // j_file << "\tinvokenonvirtual    java/lang/Object/<init>()V"    << endl;
-    // j_file << "\treturn"                                            << endl;
-    // j_file                                                          << endl;
-    // j_file << ".limit locals 1"                                     << endl;
-    // j_file << ".limit stack 1"                                      << endl;
-    // j_file << ".end method"                                         << endl;
-    // j_file                                                          << endl;
 
     auto value = visitChildren(context);
 
@@ -120,7 +107,10 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
 
 antlrcpp::Any Pass1Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitContext *context)
 {
-    print_debug_context(1, context, "visitTranslationUnit");
+    if (!print_debug_context(1, context, "visitTranslationUnit"))
+    {
+        return nullptr;
+    }
     return visitChildren(context);
 }
 
@@ -132,7 +122,10 @@ antlrcpp::Any Pass1Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
 
 antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context)
 {
-    print_debug_context(1, context, "visitTypeSpecifier");
+    if (!print_debug_context(1, context, "visitTypeSpecifier"))
+    {
+        return nullptr;
+    }
     return visitChildren(context);
 }
 
@@ -144,7 +137,10 @@ antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext 
 
 antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *context)
 {
-    print_debug_context(1, context, "visitDeclaration"); 
+    if (!print_debug_context(1, context, "visitDeclaration"))
+    {
+        return nullptr;
+    }
 
     try
     { 
@@ -250,7 +246,10 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
 
 antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context)
 {
-    print_debug_context(1, context, "visitFunctionDeclaration");
+    if (!print_debug_context(1, context, "visitFunctionDeclaration"))
+    {
+        return nullptr;
+    }
 
     // Make a comment as to what the declaration is
     j_file << "\n; " << context->getText() << "\n" << endl;
@@ -318,7 +317,10 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
 }
 
 antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context) {
-    print_debug_context(1, context, "visitFunctionDefinition");
+    if (!print_debug_context(1, context, "visitFunctionDefinition"))
+    {
+        return nullptr;
+    }
 
     std::string function_name = context->Identifier()->toString();
     std::string function_return_type, function_parameters;
@@ -366,16 +368,13 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     //create a local symbal table for the function
     SymTab *local_symTab = symtab_stack->push();
-    SymTabEntry *local_name_entry = local_symTab->enter(context->Identifier()->toString());
-    local_name_entry->set_definition((Definition) DF_FUNCTION);
-    cout << TAB << "Symbol table created for : " << context->Identifier()->toString() << endl;
 
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
 
-    std::cout << "***** size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
+    std::cout << TAB << "Size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
     for (auto variable:symtab_stack->get_local_symtab()->sorted_entries()) {
-        std::cout << "***" << variable->get_name();
+        std::cout << TAB << variable->get_name() << endl;
     }
 
     visit(context->compoundStatement());
@@ -398,7 +397,10 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
 antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 {
-    print_debug_context(1, context, "visitPrimExpr");
+    if (!print_debug_context(1, context, "visitPrimExpr"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Determines the type + type letter of the identifier
@@ -471,7 +473,10 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
         "*", "/", "%"
     };
 
-    print_debug_context(1, context, "visitMulDivExpr");
+    if (!print_debug_context(1, context, "visitMulDivExpr"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Determines the expression operator
@@ -518,7 +523,10 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
         "+", "-"
     };
 
-    print_debug_context(1, context, "visitAddminExpr");
+    if (!print_debug_context(1, context, "visitAddminExpr"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Determines the expression operator
@@ -565,7 +573,10 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
         "<<" , ">>" , "&"  , "|"  , "~"  , "^" 
     };
 
-    print_debug_context(1, context, "visitBitExpr");
+    if (!print_debug_context(1, context, "visitBitExpr"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Determines the expression operator
@@ -620,7 +631,10 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
 
 antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context)
 {
-    print_debug_context(1, context, "visitAssignmentExpression");
+    if (!print_debug_context(1, context, "visitAssignmentExpression"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Determines the type + type letter of the identifier
@@ -644,8 +658,12 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
         {
             context->type_letter = letter_map_lookup(type);
             context->type = type;
-            context->expression()->type = context->type;
-            context->expression()->type_letter = context->type_letter;
+
+            if (context->expression())
+            {
+                context->expression()->type = context->type;
+                context->expression()->type_letter = context->type_letter;
+            }
         }
         else
         {
@@ -668,7 +686,10 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
 antlrcpp::Any Pass1Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context)
 {
-    print_debug_context(1, context, "visitBasicConditionalExpr");
+    if (!print_debug_context(1, context, "visitBasicConditionalExpr"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Saves the operator characters
@@ -702,7 +723,10 @@ antlrcpp::Any Pass1Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicCondition
 
 antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context)
 {
-    print_debug_context(1, context, "visitConnectedConditionalExpr");
+    if (!print_debug_context(1, context, "visitConnectedConditionalExpr"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Saves the operator characters
@@ -724,6 +748,36 @@ antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedC
         throw AntlrParsedIncorrectly("[visitConnectedConditionalExpr] Does not have proper operands");
     }
 
+    // Set operand expressions to be the same iteration name
+    context->conditionalExpression(0)->iteration_name = context->iteration_name;
+    context->conditionalExpression(1)->iteration_name = context->iteration_name;
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context)
+{
+    if (!print_debug_context(1, context, "visitNegatedConditionalExpr"))
+    {
+        return nullptr;
+    }
+
+    // Set operand expression to be the same iteration name
+    context->conditionalExpression()->iteration_name = context->iteration_name;
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context)
+{
+    if (!print_debug_context(1, context, "visitParenthesizedConditionalExpr"))
+    {
+        return nullptr;
+    }
+
+    // Set operand expression to be the same iteration name
+    context->conditionalExpression()->iteration_name = context->iteration_name;
+
     return visitChildren(context);
 }
 
@@ -735,30 +789,29 @@ antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedC
 
 antlrcpp::Any Pass1Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * context)
 {
-    print_debug_context(1, context, "visitAssignmentStatement");
+    if (!print_debug_context(1, context, "visitAssignmentStatement"))
+    {
+        return nullptr;
+    }
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext * context)
 {
-    print_debug_context(1, context, "visitCompoundStatement");
-
-    // if(context->local_symTab == nullptr) {
-    //     context->local_symTab = symtab_stack->push();
-    //     SymTabEntry *local_name_entry = context->local_symTab->enter(context->scope_name);
-    //     local_name_entry->set_definition((Definition) DF_SCOPE);
-    //     cout << TAB << "Symbol created : " << context->scope_name << endl;
-    // }else{
-    //     symtab_stack->push(context->local_symTab);
-    //     for(auto variable:context->local_symTab->sorted_entries()){std::cout << "***" << variable->get_name();}
-    // }
+    if (!print_debug_context(1, context, "visitCompoundStatement"))
+    {
+        return nullptr;
+    }
 
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass1Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
 {
-    print_debug_context(1, context, "visitIterationStatement");
+    if (!print_debug_context(1, context, "visitIterationStatement"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Sets the iteration name to while_N where N is the current scope number
@@ -771,7 +824,10 @@ antlrcpp::Any Pass1Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
 
 antlrcpp::Any Pass1Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context)
 {
-    print_debug_context(1, context, "visitIfElseStatement");
+    if (!print_debug_context(1, context, "visitIfElseStatement"))
+    {
+        return nullptr;
+    }
 
     // Enumerate each else if statement
     vector <Pcl2Parser::ElseIfStatementContext *> else_ifs = context->elseIfStatement();
@@ -785,7 +841,10 @@ antlrcpp::Any Pass1Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementCont
 
 antlrcpp::Any Pass1Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *context)
 {
-    print_debug_context(1, context, "visitIfStatement");
+    if (!print_debug_context(1, context, "visitIfStatement"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Sets the iteration name to if_N where N is the current scope number
@@ -798,7 +857,10 @@ antlrcpp::Any Pass1Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *con
 
 antlrcpp::Any Pass1Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context)
 {
-    print_debug_context(1, context, "visitElseIfStatement");
+    if (!print_debug_context(1, context, "visitElseIfStatement"))
+    {
+        return nullptr;
+    }
 
     /**
      *  Sets the iteration name to else_if_N where N is the current scope number
@@ -814,13 +876,19 @@ antlrcpp::Any Pass1Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementCont
 
 antlrcpp::Any Pass1Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext *context)
 {
-    print_debug_context(1, context, "visitElseStatement");
+    if (!print_debug_context(1, context, "visitElseStatement"))
+    {
+        return nullptr;
+    }
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
 {
-    print_debug_context(1, context, "visitUnaryIncrementStatement");
+    if (!print_debug_context(1, context, "visitUnaryIncrementStatement"))
+    {
+        return nullptr;
+    }
 
     // Look up type of this expression in the symbol table stack
     lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
@@ -830,7 +898,10 @@ antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrem
 
 antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context)
 {
-    print_debug_context(1, context, "visitUnaryDecrementStatement");
+    if (!print_debug_context(1, context, "visitUnaryDecrementStatement"))
+    {
+        return nullptr;
+    }
 
     // Look up type of this expression in the symbol table stack
     lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
@@ -840,7 +911,10 @@ antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
 
 antlrcpp::Any Pass1Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context)
 {
-    print_debug_context(1, context, "visitUnarySquareStatement");
+    if (!print_debug_context(1, context, "visitUnarySquareStatement"))
+    {
+        return nullptr;
+    }
 
     // Look up type of this expression in the symbol table stack
     lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);

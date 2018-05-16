@@ -81,21 +81,44 @@ TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * 
     }
 }
 
-void PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const
+bool PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const
 {
-    constexpr size_t longest_name = 30;
+    constexpr size_t longest_name = 35;
+    const string error_prefix = "<missing";
     const string space_padding(longest_name - rule_name.length(), ' ');
-    
-    cout << "[PASS"
-         << std::to_string(pass_num)
-         << "][" 
-         << context->children.size() 
-         << "] " 
-         << rule_name 
-         << space_padding 
-         << " : " 
-         << context->getText() 
-         << endl;
+    const string text = context->getText();
+
+    // if (text.find("<missing") != std::string::npos)
+    if (std::equal(error_prefix.begin(), error_prefix.end(), text.begin()))
+    {
+        cout << "-----------------------------------------------------------" << endl;
+        cout << "[PASS"
+             << std::to_string(pass_num)
+             << "][" 
+             << context->children.size() 
+             << "][COMPILATION ERROR] " 
+             << rule_name 
+             << " : " 
+             << context->getText() 
+             << endl;
+        cout << "Skipping this node!" << endl;
+        cout << "-----------------------------------------------------------" << endl;
+        return false;
+    }
+    else
+    {
+        cout << "[PASS"
+             << std::to_string(pass_num)
+             << "][" 
+             << context->children.size() 
+             << "] " 
+             << rule_name 
+             << space_padding 
+             << " : " 
+             << context->getText() 
+             << endl;
+        return true;
+    }
 }
 
 char PassVisitor::letter_map_lookup(const TypeSpec * type) const
@@ -253,4 +276,24 @@ bool PassVisitor::is_global(const string variable) const
     }
 
     return false;
+}
+
+string PassVisitor::convert_type_if_neccessary(TypeSpec * current_type, TypeSpec * needed_type)
+{
+    string instruction;
+
+    if (current_type && needed_type && current_type != needed_type)
+    {
+             if (Predefined::double_type == current_type) { instruction += "d2"; }
+        else if (Predefined::float_type  == current_type) { instruction += "f2"; }
+        else if (Predefined::int_type    == current_type) { instruction += "i2"; }
+        else { throw InvalidType("Unsupported type for conversion instruction : " + current_type->to_string()); }
+
+             if (Predefined::double_type == needed_type) { instruction += "d"; }
+        else if (Predefined::float_type  == needed_type) { instruction += "f"; }
+        else if (Predefined::int_type    == needed_type) { instruction += "i"; }
+        else { throw InvalidType("Unsupported type for conversion instruction : " + current_type->to_string()); }
+    }
+
+    return instruction;
 }
