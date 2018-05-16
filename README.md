@@ -46,3 +46,17 @@ Use `bash compile.sh SAMPLE_PROGRAM_NO_EXTENSIONS_UNDER_SAMPLES_DIR` to compile 
 The runtime library has already been compiled into a static library for easy linking, no need to worry about the runtime source files
 However, it will not run on all machines.  Use the `recompile.sh` to recompile a static library on your machine which will appear under
 `antlr4-runtime/temp`.
+
+### TODO
+
+1. Strip repository of unneeded files
+2. Clean up and rewrite intermediate modules
+3. Finish writing `JasminEmitter` module
+4. Integrate `JasminEmitter` into the visitors
+5. Add all the operators into the language
+6. Add `for loops`
+7. Add `switch case`
+8. Add tests
+9. Add `arrays`
+10. Add `structs`
+11. Add `enums`
