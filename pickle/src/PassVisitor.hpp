@@ -19,11 +19,17 @@ using namespace wci::intermediate;
 
 
 
+/**
+ *  Class that Pass1Visitor and Pass2Visitor inherit from
+ *  Contains data structures used by all passes and generic helper functions
+ *  Protected constructor to prevent direct instantiation
+ */
+
 class PassVisitor
 {
 protected:
 
-    /// Symbol information
+    /// Symbol information / attributes
     typedef struct
     {
         uint32_t id;
@@ -49,10 +55,13 @@ protected:
     /// Maps a pointer to the typespec to the instruction prefix
     static const unordered_map <TypeSpec **, char> instruction_prefix_map;
 
+    /// Maps scope names to maps of symbol names to symbol attributes
     static unordered_map <string, unordered_map <string, PassVisitor::symbol_S>> variable_id_map;
 
+    /// Maps function names to their function invoke signature
     static unordered_map <string, string> function_definition_map;
 
+    /// Stores the current function name
     static string current_function;
 
     /// Counts up for each compound statement
@@ -88,7 +97,7 @@ protected:
      *  @param context   : Current context or parser rule
      *  @param rule_name : Name of current rule
      */
-    void print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const;
+    bool print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const;
 
     /**
      *  Wrapper for determining if an identifier is a digit or not
@@ -100,11 +109,46 @@ protected:
         return std::isdigit(identifier[0]);
     }
 
+    /**
+     *  Sets up a GET instruction depending on global or not global
+     *  @param program_name : The name of the program
+     *  @param variable     : The name of the variable
+     *  @param type_letter  : The type of the variable
+     *  @returns            : The constructed instruction, returns ???? if not found
+     *  @throws             : InvalidType if type letter not supported
+     */
     string create_get_variable_instruction(const string program_name, const string variable, const char type_letter);
+
+    /**
+     *  Sets up a PUT instruction depending on global or not global
+     *  @param program_name : The name of the program
+     *  @param variable     : The name of the variable
+     *  @param type_letter  : The type of the variable
+     *  @returns            : The constructed instruction, returns ???? if not found
+     *  @throws             : InvalidType if type letter not supported
+     */
     string create_put_variable_instruction(const string program_name, const string variable, const char type_letter);
 
+    /**
+     *  Looks up the variable ID in the variable id table
+     *  @param variable : The name of the variable
+     *  @returns        : The enumerated ID of the variable
+     */
     uint32_t get_variable_id(const string variable) const;
 
+    /**
+     *  Determines if a variable is in the global symbol table
+     *  @param variable : The name of the variable
+     *  @returns        : True for global, false for not global
+     */
     bool is_global(const string variable) const;
+
+    /**
+     *  Determines if a type conversion instruction is necessary when working with two types
+     *  @param current_type : The type the last instruction was working with
+     *  @param needed_type  : The type the next instruction is working with
+     *  @returns            : A string with the type instruction, empty if no instruction needed
+     */
+    string convert_type_if_neccessary(TypeSpec * current_type, TypeSpec * needed_type);
 
 };

@@ -1,56 +1,70 @@
+/// Global variables
 int mak1 = 128;
 int mak2 = 256;
 int mak3 = 1;
 int mak4 = -1;
+float mak5 = .1;
 
-void fizzy(int f)
+/**
+ *  Function 1
+ *  Negates the input
+ */
+int fizzy(int f)
 {
-    int y;
-    y = f;
-    return;
+    int negate = f * -1;
+    return negate;
 }
 
-void buzzy(int b)
+/**
+ *  Function 2
+ *  Squares the input
+ */
+int buzzy(int b)
 {
-    int x;
-    x = b;
-    return;
+    int square;
+    square = b;
+    square**;
+    return square;
 }
 
-/// Function
-void main(double args)
+/// Main
+void main()
 {
     /// Initialize variables first
     int fizz_counter = 0;
     int buzz_counter = 0;
-
     int fizz = 5;
     int buzz = 3;
     int fizz_buzz = fizz * buzz;
 
-    /// Change me
-    double d = 15;
+    /// Change me, try values 0, 200, in between, etc
+    double d = 100;
 
-    /// Testing floating point
-    double e = 1.1;
+    /// Testing floating point and signed
+    double e = -1.1;
 
-    while (d > 0)
+    /// While loop
+    while ((d > 0) and (d < 200))   /// Multiple conditions using the "and" operator
     {
+        /// If statement
         if (d % fizz_buzz == 0)
         {
-            /// Square operator
+            /// Square operator, shows working on floating point
             e**;
         }
+        /// Else if statement
         else if (d % fizz == 0)
         {
             /// Unary operator
             fizz_counter++;
         }
+        /// Multiple else if statements, supports infinite, scalable
         else if (d % buzz == 0)
         {
             /// Unary operator
             ++buzz_counter;
         }
+        /// Optional ending else statement
         else
         {
             /// Bit operations
@@ -64,7 +78,9 @@ void main(double args)
         d--;
     }
 
-    fizzy(fizz_counter);
+    /// Call functions and store value in lvalue
+    fizz_counter = fizzy(fizz_counter);
+    buzz_counter = buzzy(buzz_counter);
 
     /// Function return statement
     return;

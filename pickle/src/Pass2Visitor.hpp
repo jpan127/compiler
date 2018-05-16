@@ -48,6 +48,7 @@ public:
     antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
     antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context) override;
     antlrcpp::Any visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context) override;
+    antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context) override;
 
     antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
     antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
@@ -56,8 +57,8 @@ public:
 
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
     antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *context) override;
-    antlrcpp::Any visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context) override;
     antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *context) override;
+    antlrcpp::Any visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context) override;
     antlrcpp::Any visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context) override;
     antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *ctx) override;
 

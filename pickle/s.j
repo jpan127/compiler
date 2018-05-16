@@ -19,144 +19,124 @@
 .field private static mak4 I
 
 
+; floatmak5=.1;
+.field private static mak5 F
+
+
 ; intf
 
 
 ; intb
 
+.method public static fizzy(I)I
+; intfizzy(intf){intnegate=f*-1;returnnegate;}
 
-; doubleargs
+	; negate=f*-1
+	iload 0
+	ldc -1
+	imul
+	istore 1
+	iload 1
+	ireturn
 
-.method public static fizzy(I)V
-; voidfizzy(intf){inty;y=f;return;}
-
-	; Initializing argument to zero - f
-	ldc 0
-	istore 2
-	; y=f
-	iload 2
-
-	istore 3
-
-	return
-
-.limit locals 24
-.limit stack 16
+.limit locals 22
+.limit stack 8
 .end method
-.method public static buzzy(I)V
-; voidbuzzy(intb){intx;x=b;return;}
+.method public static buzzy(I)I
+; intbuzzy(intb){intsquare;square=b;square**;returnsquare;}
 
-	; Initializing argument to zero - b
-	ldc 0
-	istore 2
-	; x=b
-	iload 2
+	; square=b
+	iload 0
+	istore 1
+	; square**
+	iload 1
+	dup
+	imul
+	istore 1
+	iload 1
+	ireturn
 
-	istore 3
-
-	return
-
-.limit locals 24
-.limit stack 16
+.limit locals 22
+.limit stack 8
 .end method
 
 .method public static main([Ljava/lang/String;)V
 
+	; Timer Module Instantiation
 	new RunTimer
 	dup
 	invokenonvirtual RunTimer/<init>()V
 	putstatic        s/_runTimer LRunTimer;
+
 	; mak1=128
 	ldc 128
-
 	putstatic	s/mak1 I
-
 	; mak2=256
 	ldc 256
-
 	putstatic	s/mak2 I
-
 	; mak3=1
 	ldc 1
-
 	putstatic	s/mak3 I
-
 	; mak4=-1
 	ldc -1
-
 	putstatic	s/mak4 I
-
-	; Initializing argument to zero - args
-	ldc2_w 0.0
-	dstore 2
+	; mak5=.1
+	ldc .1
+	putstatic	s/mak5 F
 	; fizz_counter=0
 	ldc 0
-
-	istore 4
-
+	istore 0
 	; buzz_counter=0
 	ldc 0
-
-	istore 5
-
+	istore 1
 	; fizz=5
 	ldc 5
-
-	istore 6
-
+	istore 2
 	; buzz=3
 	ldc 3
-
-	istore 7
-
+	istore 3
 	; fizz_buzz=fizz*buzz
-	iload 6
-
-	iload 7
-
+	iload 2
+	iload 3
 	imul
-	istore 8
+	istore 4
+	; d=100
+	ldc2_w 100.0
+	dstore 5
+	; e=-1.1
+	ldc2_w -1.1
+	dstore 7
 
-	; d=15
-	ldc2_w 15.0
-
-	dstore 9
-
-	; e=1.1
-	ldc2_w 1.1
-
-	dstore 11
-
-
-; while(d>0){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
+; while((d>0)and(d<200)){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
 while_0:
 	; d > 0
-	dload 9
-
+	dload 5
 	d2i
 	ldc 0
-
 	; Exit [while_0] condition
 	if_icmple while_0_end
+	; d < 200
+	dload 5
+	d2i
+	ldc 200
+	; Exit [while_0] condition
+	if_icmpge while_0_end
 ; if(d%fizz_buzz==0){e**;}
 if_1:
 	; d%fizz_buzz == 0
-	dload 9
-
-	iload 8
-
+	dload 5
+	iload 4
 	i2d
 	drem
 	d2i
 	ldc 0
-
 	; Exit [if_1] condition
 	if_icmpne if_1_end
 	; e**
-	dload 11
+	dload 7
 	dup2
 	dmul
-	dstore 11
+	dstore 7
 	; Exit if-else statement
 	goto if_else_end_1
 if_1_end:
@@ -164,22 +144,19 @@ if_1_end:
 ; elseif(d%fizz==0){fizz_counter++;}
 else_if_1_0:
 	; d%fizz == 0
-	dload 9
-
-	iload 6
-
+	dload 5
+	iload 2
 	i2d
 	drem
 	d2i
 	ldc 0
-
 	; Exit [else_if_1_0] condition
 	if_icmpne else_if_1_0_end
 	; fizz_counter++
-	iload 4
+	iload 0
 	iconst_1
 	iadd
-	istore 4
+	istore 0
 	; Exit if-else statement
 	goto if_else_end_1
 else_if_1_0_end:
@@ -187,22 +164,19 @@ else_if_1_0_end:
 ; elseif(d%buzz==0){++buzz_counter;}
 else_if_1_1:
 	; d%buzz == 0
-	dload 9
-
-	iload 7
-
+	dload 5
+	iload 3
 	i2d
 	drem
 	d2i
 	ldc 0
-
 	; Exit [else_if_1_1] condition
 	if_icmpne else_if_1_1_end
 	; ++buzz_counter
-	iload 5
+	iload 1
 	iconst_1
 	iadd
-	istore 5
+	istore 1
 	; Exit if-else statement
 	goto if_else_end_1
 else_if_1_1_end:
@@ -211,50 +185,43 @@ else_if_1_1_end:
 else_1:
 	; mak1=mak1^mak2
 	getstatic	s/mak1 I
-
 	getstatic	s/mak2 I
-
 	ixor
 	putstatic	s/mak1 I
-
 	; mak2=mak2&mak3
 	getstatic	s/mak2 I
-
 	getstatic	s/mak3 I
-
 	iand
 	putstatic	s/mak2 I
-
 	; mak3=mak3<<1
 	getstatic	s/mak3 I
-
 	ldc 1
-
 	ishl
 	putstatic	s/mak3 I
-
 	; mak4=mak4*-2
 	getstatic	s/mak4 I
-
 	ldc -2
-
 	imul
 	putstatic	s/mak4 I
-
 if_else_end_1:
 
 	; d--
-	dload 9
+	dload 5
 	dconst_1
 	dsub
-	dstore 9
+	dstore 5
 	; Jump to start of loop
 	goto while_0
 while_0_end:
 
-	iload 4
-
-	invokestatic s/fizzy(I)V
+	; fizz_counter=fizzy(fizz_counter)
+	iload 0
+	invokestatic s/fizzy(I)I
+	istore 0
+	; buzz_counter=buzzy(buzz_counter)
+	iload 1
+	invokestatic s/buzzy(I)I
+	istore 1
 
 ; Printing results of the program below
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -271,8 +238,19 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	dload 11
+	dload 7
 	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - buzz_counter
+	ldc "buzz_counter : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 1
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
 
@@ -282,7 +260,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	dload 9
+	dload 5
 	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -293,40 +271,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 4
-	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-	aastore
-	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
-
-	; Printing symbol - args
-	ldc "args : %f\n"
-	ldc 1
-	anewarray java/lang/Object
-	dup
-	iconst_0
-	dload 2
-	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
-	aastore
-	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
-
-	; Printing symbol - fizz_buzz
-	ldc "fizz_buzz : %d\n"
-	ldc 1
-	anewarray java/lang/Object
-	dup
-	iconst_0
-	iload 8
-	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
-	aastore
-	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
-
-	; Printing symbol - buzz_counter
-	ldc "buzz_counter : %d\n"
-	ldc 1
-	anewarray java/lang/Object
-	dup
-	iconst_0
-	iload 5
+	iload 0
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -337,7 +282,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 6
+	iload 2
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -348,7 +293,18 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 7
+	iload 3
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - fizz_buzz
+	ldc "fizz_buzz : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 4
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -361,6 +317,17 @@ print_results:
 	iconst_0
 	getstatic	s/mak4 I
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+
+	; Printing symbol - mak5
+	ldc "mak5 : %f\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	getstatic	s/mak5 F
+	invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
 
@@ -403,10 +370,11 @@ print_results:
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+	; Print Elapsed Time
 	getstatic     s/_runTimer LRunTimer;
 	invokevirtual RunTimer.printElapsedTime()V
 	return
 
-.limit locals 42
-.limit stack 88
+.limit locals 36
+.limit stack 64
 .end method

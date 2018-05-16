@@ -86,7 +86,7 @@ protected:
      *  @param context   : Current context or parser rule
      *  @param rule_name : Name of current rule
      */
-    void print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const;
+    bool print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const;
 
     /**
      *  Wrapper for determining if an identifier is a digit or not

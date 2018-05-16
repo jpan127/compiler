@@ -82,6 +82,8 @@ public:
     antlrcpp::Any visitBitExpr(Pcl2Parser::BitExprContext *context) override;
     antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context) override;
     antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context) override;
+    antlrcpp::Any visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context) override;
+    antlrcpp::Any visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context) override;
 
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
 
