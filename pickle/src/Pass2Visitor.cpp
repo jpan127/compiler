@@ -20,7 +20,7 @@ using namespace wci::intermediate::symtabimpl;
  *      XSUB instructions will subtract bottom operand - top operand, with bottom operand as the first operand pushed onto the stack
  */
 
-Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : PassVisitor(), program_name(fname), j_file(j_file), debug_flag(debug)
+Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : PassVisitor(2), program_name(fname), j_file(j_file), debug_flag(debug)
 {
     /// Empty
 }
@@ -136,19 +136,13 @@ void Pass2Visitor::emit_symbol_table()
 
 antlrcpp::Any Pass2Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context)
 {
-    if (!print_debug_context(2, context, "visitCompilationUnit"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitContext * context)
 {
-    if (!print_debug_context(2, context, "visitTranslationUnit"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     return visitChildren(context);
 }
 
@@ -160,10 +154,7 @@ antlrcpp::Any Pass2Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
 
 antlrcpp::Any Pass2Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context)
 {
-    if (!print_debug_context(2, context, "visitTypeSpecifier"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Nothing yet
@@ -180,10 +171,7 @@ antlrcpp::Any Pass2Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext 
 
 antlrcpp::Any Pass2Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *context)
 {
-    if (!print_debug_context(2, context, "visitDeclaration"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Nothing yet
@@ -194,20 +182,14 @@ antlrcpp::Any Pass2Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
 
 antlrcpp::Any Pass2Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context)
 {
-    if (!print_debug_context(2, context, "visitFunctionDeclaration"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     return visitChildren(context);
 }
 
 antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context)
 {
-    if (!print_debug_context(2, context, "visitFunctionDefinition"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     current_function = context->Identifier()->toString();
 
     bool is_main = context->Identifier()->getText() == "main";
@@ -249,10 +231,7 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
 antlrcpp::Any Pass2Visitor::visitFunctionCall(Pcl2Parser::FunctionCallContext *context)
 {
-    if (!print_debug_context(2, context, "visitFunctionCall"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     if (context->identifierList())
     {
@@ -267,10 +246,7 @@ antlrcpp::Any Pass2Visitor::visitFunctionCall(Pcl2Parser::FunctionCallContext *c
 
 antlrcpp::Any Pass2Visitor::visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context)
 {
-    if (!print_debug_context(2, context, "visitFunctionReturn"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     if (context->identifierList())
     {
@@ -291,10 +267,7 @@ antlrcpp::Any Pass2Visitor::visitFunctionReturn(Pcl2Parser::FunctionReturnContex
 
 antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext * context)
 {
-    if (!print_debug_context(2, context, "visitAssignmentExpression"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  RHS expression will take care of emitting its own instructions
@@ -364,10 +337,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
 
 antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitPrimExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  If variable : emit getstatic
@@ -454,10 +424,7 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
 
 antlrcpp::Any Pass2Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitMulDivExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Visits children expressions first which will push to stack
@@ -499,10 +466,7 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
 
 antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitAddminExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Visits children expressions first which will push to stack
@@ -544,10 +508,7 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
 
 antlrcpp::Any Pass2Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitBitExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Visits children expressions first which will push to stack
@@ -589,10 +550,7 @@ antlrcpp::Any Pass2Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
 
 antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitBasicConditionalExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Children emit instructions first
@@ -650,10 +608,7 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicCondition
 
 antlrcpp::Any Pass2Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitConnectedConditionalExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Top level conditional expression
@@ -690,10 +645,7 @@ antlrcpp::Any Pass2Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedC
 
 antlrcpp::Any Pass2Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitNegatedConditionalExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Nothing yet
@@ -704,10 +656,7 @@ antlrcpp::Any Pass2Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedCondi
 
 antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context)
 {
-    if (!print_debug_context(2, context, "visitParenthesizedConditionalExpr"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Nothing yet
@@ -751,10 +700,7 @@ antlrcpp::Any Pass2Visitor::visitJumpStatement(Pcl2Parser::JumpStatementContext 
 
 antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitAssignmentStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Nothing yet
@@ -765,10 +711,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentState
 
 antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitIterationStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Emit start of loop label
@@ -811,10 +754,7 @@ antlrcpp::Any Pass2Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
 
 antlrcpp::Any Pass2Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitIfElseStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Top level if else statement node
@@ -838,10 +778,7 @@ antlrcpp::Any Pass2Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementCont
 
 antlrcpp::Any Pass2Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitIfStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Emit start of if label
@@ -887,10 +824,7 @@ antlrcpp::Any Pass2Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *con
 
 antlrcpp::Any Pass2Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitElseIfStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Emit start of else if label
@@ -936,10 +870,7 @@ antlrcpp::Any Pass2Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementCont
 
 antlrcpp::Any Pass2Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitElseStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Emit start of else label
@@ -965,10 +896,7 @@ antlrcpp::Any Pass2Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext 
 
 antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitUnaryIncrementStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Retrieve variable
@@ -1001,10 +929,7 @@ antlrcpp::Any Pass2Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrem
 
 antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitUnaryDecrementStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Retrieve variable
@@ -1053,10 +978,7 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
 
 antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context)
 {
-    if (!print_debug_context(2, context, "visitUnarySquareStatement"))
-    {
-        return nullptr;
-    }
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     /**
      *  Retrieve variable twice

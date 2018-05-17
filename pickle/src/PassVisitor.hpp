@@ -19,6 +19,13 @@ using namespace wci::intermediate;
 
 
 
+/// Common code to all visit nodes, not the best but could not find a better solution
+#define PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR()                 \
+    if (!print_debug_context(context, string(__FUNCTION__)))   \
+    {                                                           \
+        return nullptr;                                         \
+    }
+
 /**
  *  Class that Pass1Visitor and Pass2Visitor inherit from
  *  Contains data structures used by all passes and generic helper functions
@@ -38,10 +45,13 @@ protected:
     } symbol_S;
 
     /// Protected constructor
-    PassVisitor() { }
+    PassVisitor(const uint8_t pass_number) : pass_number(pass_number) { }
 
     /// Virtual destructor
     virtual ~PassVisitor() { }
+
+    /// Enumerates the pass number
+    const uint8_t pass_number;
 
     /// Just a tab character
     static const char TAB = '\t';
@@ -93,11 +103,10 @@ protected:
 
     /**
      *  Prints the current visit context information if [debug_flag] is true
-     *  @param pass_num  : The current pass number
      *  @param context   : Current context or parser rule
      *  @param rule_name : Name of current rule
      */
-    bool print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const;
+    bool print_debug_context(antlr4::ParserRuleContext * context, const std::string & rule_name) const;
 
     /**
      *  Wrapper for determining if an identifier is a digit or not

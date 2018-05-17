@@ -81,7 +81,7 @@ TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * 
     }
 }
 
-bool PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRuleContext * context, const std::string & rule_name) const
+bool PassVisitor::print_debug_context(antlr4::ParserRuleContext * context, const std::string & rule_name) const
 {
     constexpr size_t longest_name = 35;
     const string error_prefix = "<missing";
@@ -93,7 +93,7 @@ bool PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRule
     {
         cout << "-----------------------------------------------------------" << endl;
         cout << "[PASS"
-             << std::to_string(pass_num)
+             << std::to_string(pass_number)
              << "][" 
              << context->children.size() 
              << "][COMPILATION ERROR] " 
@@ -108,7 +108,7 @@ bool PassVisitor::print_debug_context(const uint8_t pass_num, antlr4::ParserRule
     else
     {
         cout << "[PASS"
-             << std::to_string(pass_num)
+             << std::to_string(pass_number)
              << "][" 
              << context->children.size() 
              << "] " 
