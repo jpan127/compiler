@@ -66,6 +66,7 @@ CPPPATH = Flatten([
     get_all_subdirectories("antlr4-runtime"),
     "src", 
     "src/wci",
+    get_all_subdirectories("src/to-be-integrated"),
     "generated",
 ])
 

@@ -54,14 +54,10 @@ struct TypeValue
     SymTab    *symtab;
     vector<SymTabEntry *> v;
 
-    TypeValue()
-        : value(nullptr), typespec(nullptr), symtab(nullptr) {}
-    TypeValue(DataValue *value)
-        : value(value), typespec(nullptr), symtab(nullptr) {}
-    TypeValue(TypeSpec *typespec)
-        : value(nullptr), typespec(typespec), symtab(nullptr) {}
-    TypeValue(SymTab *symtab)
-        : value(nullptr), typespec(nullptr), symtab(symtab) {}
+    TypeValue()                   : value(nullptr) , typespec(nullptr)  , symtab(nullptr) {}
+    TypeValue(DataValue *value)   : value(value)   , typespec(nullptr)  , symtab(nullptr) {}
+    TypeValue(TypeSpec *typespec) : value(nullptr) , typespec(typespec) , symtab(nullptr) {}
+    TypeValue(SymTab *symtab)     : value(nullptr) , typespec(nullptr)  , symtab(symtab)  {}
 
     ~TypeValue() {}
 };
