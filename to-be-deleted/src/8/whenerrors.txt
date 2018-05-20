@@ -1,6 +1,0 @@
-BEGIN
-    WHEN
-        i := 3 => k > 5;
-        m = n  :  m := 2*n;
-    END;
-END.
