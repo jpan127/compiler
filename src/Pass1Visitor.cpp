@@ -201,13 +201,10 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *cont
         }
         else
         {
-            const PassVisitor::symbol_S symbol = 
-            {
-                .id = variable_id->id,
-                .type_letter = context->type_letter,
-                .type = context->type,
-            };
-            PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = symbol;
+            PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
+                variable_name,
+                ::intermediate::Symbol(variable_id->id, context->type_letter, context->type)
+            );
         }
     }
     catch (MissingSymbol const & error)
@@ -293,13 +290,10 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(CmmParser::FunctionDeclarat
             }
             else
             {
-                const PassVisitor::symbol_S symbol = 
-                {
-                    .id = variable_id->id,
-                    .type_letter = context->type_letter,
-                    .type = context->type,
-                };
-                PassVisitor::variable_id_map[PassVisitor::current_function][variable_name] = symbol;
+                PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
+                    variable_name,
+                    ::intermediate::Symbol(variable_id->id, context->type_letter, context->type)
+                );
             }
         }
         catch (MissingSymbol const & error)
@@ -325,15 +319,14 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitio
 
     try 
     {
-        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) != PassVisitor::variable_id_map.end()
-            && PassVisitor::function_definition_map.find(PassVisitor::current_function) !=
-               PassVisitor::function_definition_map.end()) 
+        if (PassVisitor::variable_id_map.find(PassVisitor::current_function)         != PassVisitor::variable_id_map.end() && 
+            PassVisitor::function_definition_map.find(PassVisitor::current_function) != PassVisitor::function_definition_map.end()) 
         {
             throw CompilerError("Function already defined : " + PassVisitor::current_function);
         } 
         else 
         {
-            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map<string, symbol_S>();
+            PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map<string, ::intermediate::Symbol>();
             PassVisitor::function_definition_map[PassVisitor::current_function] = PassVisitor::current_function + "(";
         }
     }

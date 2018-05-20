@@ -58,7 +58,7 @@ namespace intermediate
         const SymbolPtr & create_and_add_symbol(const std::string & name,
             const uint32_t id, 
             const char type_letter, 
-            const TypeSpec * type);
+            TypeSpec * type);
 
         /**
          *  Looks up a symbol in the table

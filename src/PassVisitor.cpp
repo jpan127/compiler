@@ -41,9 +41,9 @@ const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
     { &Predefined::double_type , 'd' },
 };
 
-unordered_map <string, unordered_map <string, PassVisitor::symbol_S>> PassVisitor::variable_id_map =
+unordered_map <string, unordered_map <string, ::intermediate::Symbol>> PassVisitor::variable_id_map =
 {
-    { "global" , unordered_map<string, PassVisitor::symbol_S>() },
+    { "global" , unordered_map <string, ::intermediate::Symbol> () },
 };
 
 unordered_map <string, string> PassVisitor::function_definition_map;
@@ -199,10 +199,10 @@ string PassVisitor::create_get_variable_instruction(const string program_name, c
                 {
                     switch (type_letter)
                     {
-                        case 'I': instruction += "iload " + std::to_string(symbols.second.id); break;
-                        case 'F': instruction += "fload " + std::to_string(symbols.second.id); break;
-                        case 'D': instruction += "dload " + std::to_string(symbols.second.id); break;
-                        case 'L': instruction += "lload " + std::to_string(symbols.second.id); break;
+                        case 'I': instruction += "iload " + std::to_string(symbols.second.get_id()); break;
+                        case 'F': instruction += "fload " + std::to_string(symbols.second.get_id()); break;
+                        case 'D': instruction += "dload " + std::to_string(symbols.second.get_id()); break;
+                        case 'L': instruction += "lload " + std::to_string(symbols.second.get_id()); break;
                         default : 
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
@@ -233,10 +233,10 @@ string PassVisitor::create_put_variable_instruction(const string program_name, c
                 {
                     switch (type_letter)
                     {
-                        case 'I': instruction += "istore " + std::to_string(symbols.second.id); break;
-                        case 'F': instruction += "fstore " + std::to_string(symbols.second.id); break;
-                        case 'D': instruction += "dstore " + std::to_string(symbols.second.id); break;
-                        case 'L': instruction += "lstore " + std::to_string(symbols.second.id); break;
+                        case 'I': instruction += "istore " + std::to_string(symbols.second.get_id()); break;
+                        case 'F': instruction += "fstore " + std::to_string(symbols.second.get_id()); break;
+                        case 'D': instruction += "dstore " + std::to_string(symbols.second.get_id()); break;
+                        case 'L': instruction += "lstore " + std::to_string(symbols.second.get_id()); break;
                         default : 
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
@@ -257,7 +257,7 @@ uint32_t PassVisitor::get_variable_id(const string variable) const
         {
             if (symbols.first == variable)
             {
-                return symbols.second.id;
+                return symbols.second.get_id();
             }
         }
     }

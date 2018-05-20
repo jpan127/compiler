@@ -13,6 +13,7 @@
 #include "CmmVisitor.h"
 
 #include "common.hpp"
+#include "Symbol.hpp"
 
 using namespace wci;
 using namespace wci::intermediate;
@@ -36,14 +37,6 @@ class PassVisitor
 {
 protected:
 
-    /// Symbol information / attributes
-    typedef struct
-    {
-        uint32_t id;
-        char type_letter;
-        TypeSpec * type;
-    } symbol_S;
-
     /// Protected constructor
     PassVisitor(const uint8_t pass_number) : pass_number(pass_number) { }
 
@@ -56,6 +49,8 @@ protected:
     /// Just a tab character
     static const char TAB = '\t';
 
+    /// @TODO : Hopefully these data structures can be moved to the symbol table modules
+
     /// Maps string types to a pointer to the typespec
     static const unordered_map <string, TypeSpec **> type_map;
 
@@ -66,7 +61,7 @@ protected:
     static const unordered_map <TypeSpec **, char> instruction_prefix_map;
 
     /// Maps scope names to maps of symbol names to symbol attributes
-    static unordered_map <string, unordered_map <string, PassVisitor::symbol_S>> variable_id_map;
+    static unordered_map <string, unordered_map <string, ::intermediate::Symbol>> variable_id_map;
 
     /// Maps function names to their function invoke signature
     static unordered_map <string, string> function_definition_map;

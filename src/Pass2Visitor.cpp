@@ -87,14 +87,14 @@ void Pass2Visitor::emit_symbol_table()
                 j_file << TAB << "; Printing symbol - " << symbol.first << endl;
                 j_file << TAB << "ldc \"" + symbol.first << " : ";
 
-                switch (symbol.second.type_letter)
+                switch (symbol.second.get_type_letter())
                 {
                     case 'F': j_file << "%f\\n\"" << endl; break;
                     case 'D': j_file << "%f\\n\"" << endl; break;
                     case 'I': j_file << "%d\\n\"" << endl; break;
                     case 'L': j_file << "%d\\n\"" << endl; break;
                     default :
-                        throw InvalidType(string("Invalid type letter found : ") + string(1, symbol.second.type_letter));
+                        throw InvalidType(string("Invalid type letter found : ") + string(1, symbol.second.get_type_letter()));
                 }
 
                 j_file << TAB << "ldc 1"                      << endl;
@@ -102,16 +102,16 @@ void Pass2Visitor::emit_symbol_table()
                 j_file << TAB << "dup"                        << endl;
                 j_file << TAB << "iconst_0"                   << endl;
 
-                j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second.type_letter) << endl;
+                j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second.get_type_letter()) << endl;
 
-                switch (symbol.second.type_letter)
+                switch (symbol.second.get_type_letter())
                 {
                     case 'F': j_file << TAB << "invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;"     << endl; break;
                     case 'D': j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;"   << endl; break;
                     case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
                     case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
                     default : 
-                        throw InvalidType(string("Invalid type letter found : ") + string(1, symbol.second.type_letter));
+                        throw InvalidType(string("Invalid type letter found : ") + string(1, symbol.second.get_type_letter()));
                 }
 
                 j_file << TAB << "aastore" << endl;
