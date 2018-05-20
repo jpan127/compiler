@@ -94,6 +94,8 @@ env = Environment(
     CXXFLAGS   = [
         "-std=c++11",
         "-g",
+        "-Wall",
+        "-Wno-trigraphs",
     ],
 )
 

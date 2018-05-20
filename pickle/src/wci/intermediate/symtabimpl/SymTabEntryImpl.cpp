@@ -56,7 +56,7 @@ void SymTabEntryImpl::initialize()
         DefinitionImpl::UNDEFINED,
     };
 
-    for (int i = 0; i < defn_words.size(); i++)
+    for (uint32_t i = 0; i < defn_words.size(); i++)
     {
         DEFINITION_WORDS[defns[i]] = defn_words[i];
     }

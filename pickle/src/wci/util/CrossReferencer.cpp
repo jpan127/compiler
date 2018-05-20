@@ -102,7 +102,7 @@ void CrossReferencer::print_symtab(SymTab *symtab, vector<TypeSpec *>& record_ty
         printf(NAME_FORMAT.c_str(), entry->get_name().c_str());
         if (line_numbers.size() > 0)
         {
-            for (int line_number : line_numbers)
+            for (size_t line_number : line_numbers)
             {
                 printf(NUMBER_FORMAT.c_str(), line_number);
             }

@@ -107,7 +107,7 @@ void ICodeNodeImpl::initialize()
         "WRITE_PARM",
     };
 
-    for (int i = 0; i < types.size(); i++)
+    for (size_t i = 0; i < types.size(); i++)
     {
         NODE_TYPE_NAMES[types[i]] = type_names[i];
     }
@@ -126,7 +126,7 @@ void ICodeNodeImpl::initialize()
         "line", "id", "level", "value", "type_id",
     };
 
-    for (int i = 0; i < keys.size(); i++)
+    for (uint32_t i = 0; i < keys.size(); i++)
     {
         NODE_KEY_NAMES[keys[i]] = key_names[i];
     }

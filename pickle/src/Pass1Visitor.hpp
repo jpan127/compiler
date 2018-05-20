@@ -19,30 +19,6 @@ using namespace wci::intermediate;
 
 class Pass1Visitor : public PassVisitor, public Pcl2BaseVisitor
 {
-private:
-
-    /// Symbol Table Stack
-    SymTabStack *symtab_stack;
-
-    /// Program ID
-    SymTabEntry *program_id;
-
-    /// Output file    
-    ofstream j_file;
-
-    /// Flag to print debug messages or not
-    const bool debug_flag;
-
-    /// Name of current program
-    const string program_name;
-
-    /**
-     *  Looks up the symbol type of context->Identifier()->getText()
-     *  Stores [context->type] and [context->type_letter]
-     *  @param context : The context object to look up and modify
-     *  @throws        : InvalidType
-     */
-    void lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter);
 
 public:
 
@@ -86,6 +62,31 @@ public:
     antlrcpp::Any visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context) override;
 
     antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
+
+private:
+
+    /// Name of current program
+    const string program_name;
+
+    /// Symbol Table Stack
+    SymTabStack *symtab_stack;
+
+    /// Program ID
+    SymTabEntry *program_id;
+
+    /// Output file    
+    ofstream j_file;
+
+    /// Flag to print debug messages or not
+    const bool debug_flag;
+
+    /**
+     *  Looks up the symbol type of context->Identifier()->getText()
+     *  Stores [context->type] and [context->type_letter]
+     *  @param context : The context object to look up and modify
+     *  @throws        : InvalidType
+     */
+    void lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter);
 
 };
 

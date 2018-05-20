@@ -17,7 +17,13 @@ using namespace wci::util;
 
 Pass1Visitor::~Pass1Visitor() = default;
 
-Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : PassVisitor(1), program_name(fname), program_id(nullptr), j_file(nullptr), debug_flag(debug)
+Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : 
+    PassVisitor(1),
+    program_name(fname),
+    symtab_stack(nullptr),
+    program_id(nullptr), 
+    j_file(nullptr), 
+    debug_flag(debug)
 {
     // Create and initialize the symbol table stack.
     symtab_stack = SymTabFactory::create_symtab_stack();
@@ -240,18 +246,24 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
     j_file << "\n; " << context->getText() << "\n" << endl;
 
     vector <Pcl2Parser::TypeSpecifierContext *> type_specifiers = context->typeSpecifier();
-    for (int i = 0; i < type_specifiers.size(); ++i) {
+    for (uint32_t i = 0; i < type_specifiers.size(); ++i)
+    {
 
-        try {
-            if (type_map.find(type_specifiers[i]->getText()) != type_map.end()) {
+        try 
+        {
+            if (type_map.find(type_specifiers[i]->getText()) != type_map.end()) 
+            {
                 cout << TAB << type_specifiers[i]->getText() << endl;
                 context->type = *(type_map.at(type_specifiers[i]->getText()));
                 context->type_letter = (char) toupper(type_specifiers[i]->getText()[0]);
-            } else {
+            } 
+            else 
+            {
                 throw InvalidType("Type not supported : " + context->getText());
             }
         }
-        catch (InvalidType const &error) {
+        catch (InvalidType const &error) 
+        {
             error.print_and_exit();
         }
 
@@ -301,7 +313,8 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context) {
+antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context) 
+{
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     std::string function_name = context->Identifier()->toString();
@@ -310,17 +323,22 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     PassVisitor::current_function = function_name;
 
-    try {
+    try 
+    {
         if (PassVisitor::variable_id_map.find(PassVisitor::current_function) != PassVisitor::variable_id_map.end()
             && PassVisitor::function_definition_map.find(PassVisitor::current_function) !=
-               PassVisitor::function_definition_map.end()) {
+               PassVisitor::function_definition_map.end()) 
+        {
             throw CompilerError("Function already defined : " + PassVisitor::current_function);
-        } else {
+        } 
+        else 
+        {
             PassVisitor::variable_id_map[PassVisitor::current_function] = unordered_map<string, symbol_S>();
             PassVisitor::function_definition_map[PassVisitor::current_function] = PassVisitor::current_function + "(";
         }
     }
-    catch (CompilerError const &error) {
+    catch (CompilerError const &error) 
+    {
         error.print_and_exit();
     }
 
@@ -330,9 +348,11 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
     //create a header for pass2visitor to use when creating the method
     context->function_header = ".method public static " + function_name + "(";
 
-    if (context->parameterTypeList()->functionDeclaration()) {
+    if (context->parameterTypeList()->functionDeclaration()) 
+    {
         //add each function parameter to jasmin function header
-        for (auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) {
+        for (auto variable: context->parameterTypeList()->functionDeclaration()->typeSpecifier()) 
+        {
             string var_type = variable->getText();
             function_parameters += (char) toupper(var_type[0]);
         }
@@ -340,22 +360,26 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
 
     //close parameter parenthesis and declare function return type
     context->function_header += function_parameters + ")" + function_return_type;
-    if(PassVisitor::current_function!= "main")
+    if (PassVisitor::current_function!= "main") 
+    {
         PassVisitor::function_definition_map[PassVisitor::current_function] += function_parameters + ")" + function_return_type;
-    else{
+    }
+    else
+    {
         PassVisitor::function_definition_map[PassVisitor::current_function] += "[Ljava/lang/String;)";
     }
     //add comment of function signature for jasmin file
     context->function_header += "\n; " + context->getText() + "\n";
 
     //create a local symbal table for the function
-    SymTab *local_symTab = symtab_stack->push();
+    symtab_stack->push();
 
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
 
     std::cout << TAB << "Size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
-    for (auto variable:symtab_stack->get_local_symtab()->sorted_entries()) {
+    for (auto variable:symtab_stack->get_local_symtab()->sorted_entries()) 
+    {
         std::cout << TAB << variable->get_name() << endl;
     }
 

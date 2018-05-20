@@ -41,7 +41,7 @@ void TypeSpecImpl::initialize()
         "scalar", "enumeration", "subrange", "array", "record",
     };
 
-    for (int i = 0; i < form_keys.size(); i++)
+    for (size_t i = 0; i < form_keys.size(); i++)
     {
         TYPE_FORM_NAMES[form_keys[i]] = form_names[i];
     }

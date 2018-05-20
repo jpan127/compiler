@@ -82,7 +82,7 @@ SymTabEntry *SymTabStackImpl::lookup(const string name) const
     SymTabEntry *found_entry = nullptr;
 
     // Search the current and enclosing scopes.
-    for (int i = current_nesting_level;
+    for (size_t i = current_nesting_level;
          (i >= 0) && (found_entry == nullptr); --i)
     {
         found_entry = stack[i]->lookup(name);
