@@ -1,4 +1,4 @@
-grammar Pcl2;
+grammar Cmm;
 
 @header {
 #include "wci/intermediate/symtab.h"

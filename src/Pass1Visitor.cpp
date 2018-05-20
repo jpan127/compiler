@@ -75,7 +75,7 @@ void Pass1Visitor::lookup_symbol_type(string const & variable, TypeSpec ** type,
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context)
+antlrcpp::Any Pass1Visitor::visitCompilationUnit(CmmParser::CompilationUnitContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -108,7 +108,7 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(Pcl2Parser::CompilationUnitCont
     return value;
 }
 
-antlrcpp::Any Pass1Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitContext *context)
+antlrcpp::Any Pass1Visitor::visitTranslationUnit(CmmParser::TranslationUnitContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     return visitChildren(context);
@@ -120,7 +120,7 @@ antlrcpp::Any Pass1Visitor::visitTranslationUnit(Pcl2Parser::TranslationUnitCont
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context)
+antlrcpp::Any Pass1Visitor::visitTypeSpecifier(CmmParser::TypeSpecifierContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     return visitChildren(context);
@@ -132,7 +132,7 @@ antlrcpp::Any Pass1Visitor::visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext 
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *context)
+antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -238,14 +238,14 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(Pcl2Parser::DeclarationContext *con
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context)
+antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(CmmParser::FunctionDeclarationContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     // Make a comment as to what the declaration is
     j_file << "\n; " << context->getText() << "\n" << endl;
 
-    vector <Pcl2Parser::TypeSpecifierContext *> type_specifiers = context->typeSpecifier();
+    vector <CmmParser::TypeSpecifierContext *> type_specifiers = context->typeSpecifier();
     for (uint32_t i = 0; i < type_specifiers.size(); ++i)
     {
 
@@ -313,7 +313,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(Pcl2Parser::FunctionDeclara
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext * context) 
+antlrcpp::Any Pass1Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitionContext * context) 
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -401,7 +401,7 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(Pcl2Parser::FunctionDefiniti
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
+antlrcpp::Any Pass1Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -469,7 +469,7 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(Pcl2Parser::PrimExprContext *context)
     return context->type;
 }
 
-antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *context)
+antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
 {
     static const set <string> operator_set = 
     {
@@ -516,7 +516,7 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(Pcl2Parser::MulDivExprContext *conte
     return visitChildren(context);   
 }
 
-antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *context)
+antlrcpp::Any Pass1Visitor::visitAddminExpr(CmmParser::AddminExprContext *context)
 {
     static const set <string> operator_set = 
     {
@@ -563,7 +563,7 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(Pcl2Parser::AddminExprContext *conte
     return nullptr;
 }
 
-antlrcpp::Any Pass1Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
+antlrcpp::Any Pass1Visitor::visitBitExpr(CmmParser::BitExprContext *context)
 {
     static const set <string> operator_set = 
     {
@@ -623,7 +623,7 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(Pcl2Parser::BitExprContext *context)
     return nullptr;
 }
 
-antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context)
+antlrcpp::Any Pass1Visitor::visitAssignmentExpression(CmmParser::AssignmentExpressionContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -675,7 +675,7 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(Pcl2Parser::AssignmentExpr
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext * context)
+antlrcpp::Any Pass1Visitor::visitBasicConditionalExpr(CmmParser::BasicConditionalExprContext * context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -709,7 +709,7 @@ antlrcpp::Any Pass1Visitor::visitBasicConditionalExpr(Pcl2Parser::BasicCondition
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext * context)
+antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(CmmParser::ConnectedConditionalExprContext * context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -740,7 +740,7 @@ antlrcpp::Any Pass1Visitor::visitConnectedConditionalExpr(Pcl2Parser::ConnectedC
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context)
+antlrcpp::Any Pass1Visitor::visitNegatedConditionalExpr(CmmParser::NegatedConditionalExprContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -750,7 +750,7 @@ antlrcpp::Any Pass1Visitor::visitNegatedConditionalExpr(Pcl2Parser::NegatedCondi
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context)
+antlrcpp::Any Pass1Visitor::visitParenthesizedConditionalExpr(CmmParser::ParenthesizedConditionalExprContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -766,20 +766,20 @@ antlrcpp::Any Pass1Visitor::visitParenthesizedConditionalExpr(Pcl2Parser::Parent
  *                                                           *
  */////////////////////////////////////////////////////////////
 
-antlrcpp::Any Pass1Visitor::visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext * context)
+antlrcpp::Any Pass1Visitor::visitAssignmentStatement(CmmParser::AssignmentStatementContext * context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitCompoundStatement(Pcl2Parser::CompoundStatementContext * context)
+antlrcpp::Any Pass1Visitor::visitCompoundStatement(CmmParser::CompoundStatementContext * context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitIterationStatement(Pcl2Parser::IterationStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitIterationStatement(CmmParser::IterationStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -792,12 +792,12 @@ antlrcpp::Any Pass1Visitor::visitIterationStatement(Pcl2Parser::IterationStateme
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitIfElseStatement(CmmParser::IfElseStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     // Enumerate each else if statement
-    vector <Pcl2Parser::ElseIfStatementContext *> else_ifs = context->elseIfStatement();
+    vector <CmmParser::ElseIfStatementContext *> else_ifs = context->elseIfStatement();
     for (uint32_t i = 0; i < else_ifs.size(); i++)
     {
         else_ifs[i]->id = i;
@@ -806,7 +806,7 @@ antlrcpp::Any Pass1Visitor::visitIfElseStatement(Pcl2Parser::IfElseStatementCont
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitIfStatement(CmmParser::IfStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -819,7 +819,7 @@ antlrcpp::Any Pass1Visitor::visitIfStatement(Pcl2Parser::IfStatementContext *con
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitElseIfStatement(CmmParser::ElseIfStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -835,23 +835,13 @@ antlrcpp::Any Pass1Visitor::visitElseIfStatement(Pcl2Parser::ElseIfStatementCont
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitElseStatement(Pcl2Parser::ElseStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitElseStatement(CmmParser::ElseStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context)
-{
-    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-    // Look up type of this expression in the symbol table stack
-    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
-
-    return visitChildren(context);
-}
-
-antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(CmmParser::UnaryIncrementStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
@@ -861,7 +851,17 @@ antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrem
     return visitChildren(context);
 }
 
-antlrcpp::Any Pass1Visitor::visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context)
+antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(CmmParser::UnaryDecrementStatementContext *context)
+{
+    PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+    // Look up type of this expression in the symbol table stack
+    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+
+    return visitChildren(context);
+}
+
+antlrcpp::Any Pass1Visitor::visitUnarySquareStatement(CmmParser::UnarySquareStatementContext *context)
 {
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 

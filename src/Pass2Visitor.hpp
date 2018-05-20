@@ -8,15 +8,15 @@
 #include "wci/intermediate/SymTabEntry.h"
 #include "wci/intermediate/TypeSpec.h"
 
-#include "Pcl2BaseVisitor.h"
+#include "CmmBaseVisitor.h"
 #include "antlr4-runtime.h"
-#include "Pcl2Visitor.h"
+#include "CmmVisitor.h"
 #include "PassVisitor.hpp"
 
 using namespace wci;
 using namespace wci::intermediate;
 
-class Pass2Visitor : public PassVisitor, public Pcl2BaseVisitor
+class Pass2Visitor : public PassVisitor, public CmmBaseVisitor
 {
 private:
 
@@ -40,39 +40,39 @@ public:
     /// Destructor
     virtual ~Pass2Visitor();
 
-    antlrcpp::Any visitCompilationUnit(Pcl2Parser::CompilationUnitContext *context) override;
-    antlrcpp::Any visitTranslationUnit(Pcl2Parser::TranslationUnitContext *context) override;
+    antlrcpp::Any visitCompilationUnit(CmmParser::CompilationUnitContext *context) override;
+    antlrcpp::Any visitTranslationUnit(CmmParser::TranslationUnitContext *context) override;
 
-    antlrcpp::Any visitTypeSpecifier(Pcl2Parser::TypeSpecifierContext *context) override;
-    antlrcpp::Any visitDeclaration(Pcl2Parser::DeclarationContext *context) override;
-    antlrcpp::Any visitFunctionDefinition(Pcl2Parser::FunctionDefinitionContext *context) override;
-    antlrcpp::Any visitFunctionCall(Pcl2Parser::FunctionCallContext *context) override;
-    antlrcpp::Any visitFunctionDeclaration(Pcl2Parser::FunctionDeclarationContext *context) override;
-    antlrcpp::Any visitFunctionReturn(Pcl2Parser::FunctionReturnContext *context) override;
+    antlrcpp::Any visitTypeSpecifier(CmmParser::TypeSpecifierContext *context) override;
+    antlrcpp::Any visitDeclaration(CmmParser::DeclarationContext *context) override;
+    antlrcpp::Any visitFunctionDefinition(CmmParser::FunctionDefinitionContext *context) override;
+    antlrcpp::Any visitFunctionCall(CmmParser::FunctionCallContext *context) override;
+    antlrcpp::Any visitFunctionDeclaration(CmmParser::FunctionDeclarationContext *context) override;
+    antlrcpp::Any visitFunctionReturn(CmmParser::FunctionReturnContext *context) override;
 
-    antlrcpp::Any visitPrimExpr(Pcl2Parser::PrimExprContext *context) override;
-    antlrcpp::Any visitMulDivExpr(Pcl2Parser::MulDivExprContext *context) override;
-    antlrcpp::Any visitAddminExpr(Pcl2Parser::AddminExprContext *context) override;
-    antlrcpp::Any visitBitExpr(Pcl2Parser::BitExprContext *context) override;
+    antlrcpp::Any visitPrimExpr(CmmParser::PrimExprContext *context) override;
+    antlrcpp::Any visitMulDivExpr(CmmParser::MulDivExprContext *context) override;
+    antlrcpp::Any visitAddminExpr(CmmParser::AddminExprContext *context) override;
+    antlrcpp::Any visitBitExpr(CmmParser::BitExprContext *context) override;
 
-    antlrcpp::Any visitAssignmentExpression(Pcl2Parser::AssignmentExpressionContext *context) override;
-    antlrcpp::Any visitBasicConditionalExpr(Pcl2Parser::BasicConditionalExprContext *context) override;
-    antlrcpp::Any visitConnectedConditionalExpr(Pcl2Parser::ConnectedConditionalExprContext *context) override;
-    antlrcpp::Any visitNegatedConditionalExpr(Pcl2Parser::NegatedConditionalExprContext *context) override;
-    antlrcpp::Any visitParenthesizedConditionalExpr(Pcl2Parser::ParenthesizedConditionalExprContext *context) override;
-    antlrcpp::Any visitJumpStatement(Pcl2Parser::JumpStatementContext *ctx) override;
+    antlrcpp::Any visitAssignmentExpression(CmmParser::AssignmentExpressionContext *context) override;
+    antlrcpp::Any visitBasicConditionalExpr(CmmParser::BasicConditionalExprContext *context) override;
+    antlrcpp::Any visitConnectedConditionalExpr(CmmParser::ConnectedConditionalExprContext *context) override;
+    antlrcpp::Any visitNegatedConditionalExpr(CmmParser::NegatedConditionalExprContext *context) override;
+    antlrcpp::Any visitParenthesizedConditionalExpr(CmmParser::ParenthesizedConditionalExprContext *context) override;
+    antlrcpp::Any visitJumpStatement(CmmParser::JumpStatementContext *ctx) override;
 
-    antlrcpp::Any visitIterationStatement(Pcl2Parser::IterationStatementContext *context) override;
-    antlrcpp::Any visitAssignmentStatement(Pcl2Parser::AssignmentStatementContext *context) override;
+    antlrcpp::Any visitIterationStatement(CmmParser::IterationStatementContext *context) override;
+    antlrcpp::Any visitAssignmentStatement(CmmParser::AssignmentStatementContext *context) override;
 
-    antlrcpp::Any visitIfElseStatement(Pcl2Parser::IfElseStatementContext *context) override;
-    antlrcpp::Any visitIfStatement(Pcl2Parser::IfStatementContext *context) override;
-    antlrcpp::Any visitElseIfStatement(Pcl2Parser::ElseIfStatementContext *context) override;
-    antlrcpp::Any visitElseStatement(Pcl2Parser::ElseStatementContext *context) override;
+    antlrcpp::Any visitIfElseStatement(CmmParser::IfElseStatementContext *context) override;
+    antlrcpp::Any visitIfStatement(CmmParser::IfStatementContext *context) override;
+    antlrcpp::Any visitElseIfStatement(CmmParser::ElseIfStatementContext *context) override;
+    antlrcpp::Any visitElseStatement(CmmParser::ElseStatementContext *context) override;
 
-    antlrcpp::Any visitUnaryIncrementStatement(Pcl2Parser::UnaryIncrementStatementContext *context) override;
-    antlrcpp::Any visitUnaryDecrementStatement(Pcl2Parser::UnaryDecrementStatementContext *context) override;
-    antlrcpp::Any visitUnarySquareStatement(Pcl2Parser::UnarySquareStatementContext *context) override;
+    antlrcpp::Any visitUnaryIncrementStatement(CmmParser::UnaryIncrementStatementContext *context) override;
+    antlrcpp::Any visitUnaryDecrementStatement(CmmParser::UnaryDecrementStatementContext *context) override;
+    antlrcpp::Any visitUnarySquareStatement(CmmParser::UnarySquareStatementContext *context) override;
 
 };
 

@@ -8,7 +8,7 @@ import os
 
 bash_script_arguments = {
     "SCRIPT"  : "scripts/build.sh",
-    "GRAMMAR" : "Pcl2.g4",
+    "GRAMMAR" : "Cmm.g4",
     "TARGET"  : "Cpp",
     "FILE"    : "{}.c".format(COMPILE),
 }

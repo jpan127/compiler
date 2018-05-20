@@ -8,9 +8,9 @@
 #include "wci/intermediate/SymTabEntry.h"
 #include "wci/intermediate/TypeSpec.h"
 
-#include "Pcl2BaseVisitor.h"
+#include "CmmBaseVisitor.h"
 #include "antlr4-runtime.h"
-#include "Pcl2Visitor.h"
+#include "CmmVisitor.h"
 
 #include "common.hpp"
 

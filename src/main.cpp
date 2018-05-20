@@ -2,8 +2,8 @@
 #include <fstream>
 
 #include "antlr4-runtime.h"
-#include "Pcl2Lexer.h"
-#include "Pcl2Parser.h"
+#include "CmmLexer.h"
+#include "CmmParser.h"
 #include "Pass1Visitor.hpp"
 #include "Pass2Visitor.hpp"
 
@@ -42,13 +42,13 @@ int main(int argc, const char *args[])
     ANTLRInputStream input(ins);
 
     /// Lexer
-    Pcl2Lexer lexer(&input);
+    CmmLexer lexer(&input);
 
     /// Tokenizer
     CommonTokenStream tokens(&lexer);
 
     /// Parser
-    Pcl2Parser parser(&tokens);
+    CmmParser parser(&tokens);
 
     /// Parse Tree
     tree::ParseTree *tree = parser.compilationUnit();
