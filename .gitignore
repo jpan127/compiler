@@ -11,3 +11,8 @@ build/*
 pickle/antlr4-runtime/temp/*
 
 pickle/generated/*
+
+.sconsign.dblite
+
+# Jasmin files in root directory
+/*.j
