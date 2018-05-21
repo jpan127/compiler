@@ -2,14 +2,11 @@
 
 #include "common.hpp"
 #include "Symbol.hpp"
-#include "intermediate/TypeSpec.h"
 
 
 
 namespace intermediate
 {
-
-    using wci::intermediate::TypeSpec;
 
     /// Alias for shared pointer to a symbol
     using SymbolPtr = std::shared_ptr <Symbol>;
@@ -56,7 +53,7 @@ namespace intermediate
          *  @returns    : A shared pointer to the newly created symbol
          *  @note @todo : First use of shared_ptr, need to evaluate
          */
-        const SymbolPtr & create_and_add_symbol(const std::string & name, TypeSpec * type);
+        const SymbolPtr & create_and_add_symbol(const std::string & name, Type type);
 
         /**
          *  Looks up a symbol in the table

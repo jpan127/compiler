@@ -12,33 +12,33 @@ using namespace wci::intermediate::symtabimpl;
 
 uint64_t PassVisitor::scope_counter = 0;
 
-const unordered_map <string, TypeSpec **> PassVisitor::type_map =
+const unordered_map <string, Type> PassVisitor::type_map =
 {
-    { "void"    , &Predefined::void_type   },
-    { "bool"    , &Predefined::bool_type   },
-    { "char"    , &Predefined::char_type   },
-    { "int"     , &Predefined::int_type    },
-    { "float"   , &Predefined::float_type  },
-    { "double"  , &Predefined::double_type },
+    { "void"    , Type::t_void   },
+    { "bool"    , Type::t_bool   },
+    { "char"    , Type::t_char   },
+    { "int"     , Type::t_int    },
+    { "float"   , Type::t_float  },
+    { "double"  , Type::t_double },
 };
 
-const unordered_map <TypeSpec **, char> PassVisitor::letter_map =
+const unordered_map <Type, char> PassVisitor::letter_map =
 {
-    { &Predefined::void_type   , 'V' },
-    { &Predefined::bool_type   , 'B' },
-    { &Predefined::char_type   , 'C' },
-    { &Predefined::int_type    , 'I' },
-    { &Predefined::float_type  , 'F' },
-    { &Predefined::double_type , 'D' },
+    { Type::t_void   , 'V' },
+    { Type::t_bool   , 'B' },
+    { Type::t_char   , 'C' },
+    { Type::t_int    , 'I' },
+    { Type::t_float  , 'F' },
+    { Type::t_double , 'D' },
 };
 
-const unordered_map <TypeSpec **, char> PassVisitor::instruction_prefix_map =
+const unordered_map <Type, char> PassVisitor::instruction_prefix_map =
 {
-    { &Predefined::bool_type   , 'i' },
-    { &Predefined::char_type   , 'i' },
-    { &Predefined::int_type    , 'i' },
-    { &Predefined::float_type  , 'f' },
-    { &Predefined::double_type , 'd' },
+    { Type::t_bool   , 'i' },
+    { Type::t_char   , 'i' },
+    { Type::t_int    , 'i' },
+    { Type::t_float  , 'f' },
+    { Type::t_double , 'd' },
 };
 
 unordered_map <string, unordered_map <string, ::intermediate::Symbol>> PassVisitor::variable_id_map =
@@ -50,34 +50,22 @@ unordered_map <string, string> PassVisitor::function_definition_map;
 
 string PassVisitor::current_function = "global";
 
-TypeSpec * PassVisitor::resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type)
+Type PassVisitor::resolve_expression_type(Type lhs_type, Type rhs_type)
 {
-    if (nullptr == lhs_type && rhs_type == nullptr)
-    {
-        return Predefined::int_type;
-    }
-    else if (nullptr == lhs_type)
-    {
-        return rhs_type;
-    }
-    else if (nullptr == rhs_type)
-    {
-        return lhs_type;
-    }
     // If any are double then result is double
-    else if (Predefined::double_type == lhs_type || Predefined::double_type == rhs_type)
+    if (Type::t_double == lhs_type || Type::t_double == rhs_type)
     {
-        return Predefined::double_type;
+        return Type::t_double;
     }
     // If any are not real and neither are double then result is real
-    else if (Predefined::float_type == lhs_type || Predefined::float_type == rhs_type)
+    else if (Type::t_float == lhs_type || Type::t_float == rhs_type)
     {
-        return Predefined::float_type;
+        return Type::t_float;
     }
     // Otherwise integer
     else
     {
-        return Predefined::int_type;
+        return Type::t_int;
     }
 }
 
@@ -121,20 +109,14 @@ bool PassVisitor::print_debug_context(antlr4::ParserRuleContext * context, const
     }
 }
 
-char PassVisitor::letter_map_lookup(const TypeSpec * type) const
+char PassVisitor::letter_map_lookup(const Type type) const
 {
     char ret = '?';
-
-    // NULL check
-    if (nullptr == type)
-    {
-        throw InvalidType("[letter_map_lookup] NULL");
-    }
 
     bool found = false;
     for (auto t : letter_map)
     {
-        if (*t.first == type)
+        if (t.first == type)
         {
             ret = t.second;
             found = true;
@@ -145,26 +127,20 @@ char PassVisitor::letter_map_lookup(const TypeSpec * type) const
     // If not found, compilation should not continue
     if (!found)
     {
-        throw InvalidType("[letter_map_lookup] Type not found : " + type->to_string());
+        throw InvalidType("[letter_map_lookup] Type not found : " + to_string(type));
     }
 
     return ret;
 }
 
-char PassVisitor::instruction_prefix_map_lookup(const TypeSpec * type) const
+char PassVisitor::instruction_prefix_map_lookup(const Type type) const
 {
     char ret = '?';
-
-    // NULL check
-    if (nullptr == type)
-    {
-        throw InvalidType("[instruction_prefix_map_lookup] NULL");
-    }
 
     bool found = false;
     for (auto t : instruction_prefix_map)
     {
-        if (*t.first == type)
+        if (t.first == type)
         {
             ret = t.second;
             found = true;
@@ -175,7 +151,7 @@ char PassVisitor::instruction_prefix_map_lookup(const TypeSpec * type) const
     // If not found, compilation should not continue
     if (!found)
     {
-        throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + type->to_string());
+        throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + to_string(type));
     }
 
     return ret;
@@ -278,21 +254,21 @@ bool PassVisitor::is_global(const string variable) const
     return false;
 }
 
-string PassVisitor::convert_type_if_neccessary(TypeSpec * current_type, TypeSpec * needed_type)
+string PassVisitor::convert_type_if_neccessary(Type current_type, Type needed_type)
 {
     string instruction;
 
-    if (current_type && needed_type && current_type != needed_type)
+    if (current_type != needed_type)
     {
-             if (Predefined::double_type == current_type) { instruction += "d2"; }
-        else if (Predefined::float_type  == current_type) { instruction += "f2"; }
-        else if (Predefined::int_type    == current_type) { instruction += "i2"; }
-        else { throw InvalidType("Unsupported type for conversion instruction : " + current_type->to_string()); }
+             if (Type::t_double == current_type) { instruction += "d2"; }
+        else if (Type::t_float  == current_type) { instruction += "f2"; }
+        else if (Type::t_int    == current_type) { instruction += "i2"; }
+        else { throw InvalidType("Unsupported type for conversion instruction : " + to_string(current_type)); }
 
-             if (Predefined::double_type == needed_type) { instruction += "d"; }
-        else if (Predefined::float_type  == needed_type) { instruction += "f"; }
-        else if (Predefined::int_type    == needed_type) { instruction += "i"; }
-        else { throw InvalidType("Unsupported type for conversion instruction : " + current_type->to_string()); }
+             if (Type::t_double == needed_type) { instruction += "d"; }
+        else if (Type::t_float  == needed_type) { instruction += "f"; }
+        else if (Type::t_int    == needed_type) { instruction += "i"; }
+        else { throw InvalidType("Unsupported type for conversion instruction : " + to_string(current_type)); }
     }
 
     return instruction;

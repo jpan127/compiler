@@ -3,14 +3,6 @@
 #include <typeinfo>
 
 #include "Pass2Visitor.hpp"
-#include "wci/intermediate/SymTabStack.h"
-#include "wci/intermediate/SymTabEntry.h"
-#include "wci/intermediate/TypeSpec.h"
-#include "wci/intermediate/symtabimpl/Predefined.h"
-
-using namespace wci;
-using namespace wci::intermediate;
-using namespace wci::intermediate::symtabimpl;
 
 
 
@@ -31,7 +23,7 @@ Pass2Visitor::~Pass2Visitor()
     j_file.close();
 }
 
-string Pass2Visitor::resolve_expression_instruction(TypeSpec * type, string const & opr)
+string Pass2Visitor::resolve_expression_instruction(Type type, string const & opr)
 {
     static const map <const string, const string> operator_to_opcode_map =
     {
@@ -285,7 +277,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
         j_file << comment << endl;
     }
 
-    TypeSpec * expression_type = nullptr;
+    Type expression_type = Type::t_int;
 
     try
     {
@@ -293,7 +285,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
         {
             // Visit right hand side expression first
             auto result = visit(context->expression());
-            expression_type = static_cast <TypeSpec *> (result);
+            expression_type = static_cast <Type> (result);
 
             const string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
             if (type_convert_instruction.size() > 0)
@@ -312,6 +304,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
     }
     catch (bad_cast const & error)
     {
+        /// @TODO : Remove this hack
         // If we cannot cast to a TypeSpec properly then the result did not return a TypeSpec, in which case continue because it does not matter
     }
     catch (AntlrParsedIncorrectly const & error)
@@ -361,8 +354,9 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
     else if (context->primaryExpression()->IntegerConstant() ||
             (context->primaryExpression()->FloatConstant()))
     {
+        cout << "******" << context->type << endl;
         // Doubles need to be treated differently
-        if (Predefined::double_type == context->type)
+        if (Type::t_double == context->type)
         {
             string double_value;
 
@@ -381,7 +375,7 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
             instruction += "ldc2_w ";
             instruction += double_value;
         }
-        else if (Predefined::float_type == context->type)
+        else if (Type::t_float == context->type)
         {
             string float_value;
 
@@ -434,7 +428,7 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *contex
     for (uint8_t i = 0; i < 2; i++)
     {
         visit(context->expression(i));
-        TypeSpec * operand_type = context->expression(i)->type;
+        Type operand_type = context->expression(i)->type;
 
         // Type mismatches need to be converted
         const string type_convert_instruction = convert_type_if_neccessary(operand_type, context->type);
@@ -476,7 +470,7 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(CmmParser::AddminExprContext *contex
     for (uint8_t i = 0; i < 2; i++)
     {
         visit(context->expression(i));
-        TypeSpec * operand_type = context->expression(i)->type;
+        Type operand_type = context->expression(i)->type;
     
         // Type mismatches need to be converted
         const string type_convert_instruction = convert_type_if_neccessary(operand_type, context->type);
@@ -518,7 +512,7 @@ antlrcpp::Any Pass2Visitor::visitBitExpr(CmmParser::BitExprContext *context)
     for (uint8_t i = 0; i < 2; i++)
     {
         visit(context->expression(i));
-        TypeSpec * operand_type = context->expression(i)->type;
+        Type operand_type = context->expression(i)->type;
     
         // Type mismatches need to be converted
         const string type_convert_instruction = convert_type_if_neccessary(operand_type, context->type);
@@ -575,13 +569,13 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(CmmParser::BasicConditiona
     {
         visit(context->expression(i));
         // Doubles and floats need to be converted before jump comparison instruction
-        if (Predefined::double_type == context->expression(i)->type)
+        if (Type::t_double == context->expression(i)->type)
         {
             j_file << TAB
                    << "d2i"
                    << endl;
         }
-        else if (Predefined::float_type  == context->expression(i)->type)
+        else if (Type::t_float  == context->expression(i)->type)
         {
             j_file << TAB
                    << "f2i"
@@ -691,8 +685,8 @@ antlrcpp::Any Pass2Visitor::visitJumpStatement(CmmParser::JumpStatementContext *
     }
 
     if (context->expression()) visit(context->expression());
-    j_file  << TAB                                                                  ;
-    if (context->expression()) j_file << context->expression()->type->to_string()[0];
+    j_file  << TAB;
+    if (context->expression()) j_file << instruction_prefix_map.at(context->expression()->type);
     j_file << "return"                                                              << endl;
     j_file                                                                          << endl;
     return nullptr;
@@ -947,19 +941,19 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(CmmParser::UnaryDecreme
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
     // Load one @TODO : Clean up
-    if (context->type == Predefined::double_type)
+    if (context->type == Type::t_double)
     {
         j_file << TAB
                << "dconst_1"
                << endl;
     }
-    else if (context->type == Predefined::float_type)
+    else if (context->type == Type::t_float)
     {
         j_file << TAB
                << "fconst_1"
                << endl;
     }
-    else if (context->type == Predefined::int_type)
+    else if (context->type == Type::t_int)
     {
         j_file << TAB
                << "iconst_1"
@@ -994,7 +988,7 @@ antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(CmmParser::UnarySquareStat
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
     j_file << TAB
-           << ((context->type == Predefined::double_type) ? ("dup2") : ("dup"))
+           << ((context->type == Type::t_double) ? ("dup2") : ("dup"))
            << endl;
 
     // Multiply

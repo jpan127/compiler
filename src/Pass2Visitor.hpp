@@ -6,7 +6,6 @@
 
 #include "wci/intermediate/SymTabStack.h"
 #include "wci/intermediate/SymTabEntry.h"
-#include "wci/intermediate/TypeSpec.h"
 
 #include "CmmBaseVisitor.h"
 #include "antlr4-runtime.h"
@@ -28,7 +27,7 @@ private:
 
     vector <string> instruction_buffer;
 
-    string resolve_expression_instruction(TypeSpec * type, string const & opr);
+    string resolve_expression_instruction(Type type, string const & opr);
 
     void emit_symbol_table();
 

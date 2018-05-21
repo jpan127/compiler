@@ -3,16 +3,11 @@
 #include <unordered_map>
 
 #include "common.hpp"
-#include "wci/intermediate/TypeSpec.h"
-#include "wci/intermediate/symtabimpl/Predefined.h"
-
+#include "TypeSpecifier.hpp"
 
 
 namespace intermediate
 {
-
-    using wci::intermediate::TypeSpec;
-    using wci::intermediate::symtabimpl::Predefined;
 
     /**
      *  @class : Symbol
@@ -31,16 +26,9 @@ namespace intermediate
          *  Initializes the constant member variables
          *  @TODO : Change to TypeSpecifier
          */
-        Symbol(const uint32_t id, TypeSpec * type) : m_id(id),  m_type(type) 
+        Symbol(const uint32_t id, Type type) : m_id(id),  m_type(type) 
         {
-            if (nullptr == type)
-            {
-                throw InvalidType("Impossible to create symbol with a NULL type");
-            }
-            else
-            {
-                m_type_letter = letter_map.at(type);
-            }
+            m_type_letter = letter_map.at(type);
         }
 
         /// Assignment operator
@@ -57,7 +45,7 @@ namespace intermediate
         char get_type_letter() const { return m_type_letter; }
 
         /// Returns the type specifier of the symbol
-        TypeSpec * get_type() const { return m_type; }
+        Type get_type() const { return m_type; }
 
     private:
 
@@ -68,19 +56,19 @@ namespace intermediate
         char m_type_letter;
 
         /// Pointer to the Predefined type
-        TypeSpec * m_type;
+        Type m_type;
 
         /// Keeps track of the line numbers this symbol was referenced
         std::vector <uint32_t> line_numbers;
 
-        const std::unordered_map <TypeSpec *, char> letter_map =
+        const std::unordered_map <Type, char> letter_map =
         {
-            { Predefined::void_type   , 'V' },
-            { Predefined::bool_type   , 'B' },
-            { Predefined::char_type   , 'C' },
-            { Predefined::int_type    , 'I' },
-            { Predefined::float_type  , 'F' },
-            { Predefined::double_type , 'D' },
+            { Type::t_void   , 'V' },
+            { Type::t_bool   , 'B' },
+            { Type::t_char   , 'C' },
+            { Type::t_int    , 'I' },
+            { Type::t_float  , 'F' },
+            { Type::t_double , 'D' },
         };
 
     };

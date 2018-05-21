@@ -1,41 +1,64 @@
 #include "TypeSpecifier.hpp"
 
+
+
+/// @TODO : Remove this
+std::ostream & operator << (std::ostream & out, const Type & rhs)
+{
+    switch (rhs)
+    {
+        case Type::t_null     : out << "null";     break;
+        case Type::t_void     : out << "void";     break;
+        case Type::t_bool     : out << "bool";     break;
+        case Type::t_char     : out << "char";     break;
+        case Type::t_int      : out << "int";      break;
+        case Type::t_float    : out << "float";    break;
+        case Type::t_double   : out << "double";   break;
+        case Type::t_long     : out << "long"  ;   break;
+        default               :                    break;
+    }
+
+    return out;
+}
+
 namespace backend
 {
 
-    const std::map <TypeSpecifier::Type, uint8_t> TypeSpecifier::type_weight_map =
+    const std::map <Type, uint8_t> TypeSpecifier::type_weight_map =
     {
-        { TypeSpecifier::Type::t_void     , 0 },
-        { TypeSpecifier::Type::t_bool     , 0 },
-        { TypeSpecifier::Type::t_char     , 0 },
-        { TypeSpecifier::Type::t_short    , 0 },
-        { TypeSpecifier::Type::t_int      , 0 },
-        { TypeSpecifier::Type::t_signed   , 0 },
-        { TypeSpecifier::Type::t_unsigned , 0 },
-        { TypeSpecifier::Type::t_uint32_t , 0 },
-        { TypeSpecifier::Type::t_int32_t  , 0 },
-        { TypeSpecifier::Type::t_float    , 1 },
-        { TypeSpecifier::Type::t_double   , 2 },
-        { TypeSpecifier::Type::t_long     , 2 },
+        { Type::t_null     , 0 },
+        { Type::t_void     , 0 },
+        { Type::t_bool     , 0 },
+        { Type::t_char     , 0 },
+        { Type::t_int      , 0 },
+        { Type::t_float    , 1 },
+        { Type::t_double   , 2 },
+        // { Type::t_signed   , 0 },
+        // { Type::t_unsigned , 0 },
+        // { Type::t_uint32_t , 0 },
+        // { Type::t_short    , 0 },
+        // { Type::t_int32_t  , 0 },
+        // { Type::t_long     , 2 },
     };
 
     std::ostream & operator << (std::ostream & out, const TypeSpecifier & rhs)
     {
         switch (rhs.m_type)
         {
-            case TypeSpecifier::Type::t_void     : out << "void";     break;
-            case TypeSpecifier::Type::t_bool     : out << "bool";     break;
-            case TypeSpecifier::Type::t_char     : out << "char";     break;
-            case TypeSpecifier::Type::t_short    : out << "short";    break;
-            case TypeSpecifier::Type::t_int      : out << "int";      break;
-            case TypeSpecifier::Type::t_long     : out << "long";     break;
-            case TypeSpecifier::Type::t_float    : out << "float";    break;
-            case TypeSpecifier::Type::t_double   : out << "double";   break;
-            case TypeSpecifier::Type::t_signed   : out << "signed";   break;
-            case TypeSpecifier::Type::t_unsigned : out << "unsigned"; break;
-            case TypeSpecifier::Type::t_uint32_t : out << "uint32_t"; break;
-            case TypeSpecifier::Type::t_int32_t  : out << "int32_t";  break;
-            default                              :                    break;
+            case Type::t_null     : out << "null";     break;
+            case Type::t_void     : out << "void";     break;
+            case Type::t_bool     : out << "bool";     break;
+            case Type::t_char     : out << "char";     break;
+            case Type::t_int      : out << "int";      break;
+            case Type::t_float    : out << "float";    break;
+            case Type::t_double   : out << "double";   break;
+            // case Type::t_long     : out << "long";     break;
+            // case Type::t_short    : out << "short";    break;
+            // case Type::t_signed   : out << "signed";   break;
+            // case Type::t_unsigned : out << "unsigned"; break;
+            // case Type::t_uint32_t : out << "uint32_t"; break;
+            // case Type::t_int32_t  : out << "int32_t";  break;
+            default               :                    break;
         }
 
         return out;
@@ -70,19 +93,20 @@ namespace backend
     {
         switch (m_type)
         {
-            case TypeSpecifier::Type::t_void     : return "void";     break;
-            case TypeSpecifier::Type::t_bool     : return "bool";     break;
-            case TypeSpecifier::Type::t_char     : return "char";     break;
-            case TypeSpecifier::Type::t_short    : return "short";    break;
-            case TypeSpecifier::Type::t_int      : return "int";      break;
-            case TypeSpecifier::Type::t_long     : return "long";     break;
-            case TypeSpecifier::Type::t_float    : return "float";    break;
-            case TypeSpecifier::Type::t_double   : return "double";   break;
-            case TypeSpecifier::Type::t_signed   : return "signed";   break;
-            case TypeSpecifier::Type::t_unsigned : return "unsigned"; break;
-            case TypeSpecifier::Type::t_uint32_t : return "uint32_t"; break;
-            case TypeSpecifier::Type::t_int32_t  : return "int32_t";  break;
-            default                              : return "";         break;
+            case Type::t_null     : return "null";     break;
+            case Type::t_void     : return "void";     break;
+            case Type::t_bool     : return "bool";     break;
+            case Type::t_char     : return "char";     break;
+            case Type::t_int      : return "int";      break;
+            case Type::t_float    : return "float";    break;
+            case Type::t_double   : return "double";   break;
+            // case Type::t_short    : return "short";    break;
+            // case Type::t_long     : return "long";     break;
+            // case Type::t_signed   : return "signed";   break;
+            // case Type::t_unsigned : return "unsigned"; break;
+            // case Type::t_uint32_t : return "uint32_t"; break;
+            // case Type::t_int32_t  : return "int32_t";  break;
+            default               : return "";         break;
         }
     }
 

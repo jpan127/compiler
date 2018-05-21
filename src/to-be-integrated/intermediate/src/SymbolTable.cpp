@@ -5,9 +5,9 @@
 namespace intermediate
 {
 
-    const SymbolPtr & SymbolTable::create_and_add_symbol(const std::string & name, TypeSpec * type)
+    const SymbolPtr & SymbolTable::create_and_add_symbol(const std::string & name, Type type)
     {
-        if (Predefined::double_type == type || Predefined::long_type == type)
+        if (Type::t_double == type || Type::t_long == type)
         {
             m_current_symbol_id += 2;
         }

@@ -5,7 +5,6 @@
 
 #include "wci/intermediate/SymTabStack.h"
 #include "wci/intermediate/SymTabEntry.h"
-#include "wci/intermediate/TypeSpec.h"
 
 #include "CmmBaseVisitor.h"
 #include "antlr4-runtime.h"
@@ -88,7 +87,7 @@ private:
      *  @param context : The context object to look up and modify
      *  @throws        : InvalidType
      */
-    void lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter);
+    void lookup_symbol_type(string const & variable, Type & type, char & type_letter);
 
 };
 

@@ -32,7 +32,7 @@ namespace intermediate
         return stack.back();
     }
 
-    void SymbolTableStack::push_symbol_locally(const std::string & name, TypeSpec * type)
+    void SymbolTableStack::push_symbol_locally(const std::string & name, Type type)
     {
         stack.back()->create_and_add_symbol(name, type);
     }

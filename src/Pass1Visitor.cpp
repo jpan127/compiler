@@ -28,12 +28,12 @@ ofstream & Pass1Visitor::get_assembly_file()
     return j_file; 
 }
 
-void Pass1Visitor::lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter)
+void Pass1Visitor::lookup_symbol_type(string const & variable, Type & type, char & type_letter)
 {
     if (auto symbol = symbol_table_stack.lookup_symbol_globally(variable))
     {
-        *type = symbol->get_type();
-        type_letter = letter_map_lookup(*type);
+        type = symbol->get_type();
+        type_letter = letter_map_lookup(type);
     }
     else
     {
@@ -111,13 +111,13 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *cont
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     try
-    { 
-        if (type_map.find(context->typeSpecifier()->getText()) != type_map.end())
+    {
+        const string type = context->typeSpecifier()->getText();
+        if (type_map.find(type) != type_map.end())
         {
-            cout << TAB << context->typeSpecifier()->getText() << endl;
-            context->type = *(type_map.at(context->typeSpecifier()->getText()));
-            context->type_letter = (char)toupper(context->typeSpecifier()->getText()[0]);
-            cout << context->type << " " << context->type_letter << endl;
+            cout << TAB << type << endl;
+            context->type = type_map.at(type);
+            context->type_letter = toupper(type[0]);
         }
         else
         {
@@ -136,27 +136,31 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *cont
     
     if (context->assignmentExpression(0))
     {
-        cout << TAB << "Has assignment\n";
         variable_name = context->assignmentExpression(0)->Identifier()->getText();
+        cout << TAB << "Has assignment\n";
+        cout << TAB << variable_name << endl;
 
         // Save type letter inside assignmentExpression
+        // @TODO : See if this is necessary
         context->assignmentExpression(0)->type_letter = context->type_letter;
+        context->assignmentExpression(0)->type = context->type;
     
         if (context->assignmentExpression(0)->expression() &&
             PassVisitor::is_digit(context->assignmentExpression(0)->expression()->getText()))
         {
             variable_initial_value = context->assignmentExpression(0)->expression()->getText();
+            context->assignmentExpression(0)->expression()->type_letter = context->type_letter;
+            context->assignmentExpression(0)->expression()->type = context->type;
         }
     }
     else
     {
-        cout << TAB << "No assignment\n";
         variable_name = context->Identifier(0)->getText();
     }
 
     try
     {
-        cout << context->type << " " << context->type_letter << endl;
+        cout << TAB << context->type << " " << context->type_letter << endl;
         
         symbol_table_stack.push_symbol_locally(variable_name, context->type);
         
@@ -219,11 +223,12 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(CmmParser::FunctionDeclarat
 
         try 
         {
-            if (type_map.find(type_specifiers[i]->getText()) != type_map.end()) 
+            const string type = type_specifiers[i]->getText();
+            if (type_map.find(type) != type_map.end()) 
             {
-                cout << TAB << type_specifiers[i]->getText() << endl;
-                context->type = *(type_map.at(type_specifiers[i]->getText()));
-                context->type_letter = (char) toupper(type_specifiers[i]->getText()[0]);
+                cout << TAB << type << endl;
+                context->type = type_map.at(type);
+                context->type_letter = toupper(type[0]);
             } 
             else 
             {
@@ -368,17 +373,15 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
      *  Stores it for Pass 2
      */
 
-    context->expression_type = expr_primary;
-
     // If parent has not set this node's type, set it
-    if (nullptr == context->type)
+    if (Type::t_null == context->type)
     {
         if (context->primaryExpression()->Identifier())
         {
             // Look up type of this expression in the symbol table stack
             try
             {
-                lookup_symbol_type(context->getText(), &(context->type), context->type_letter);
+                lookup_symbol_type(context->getText(), context->type, context->type_letter);
             }
             catch (MissingSymbol const & error)
             {
@@ -392,12 +395,12 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
         else if (context->primaryExpression()->IntegerConstant())
         {
             context->type_letter = 'I';
-            context->type = Predefined::int_type;
+            context->type = Type::t_int;
         }
         else if (context->primaryExpression()->FloatConstant())
         {
             context->type_letter = 'F';
-            context->type = Predefined::float_type;
+            context->type = Type::t_float;
         }        
     }
 
@@ -424,8 +427,6 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *contex
      *  Stores it for pass 2
      */
     
-    context->expression_type = expr_mul_div;
-
     try
     {
         if (operator_set.find(context->opr->getText()) != operator_set.end())
@@ -442,15 +443,16 @@ antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *contex
         error.print_and_exit();
     }
 
-    TypeSpec * lhs_type = static_cast <TypeSpec *> (visit(context->expression(0)));
-    TypeSpec * rhs_type = static_cast <TypeSpec *> (visit(context->expression(1)));
+    // Only instance of actually returning a value from a child node
+    Type lhs_type = static_cast <Type> (visit(context->expression(0)));
+    Type rhs_type = static_cast <Type> (visit(context->expression(1)));
 
     context->type = resolve_expression_type(lhs_type, rhs_type);
 
     cout << TAB
-         << lhs_type 
+         << to_string(lhs_type)
          << " " 
-         << rhs_type 
+         << to_string(rhs_type)
          << endl;
 
     return visitChildren(context);   
@@ -471,8 +473,6 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(CmmParser::AddminExprContext *contex
      *  Stores it for pass 2
      */
 
-    context->expression_type = expr_add_min;
-
     try
     {
         if (operator_set.find(context->opr->getText()) != operator_set.end())
@@ -489,15 +489,15 @@ antlrcpp::Any Pass1Visitor::visitAddminExpr(CmmParser::AddminExprContext *contex
         error.print_and_exit();
     }
 
-    TypeSpec * lhs_type = static_cast <TypeSpec *> (visit(context->expression(0)));
-    TypeSpec * rhs_type = static_cast <TypeSpec *> (visit(context->expression(1)));
+    Type lhs_type = static_cast <Type> (visit(context->expression(0)));
+    Type rhs_type = static_cast <Type> (visit(context->expression(1)));
 
     context->type = resolve_expression_type(lhs_type, rhs_type);
 
     cout << TAB
-         << lhs_type 
+         << to_string(lhs_type) 
          << " " 
-         << rhs_type 
+         << to_string(rhs_type) 
          << endl;
 
     return nullptr;
@@ -518,8 +518,6 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(CmmParser::BitExprContext *context)
      *  Stores it for pass 2
      */
 
-    context->expression_type = expr_add_min;
-
     try
     {
         if (operator_set.find(context->opr->getText()) != operator_set.end())
@@ -538,11 +536,11 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(CmmParser::BitExprContext *context)
 
     try
     {
-        TypeSpec * lhs_type = static_cast <TypeSpec *> (visit(context->expression(0)));
-        TypeSpec * rhs_type = static_cast <TypeSpec *> (visit(context->expression(1)));
+        Type lhs_type = static_cast <Type> (visit(context->expression(0)));
+        Type rhs_type = static_cast <Type> (visit(context->expression(1)));
 
-        if ((Predefined::float_type == lhs_type) ||
-            (Predefined::float_type == rhs_type))
+        if ((Type::t_float == lhs_type) ||
+            (Type::t_float == rhs_type))
         {
             throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
         }
@@ -550,9 +548,9 @@ antlrcpp::Any Pass1Visitor::visitBitExpr(CmmParser::BitExprContext *context)
         context->type = resolve_expression_type(lhs_type, rhs_type);
         
         cout << TAB
-             << lhs_type 
+             << to_string(lhs_type) 
              << " " 
-             << rhs_type 
+             << to_string(rhs_type) 
              << endl;
     }
     catch (CompilerError const & error)
@@ -576,7 +574,8 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
 
     try
     {
-        lookup_symbol_type(variable, &(context->type), context->type_letter);
+        cout << variable << context->type << endl;
+        lookup_symbol_type(variable, context->type, context->type_letter);
     }
     catch (InvalidType const & error)
     {
@@ -766,7 +765,7 @@ antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(CmmParser::UnaryIncreme
     // Look up type of this expression in the symbol table stack
     try
     {
-        lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+        lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
     }
     catch (MissingSymbol const & error)
     {
@@ -787,7 +786,7 @@ antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(CmmParser::UnaryDecreme
     // Look up type of this expression in the symbol table stack
     try
     {
-        lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+        lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
     }
     catch (MissingSymbol const & error)
     {
@@ -808,7 +807,7 @@ antlrcpp::Any Pass1Visitor::visitUnarySquareStatement(CmmParser::UnarySquareStat
     // Look up type of this expression in the symbol table stack
     try
     {
-        lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+        lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
     }
     catch (MissingSymbol const & error)
     {

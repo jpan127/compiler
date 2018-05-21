@@ -2,7 +2,7 @@ grammar Cmm;
 
 @header {
 #include "wci/intermediate/symtab.h"
-#include "wci/intermediate/TypeSpec.h"
+#include "TypeSpecifier.hpp"
 using namespace wci::intermediate;
 }
 
@@ -31,7 +31,7 @@ functionDefinition
 
 functionDeclaration
     locals [
-        TypeSpec * type = nullptr,
+        Type type = Type::t_null,
         char type_letter = 0,
     ]
     :   typeSpecifier Identifier(Comma typeSpecifier Identifier)*
@@ -39,7 +39,7 @@ functionDeclaration
 
 declaration 
     locals [
-        TypeSpec * type = nullptr, 
+        Type type = Type::t_null, 
         char type_letter = 0
     ]
     :   typeSpecifier Identifier (Comma Identifier)* Semi
@@ -99,7 +99,7 @@ statement
 
 unaryStatement
     locals [
-        TypeSpec * type = nullptr,
+        Type type = Type::t_null,
         char type_letter = '?'
     ]
     :   PlusPlus   Identifier  # unaryIncrementStatement
@@ -154,10 +154,9 @@ primaryExpression
 
 expression 
     locals [
-        TypeSpec * type = nullptr,
+        Type type = Type::t_null,
         string expr_operator,
-        char type_letter = '?',
-        expression_type_E expression_type
+        char type_letter = '?'
     ]
     :   expression opr=( '*' | '/' | '%' ) expression                       # mulDivExpr
     |   expression opr=( '+' | '-' ) expression                             # addminExpr
@@ -179,7 +178,7 @@ conditionalExpression
 
 assignmentExpression
     locals [
-        TypeSpec * type = nullptr, 
+        Type type = Type::t_null, 
         char type_letter = 0,
         uint32_t current_nesting_level = 0
     ]

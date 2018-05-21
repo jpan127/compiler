@@ -4,27 +4,18 @@
 #include <set>
 #include <map>
 
-#include "wci/intermediate/SymTabStack.h"
-#include "wci/intermediate/SymTabEntry.h"
-#include "wci/intermediate/typeimpl/TypeSpecImpl.h"
-#include "wci/intermediate/TypeSpec.h"
-
 #include "CmmBaseVisitor.h"
 #include "antlr4-runtime.h"
 #include "CmmVisitor.h"
 
 #include "common.hpp"
-#include "Symbol.hpp"
-
-using namespace wci;
-using namespace wci::intermediate;
-using namespace wci::intermediate::symtabimpl;
+#include "SymbolTableStack.hpp"
 
 
 
 /// Common code to all visit nodes, not the best but could not find a better solution
 #define PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR()                 \
-    if (!print_debug_context(context, string(__FUNCTION__)))   \
+    if (!print_debug_context(context, string(__FUNCTION__)))    \
     {                                                           \
         return nullptr;                                         \
     }
@@ -35,6 +26,22 @@ enum class PassEnumeration
     pass2 = 2,
     pass3 = 3,
 };
+
+inline string to_string(Type t)
+{
+    switch (t)
+    {
+        case Type::t_null   : return string("t_null");   break;
+        case Type::t_void   : return string("t_void");   break;
+        case Type::t_bool   : return string("t_bool");   break;
+        case Type::t_char   : return string("t_char");   break;
+        case Type::t_int    : return string("t_int");    break;
+        case Type::t_float  : return string("t_float");  break;
+        case Type::t_double : return string("t_double"); break;
+    }
+
+    return string();
+}
 
 /**
  *  Class that Pass1Visitor and Pass2Visitor inherit from
@@ -60,14 +67,14 @@ protected:
     
     /// @TODO : Hopefully these data structures can be moved to the symbol table modules
 
-    /// Maps string types to a pointer to the typespec
-    static const unordered_map <string, TypeSpec **> type_map;
+    /// Maps string types to a pointer to the type
+    static const unordered_map <string, Type> type_map;
 
-    /// Maps a pointer to the typespec to the type letter
-    static const unordered_map <TypeSpec **, char> letter_map;
+    /// Maps a pointer to the type to the type letter
+    static const unordered_map <Type, char> letter_map;
 
-    /// Maps a pointer to the typespec to the instruction prefix
-    static const unordered_map <TypeSpec **, char> instruction_prefix_map;
+    /// Maps a pointer to the type to the instruction prefix
+    static const unordered_map <Type, char> instruction_prefix_map;
 
     /// Maps scope names to maps of symbol names to symbol attributes
     static unordered_map <string, unordered_map <string, ::intermediate::Symbol>> variable_id_map;
@@ -87,7 +94,7 @@ protected:
      *  @param rhs_type : Type of RHS
      *  @returns        : A single type which is the greater of the two
      */
-    TypeSpec * resolve_expression_type(TypeSpec * lhs_type, TypeSpec * rhs_type);
+    Type resolve_expression_type(Type lhs_type, Type rhs_type);
 
     /**
      *  Looks up the letter with [letter_map]
@@ -95,7 +102,7 @@ protected:
      *  @returns    : The letter looked up, throws if not found
      *  @throws     : InvalidType
      */
-    char letter_map_lookup(const TypeSpec * type) const;
+    char letter_map_lookup(const Type type) const;
 
     /**
      *  Looks up the letter with [instruction_prefix_map]
@@ -103,7 +110,7 @@ protected:
      *  @returns    : The letter looked up, throws if not found
      *  @throws     : InvalidType
      */
-    char instruction_prefix_map_lookup(const TypeSpec * type) const;
+    char instruction_prefix_map_lookup(const Type type) const;
 
     /**
      *  Prints the current visit context information if [debug_flag] is true
@@ -119,7 +126,7 @@ protected:
      */
     static bool is_digit(const string & identifier)
     {
-        return std::isdigit(identifier[0]);
+        return std::isdigit(identifier[0]) || (identifier[0] == '-' && std::isdigit(identifier[1]));
     }
 
     /**
@@ -162,6 +169,6 @@ protected:
      *  @param needed_type  : The type the next instruction is working with
      *  @returns            : A string with the type instruction, empty if no instruction needed
      */
-    string convert_type_if_neccessary(TypeSpec * current_type, TypeSpec * needed_type);
+    string convert_type_if_neccessary(Type current_type, Type needed_type);
 
 };

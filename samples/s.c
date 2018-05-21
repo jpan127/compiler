@@ -44,7 +44,7 @@ void main()
     double e = -1.1;
 
     /// While loop
-    while ((d > 0) and (d < 200))   /// Multiple conditions using the "and" operator
+    while ((d > 0) and (d < 1000))   /// Multiple conditions using the "and" operator
     {
         /// If statement
         if (d % fizz_buzz == 0)
