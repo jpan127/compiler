@@ -27,14 +27,6 @@ typedef enum
 } expression_type_E;
 
 /**
- * Type specification form
- */
-enum class TypeForm
-{
-    // to be "subclassed" by implementation-specific type forms
-};
-
-/**
  * Type specification key
  */
 enum class TypeKey
@@ -43,6 +35,20 @@ enum class TypeKey
 };
 
 class TypeSpec;  // forward declaration
+
+/**
+ * Type specification form implementation
+ */
+enum class TypeFormImpl
+{
+    SCALAR, ENUMERATION, SUBRANGE, ARRAY, RECORD,
+};
+
+constexpr TypeFormImpl TF_SCALAR = TypeFormImpl::SCALAR;
+constexpr TypeFormImpl TF_ENUMERATION = TypeFormImpl::ENUMERATION;
+constexpr TypeFormImpl TF_SUBRANGE = TypeFormImpl::SUBRANGE;
+constexpr TypeFormImpl TF_ARRAY = TypeFormImpl::ARRAY;
+constexpr TypeFormImpl TF_RECORD = TypeFormImpl::RECORD;
 
 /**
  * Type value.
@@ -74,7 +80,7 @@ public:
      * Getter
      * @return the type form.
      */
-    virtual TypeForm get_form() const = 0;
+    virtual TypeFormImpl get_form() const = 0;
 
     /**
      * Getter.

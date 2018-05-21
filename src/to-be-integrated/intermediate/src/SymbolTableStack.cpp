@@ -5,6 +5,18 @@
 namespace intermediate
 {
 
+    SymbolTableStack::SymbolTableStack() : m_current_nesting_level(0)
+    {
+        SymbolTablePtr table_ptr = std::make_shared <SymbolTable> 
+        (
+            SymbolTableScope::global, 
+            "global", 
+            0
+        );
+
+        push_symbol_table(table_ptr);
+    }
+
     SymbolTableStack::SymbolTableStack(SymbolTablePtr & global_table) : m_current_nesting_level(0)
     {
         stack.push_back(global_table);
@@ -18,6 +30,11 @@ namespace intermediate
     const SymbolTablePtr & SymbolTableStack::get_local_symbol_table() const
     {
         return stack.back();
+    }
+
+    void SymbolTableStack::push_symbol_locally(const std::string & name, TypeSpec * type)
+    {
+        stack.back()->create_and_add_symbol(name, type);
     }
 
     void SymbolTableStack::push_symbol_table(SymbolTablePtr & table)
@@ -40,7 +57,18 @@ namespace intermediate
 
     SymbolPtr SymbolTableStack::lookup_symbol_globally(const std::string & name) const
     {
-        return stack.front()->lookup_symbol(name);
+        SymbolPtr symbol = nullptr;
+
+        for (auto table : stack)
+        {
+            if (nullptr != table->lookup_symbol(name))
+            {
+                symbol = table->lookup_symbol(name);
+                break;
+            }
+        }
+        
+        return symbol;
     }
 
 } /// intermediate

@@ -16,7 +16,7 @@ namespace wci { namespace intermediate {
 using namespace std;
 using namespace wci::intermediate::typeimpl;
 
-TypeSpec *TypeFactory::create_type(const TypeForm form)
+TypeSpec *TypeFactory::create_type(const TypeFormImpl form)
 {
     return new TypeSpecImpl(form);
 }

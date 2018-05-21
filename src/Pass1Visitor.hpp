@@ -12,6 +12,8 @@
 #include "CmmVisitor.h"
 #include "PassVisitor.hpp"
 
+#include "SymbolTableStack.hpp"
+
 using namespace wci;
 using namespace wci::intermediate;
 
@@ -26,7 +28,7 @@ public:
     explicit Pass1Visitor(const string fname, const bool debug=false);
     
     /// Destructor
-    ~Pass1Visitor();
+    ~Pass1Visitor() { }
 
     /// Returns the output file
     ofstream & get_assembly_file();
@@ -69,7 +71,7 @@ private:
     const string program_name;
 
     /// Symbol Table Stack
-    SymTabStack *symtab_stack;
+    ::intermediate::SymbolTableStack symbol_table_stack;
 
     /// Program ID
     SymTabEntry *program_id;

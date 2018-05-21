@@ -52,7 +52,7 @@ protected:
     class name : public CustomException                                    \
     {                                                                      \
     public:                                                                \
-        name(const std::string msg) : CustomException("[name] " + msg) { } \
+        name(const std::string msg) : CustomException("["#name"] " + msg) { } \
     }
 
 /// @ { Custom exception classes

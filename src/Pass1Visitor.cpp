@@ -5,35 +5,21 @@
 #include "Pass1Visitor.hpp"
 #include "wci/intermediate/SymTabFactory.h"
 #include "wci/intermediate/symtabimpl/Predefined.h"
-#include "wci/util/CrossReferencer.h"
 
 using namespace std;
 using namespace wci;
 using namespace wci::intermediate;
 using namespace wci::intermediate::symtabimpl;
-using namespace wci::util;
 
 
-
-Pass1Visitor::~Pass1Visitor() = default;
 
 Pass1Visitor::Pass1Visitor(const string fname, const bool debug) : 
     PassVisitor(1),
     program_name(fname),
-    symtab_stack(nullptr),
-    program_id(nullptr), 
+    symbol_table_stack(),
     j_file(nullptr), 
     debug_flag(debug)
 {
-    // Create and initialize the symbol table stack.
-    symtab_stack = SymTabFactory::create_symtab_stack();
-    Predefined::initialize(symtab_stack);
-
-    program_id = symtab_stack->enter_local(program_name);
-    program_id->set_definition((Definition) DF_PROGRAM);
-    program_id->set_attribute((SymTabKey) ROUTINE_SYMTAB, new EntryValue(symtab_stack->push()));
-    symtab_stack->set_program_id(program_id);
-
     cout << "Pass1Visitor: symtab stack initialized" << endl;
 }
 
@@ -44,28 +30,14 @@ ofstream & Pass1Visitor::get_assembly_file()
 
 void Pass1Visitor::lookup_symbol_type(string const & variable, TypeSpec ** type, char & type_letter)
 {
-    try
+    if (auto symbol = symbol_table_stack.lookup_symbol_globally(variable))
     {
-        const SymTabEntry * entry = symtab_stack->lookup(variable);
-
-        if (!entry)
-        {
-            throw MissingSymbol(variable);
-        }
-
-        *type = entry->get_typespec();
-
-        if (nullptr == *type)
-        {
-            cerr << "Missing type : " << variable << endl;
-            exit(-1);
-        }
-
+        *type = symbol->get_type();
         type_letter = letter_map_lookup(*type);
     }
-    catch (InvalidType const & error)
+    else
     {
-        error.print_and_exit();
+        throw MissingSymbol(variable);
     }
 }
 
@@ -101,10 +73,12 @@ antlrcpp::Any Pass1Visitor::visitCompilationUnit(CmmParser::CompilationUnitConte
 
     auto value = visitChildren(context);
 
+#if 0
     // Print the cross-reference table
     CrossReferencer cross_referencer;
     cross_referencer.print(symtab_stack);
-    
+#endif
+
     return value;
 }
 
@@ -143,6 +117,7 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *cont
             cout << TAB << context->typeSpecifier()->getText() << endl;
             context->type = *(type_map.at(context->typeSpecifier()->getText()));
             context->type_letter = (char)toupper(context->typeSpecifier()->getText()[0]);
+            cout << context->type << " " << context->type_letter << endl;
         }
         else
         {
@@ -179,21 +154,12 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *cont
         variable_name = context->Identifier(0)->getText();
     }
 
-    // Create a symbol table for a new declaration
-    SymTabEntry * variable_id = symtab_stack->enter_local(variable_name);
-    variable_id->set_definition((Definition) DF_VARIABLE);
-    variable_id->set_typespec(context->type);
-
-    if (Predefined::double_type == context->type)
-    {
-        // Create a symbol table for a dummy for the second symbol asdfakfds;ksad;fasdf
-        SymTabEntry *variable_id = symtab_stack->enter_local(variable_name + "_dummy");
-        variable_id->set_definition((Definition) DF_VARIABLE);
-        variable_id->set_typespec(context->type);
-    }
-
     try
     {
+        cout << context->type << " " << context->type_letter << endl;
+        
+        symbol_table_stack.push_symbol_locally(variable_name, context->type);
+        
         // Find function in map
         if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
         {
@@ -203,21 +169,26 @@ antlrcpp::Any Pass1Visitor::visitDeclaration(CmmParser::DeclarationContext *cont
         {
             PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
                 variable_name,
-                ::intermediate::Symbol(variable_id->id, context->type_letter, context->type)
+                ::intermediate::Symbol(
+                    symbol_table_stack.get_last_symbol_id_locally(), 
+                    context->type
+                )
             );
         }
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
     }
     catch (MissingSymbol const & error)
     {
         error.print_and_exit();
     }
 
-    cout << TAB << "Symbol table created for : " << variable_name << endl;
+    cout << TAB << "Symbol created for : " << variable_name << endl;
 
-    // Determine if current symbol table is global
-    SymTab * const local_symbol_table = symtab_stack->get_local_symtab();
     // Depending which scope this is in, emit declaration
-    if (local_symbol_table->get_nesting_level() == 1)
+    if (symbol_table_stack.get_current_nesting_level() == 1)
     {
         // Make a comment as to what the declaration is
         j_file << "\n; " << context->getText() << endl;
@@ -264,26 +235,13 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(CmmParser::FunctionDeclarat
             error.print_and_exit();
         }
 
-        string variable_name;
+        string variable_name = context->Identifier(i)->getText();
         string variable_initial_value;
-
-        variable_name = context->Identifier(i)->getText();
-
-        // Create a symbol table for a new declaration
-        SymTabEntry *variable_id = symtab_stack->enter_local(variable_name);
-        variable_id->set_definition((Definition) DF_VARIABLE);
-        variable_id->set_typespec(context->type);
-
-        if (Predefined::double_type == context->type)
-        {
-            // Create a symbol table for a dummy for the second symbol asdfakfds;ksad;fasdf
-            SymTabEntry *variable_id = symtab_stack->enter_local(variable_name + "_dummy");
-            variable_id->set_definition((Definition) DF_VARIABLE);
-            variable_id->set_typespec(context->type);
-        }
 
         try
         {
+            symbol_table_stack.push_symbol_locally(variable_name, context->type);
+            
             if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
             {
                 throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
@@ -292,16 +250,23 @@ antlrcpp::Any Pass1Visitor::visitFunctionDeclaration(CmmParser::FunctionDeclarat
             {
                 PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
                     variable_name,
-                    ::intermediate::Symbol(variable_id->id, context->type_letter, context->type)
+                    ::intermediate::Symbol(
+                        symbol_table_stack.get_last_symbol_id_locally(), 
+                        context->type
+                    )
                 );
             }
+        }
+        catch (InvalidType const & error)
+        {
+            error.print_and_exit();
         }
         catch (MissingSymbol const & error)
         {
             error.print_and_exit();
         }
 
-        cout << TAB << "Symbol table created for : " << variable_name << endl;
+        cout << TAB << "Symbol created for : " << variable_name << endl;
     }
 
     return visitChildren(context);
@@ -364,24 +329,24 @@ antlrcpp::Any Pass1Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitio
     //add comment of function signature for jasmin file
     context->function_header += "\n; " + context->getText() + "\n";
 
-    //create a local symbal table for the function
-    symtab_stack->push();
+    // Create new symbol table
+    ::intermediate::SymbolTablePtr table_ptr = std::make_shared <::intermediate::SymbolTable>
+    (
+        ::intermediate::SymbolTableScope::function, 
+        function_name, 
+        symbol_table_stack.get_current_nesting_level()
+    );
+    symbol_table_stack.push_symbol_table(table_ptr);
 
     //allow parameterTypeList to add function parameters to symtab
     visit(context->parameterTypeList());
-
-    std::cout << TAB << "Size of local symtab" << symtab_stack->get_local_symtab()->sorted_entries().size() << std::endl;
-    for (auto variable:symtab_stack->get_local_symtab()->sorted_entries()) 
-    {
-        std::cout << TAB << variable->get_name() << endl;
-    }
-
     visit(context->compoundStatement());
 
-    context->num_local_vars = symtab_stack->get_local_symtab()->get_size() - 1;
-    context->stack_size = context->num_local_vars * 8;
+    context->num_local_vars = symbol_table_stack.get_local_symbol_table()->get_size() - 1; /// symtab_stack->get_local_symtab()->get_size() - 1;
+    context->stack_size     = context->num_local_vars * 8;
 
-    symtab_stack->pop();
+    symbol_table_stack.pop_symbol_table();
+    cout << "Popped" << endl;
 
     PassVisitor::current_function = "global";
 
@@ -413,26 +378,7 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
             // Look up type of this expression in the symbol table stack
             try
             {
-                const string variable = context->getText();
-
-                const SymTabEntry * entry = symtab_stack->lookup(variable);
-
-                if (!entry)
-                {
-                    throw MissingSymbol(variable);
-                }
-
-                TypeSpec * type = entry->get_typespec();
-
-                if (type)
-                {
-                    context->type_letter = letter_map_lookup(type);
-                    context->type = type;
-                }
-                else
-                {
-                    throw MissingSymbol("Symbol missing type : " + variable);
-                }
+                lookup_symbol_type(context->getText(), &(context->type), context->type_letter);
             }
             catch (MissingSymbol const & error)
             {
@@ -457,7 +403,8 @@ antlrcpp::Any Pass1Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
 
     visitChildren(context);
 
-    context->primaryExpression()->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
+    // context->primaryExpression()->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
+    context->primaryExpression()->current_nesting_level = symbol_table_stack.get_current_nesting_level();
 
     return context->type;
 }
@@ -629,30 +576,7 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
 
     try
     {
-        SymTabEntry * entry = symtab_stack->lookup(variable);
-
-        if (!entry)
-        {
-            throw MissingSymbol("Missing symbol table : " + variable);
-        }
-
-        TypeSpec * type = entry->get_typespec();
-    
-        if (type)
-        {
-            context->type_letter = letter_map_lookup(type);
-            context->type = type;
-
-            if (context->expression())
-            {
-                context->expression()->type = context->type;
-                context->expression()->type_letter = context->type_letter;
-            }
-        }
-        else
-        {
-            throw MissingSymbol("Symbol missing type : " + variable);
-        }
+        lookup_symbol_type(variable, &(context->type), context->type_letter);
     }
     catch (InvalidType const & error)
     {
@@ -663,7 +587,8 @@ antlrcpp::Any Pass1Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
         error.print_and_exit();
     }
 
-    context->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
+    // context->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
+    context->current_nesting_level = symbol_table_stack.get_current_nesting_level();
 
     return visitChildren(context);
 }
@@ -839,7 +764,18 @@ antlrcpp::Any Pass1Visitor::visitUnaryIncrementStatement(CmmParser::UnaryIncreme
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     // Look up type of this expression in the symbol table stack
-    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+    try
+    {
+        lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+    }
+    catch (MissingSymbol const & error)
+    {
+        error.print_and_exit();
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
+    }
 
     return visitChildren(context);
 }
@@ -849,7 +785,18 @@ antlrcpp::Any Pass1Visitor::visitUnaryDecrementStatement(CmmParser::UnaryDecreme
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     // Look up type of this expression in the symbol table stack
-    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+    try
+    {
+        lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+    }
+    catch (MissingSymbol const & error)
+    {
+        error.print_and_exit();
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
+    }
 
     return visitChildren(context);
 }
@@ -859,7 +806,18 @@ antlrcpp::Any Pass1Visitor::visitUnarySquareStatement(CmmParser::UnarySquareStat
     PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
     // Look up type of this expression in the symbol table stack
-    lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+    try
+    {
+        lookup_symbol_type(context->Identifier()->getText(), &context->type, context->type_letter);
+    }
+    catch (MissingSymbol const & error)
+    {
+        error.print_and_exit();
+    }
+    catch (InvalidType const & error)
+    {
+        error.print_and_exit();
+    }
 
     return visitChildren(context);
 }

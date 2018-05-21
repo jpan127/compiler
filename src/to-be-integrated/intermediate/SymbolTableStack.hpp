@@ -24,6 +24,12 @@ namespace intermediate
     public:
 
         /**
+         *  Default Constructor
+         *  Creates an empty global symbol table
+         */
+        SymbolTableStack();
+
+        /**
          *  Constructor
          *  @param global_table : Global symbol table to push onto the stack first
          */
@@ -32,11 +38,21 @@ namespace intermediate
         /// Returns the current nesting level
         uint32_t get_current_nesting_level() const { return m_current_nesting_level; }
 
+        /// Returns the last symbol ID of the local symbol table
+        uint32_t get_last_symbol_id_locally() const { return stack.back()->get_last_symbol_id(); }
+
         /// Returns the global symbol table, will always exist
         const SymbolTablePtr & get_global_symbol_table() const;
 
         /// Returns the local symbol table, will always exist
         const SymbolTablePtr & get_local_symbol_table() const;
+
+        /**
+         *  Pushes a symbol onto the local symbol table
+         *  @param name : Name of symbol
+         *  @param type : Type of the symbol
+         */
+        void push_symbol_locally(const std::string & name, TypeSpec * type);
 
         /**
          *  Pushes a new symbol table onto the stack

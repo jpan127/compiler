@@ -24,7 +24,7 @@ public:
      * @param form the form.
      * @return the type specification.
      */
-    static TypeSpec *create_type(const TypeForm form);
+    static TypeSpec *create_type(const TypeFormImpl form);
 
     /**
      * Create a string type specification.

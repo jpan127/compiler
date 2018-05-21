@@ -49,12 +49,12 @@ void TypeSpecImpl::initialize()
     INITIALIZED = true;
 }
 
-TypeSpecImpl::TypeSpecImpl() : form((TypeForm) -1), type_id(nullptr)
+TypeSpecImpl::TypeSpecImpl() : form((TypeFormImpl) -1), type_id(nullptr)
 {
     initialize();
 }
 
-TypeSpecImpl::TypeSpecImpl(TypeForm form) : form(form), type_id(nullptr)
+TypeSpecImpl::TypeSpecImpl(TypeFormImpl form) : form(form), type_id(nullptr)
 {
     initialize();
 }
@@ -62,9 +62,9 @@ TypeSpecImpl::TypeSpecImpl(TypeForm form) : form(form), type_id(nullptr)
 TypeSpecImpl::TypeSpecImpl(string value)
 {
     initialize();
-    form = (TypeForm) TF_ARRAY;
+    form = (TypeFormImpl) TF_ARRAY;
 
-    TypeSpec *index_type = new TypeSpecImpl((TypeForm) TF_SUBRANGE);
+    TypeSpec *index_type = new TypeSpecImpl((TypeFormImpl) TF_SUBRANGE);
     index_type->set_attribute((TypeKey) SUBRANGE_BASE_TYPE,
                               new TypeValue(Predefined::integer_type));
     index_type->set_attribute((TypeKey) SUBRANGE_MIN_VALUE,
@@ -88,7 +88,7 @@ TypeSpecImpl::~TypeSpecImpl()
 {
 }
 
-TypeForm TypeSpecImpl::get_form() const { return form; }
+TypeFormImpl TypeSpecImpl::get_form() const { return form; }
 
 SymTabEntry *TypeSpecImpl::get_identifier() const { return type_id; }
 
@@ -106,7 +106,7 @@ TypeValue *TypeSpecImpl::get_attribute(TypeKey key)
 
 bool TypeSpecImpl::is_pascal_string()
 {
-    if (form == (TypeForm) TF_ARRAY)
+    if (form == (TypeFormImpl) TF_ARRAY)
     {
         TypeValue *type_value = this->get_attribute((TypeKey) ARRAY_ELEMENT_TYPE);
         TypeSpec  *elmt_type  = type_value->typespec;
@@ -128,7 +128,7 @@ bool TypeSpecImpl::is_pascal_string()
  */
 TypeSpec *TypeSpecImpl::base_type()
 {
-    if (form == (TypeForm) TF_SUBRANGE)
+    if (form == (TypeFormImpl) TF_SUBRANGE)
     {
         TypeValue *type_value =
                        this->get_attribute((TypeKey) SUBRANGE_BASE_TYPE);

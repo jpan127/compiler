@@ -7,6 +7,12 @@
 #include "Pass1Visitor.hpp"
 #include "Pass2Visitor.hpp"
 
+#include "wci/intermediate/typeimpl/TypeSpecImpl.h"
+#include "wci/intermediate/TypeSpec.h"
+using namespace wci;
+using namespace wci::intermediate;
+using namespace wci::intermediate::symtabimpl;
+
 using namespace std;
 using namespace antlrcpp;
 using namespace antlr4;
@@ -34,6 +40,14 @@ int main(int argc, const char *args[])
         cout << error << endl;
         return -1;
     }
+
+    /// @TODO : Remove when integrating TypeSpecifier
+    Predefined::void_type   = new wci::intermediate::typeimpl::TypeSpecImpl(wci::intermediate::TypeFormImpl::SCALAR);
+    Predefined::bool_type   = new wci::intermediate::typeimpl::TypeSpecImpl(wci::intermediate::TypeFormImpl::SCALAR);
+    Predefined::char_type   = new wci::intermediate::typeimpl::TypeSpecImpl(wci::intermediate::TypeFormImpl::SCALAR);
+    Predefined::int_type    = new wci::intermediate::typeimpl::TypeSpecImpl(wci::intermediate::TypeFormImpl::SCALAR);
+    Predefined::float_type  = new wci::intermediate::typeimpl::TypeSpecImpl(wci::intermediate::TypeFormImpl::SCALAR);
+    Predefined::double_type = new wci::intermediate::typeimpl::TypeSpecImpl(wci::intermediate::TypeFormImpl::SCALAR);
 
     /// Input Stream
     ifstream ins(args[1]);

@@ -18,20 +18,6 @@ namespace wci { namespace intermediate { namespace typeimpl {
 using namespace std;
 
 /**
- * Type specification form implementation
- */
-enum class TypeFormImpl
-{
-    SCALAR, ENUMERATION, SUBRANGE, ARRAY, RECORD,
-};
-
-constexpr TypeFormImpl TF_SCALAR = TypeFormImpl::SCALAR;
-constexpr TypeFormImpl TF_ENUMERATION = TypeFormImpl::ENUMERATION;
-constexpr TypeFormImpl TF_SUBRANGE = TypeFormImpl::SUBRANGE;
-constexpr TypeFormImpl TF_ARRAY = TypeFormImpl::ARRAY;
-constexpr TypeFormImpl TF_RECORD = TypeFormImpl::RECORD;
-
-/**
  * Type specification key implementation
  */
 enum class TypeKeyImpl
@@ -71,7 +57,7 @@ public:
      * Constructor.
      * @param form the type form.
      */
-    TypeSpecImpl(TypeForm form);
+    TypeSpecImpl(TypeFormImpl form);
 
     /**
      * Constructor.
@@ -88,7 +74,7 @@ public:
      * Getter
      * @return the type form.
      */
-    TypeForm get_form() const;
+    TypeFormImpl get_form() const;
 
     /**
      * Getter.
@@ -132,7 +118,7 @@ public:
     static map<TypeKeyImpl,  string> TYPE_KEY_NAMES;
 
 private:
-    TypeForm form;
+    TypeFormImpl form;
     SymTabEntry *type_id;  // type identifier
     map<TypeKey, TypeValue *> contents;
 

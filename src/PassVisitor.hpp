@@ -6,6 +6,7 @@
 
 #include "wci/intermediate/SymTabStack.h"
 #include "wci/intermediate/SymTabEntry.h"
+#include "wci/intermediate/typeimpl/TypeSpecImpl.h"
 #include "wci/intermediate/TypeSpec.h"
 
 #include "CmmBaseVisitor.h"
@@ -17,6 +18,7 @@
 
 using namespace wci;
 using namespace wci::intermediate;
+using namespace wci::intermediate::symtabimpl;
 
 
 
@@ -26,6 +28,13 @@ using namespace wci::intermediate;
     {                                                           \
         return nullptr;                                         \
     }
+
+enum class PassEnumeration
+{
+    pass1 = 1,
+    pass2 = 2,
+    pass3 = 3,
+};
 
 /**
  *  Class that Pass1Visitor and Pass2Visitor inherit from
@@ -48,7 +57,7 @@ protected:
 
     /// Just a tab character
     static const char TAB = '\t';
-
+    
     /// @TODO : Hopefully these data structures can be moved to the symbol table modules
 
     /// Maps string types to a pointer to the typespec

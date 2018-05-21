@@ -100,11 +100,11 @@ void Predefined::init_symbol_table(SymTabStack *symtab_stack, const string name,
     *id = symtab_stack->enter_local(name);
     if (*type == bool_type)
     {
-        *type = TypeFactory::create_type((TypeForm) TF_ENUMERATION);
+        *type = TypeFactory::create_type((TypeFormImpl) TF_ENUMERATION);
     }
     else
     {
-        *type = TypeFactory::create_type((TypeForm) TF_SCALAR);
+        *type = TypeFactory::create_type((TypeFormImpl) TF_SCALAR);
     }
     (*type)->set_identifier(*id);
     (*id)->set_definition((Definition) DF_TYPE);
@@ -138,7 +138,7 @@ void Predefined::initialize_types(SymTabStack *symtab_stack)
     }
 
     // Undefined type.
-    undefined_type = TypeFactory::create_type((TypeForm) TF_SCALAR);
+    undefined_type = TypeFactory::create_type((TypeFormImpl) TF_SCALAR);
 }
 
 void Predefined::initialize_constants(SymTabStack *symtab_stack)

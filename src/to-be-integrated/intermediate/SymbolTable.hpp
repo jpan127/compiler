@@ -46,7 +46,8 @@ namespace intermediate
         SymbolTable(const SymbolTableScope scope, const std::string table_name, const uint32_t nesting_level) : 
             m_scope(scope),
             m_table_name(table_name), 
-            m_nesting_level(nesting_level)
+            m_nesting_level(nesting_level),
+            m_current_symbol_id(0)
             { /* Empty */}
 
         /**
@@ -55,10 +56,7 @@ namespace intermediate
          *  @returns    : A shared pointer to the newly created symbol
          *  @note @todo : First use of shared_ptr, need to evaluate
          */
-        const SymbolPtr & create_and_add_symbol(const std::string & name,
-            const uint32_t id, 
-            const char type_letter, 
-            TypeSpec * type);
+        const SymbolPtr & create_and_add_symbol(const std::string & name, TypeSpec * type);
 
         /**
          *  Looks up a symbol in the table
@@ -75,6 +73,9 @@ namespace intermediate
         /// Returns the nesting level of the table
         uint32_t get_nesting_level() const { return m_nesting_level; }
 
+        /// Returns the last symbol ID
+        uint32_t get_last_symbol_id() const { return m_current_symbol_id - 1; }
+
     private:
 
         /// Scope of this table
@@ -85,6 +86,9 @@ namespace intermediate
 
         /// The nesting level of the table in the symbol table stack, should never change
         const uint32_t m_nesting_level;
+
+        /// ID of the next symbol to be added
+        uint32_t m_current_symbol_id;
 
         /// Maps symbol name to a pointer to the symbol object
         std::map <const std::string, SymbolPtr> m_table;

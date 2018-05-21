@@ -5,12 +5,18 @@
 namespace intermediate
 {
 
-    const SymbolPtr & SymbolTable::create_and_add_symbol(const std::string & name,
-        const uint32_t id, 
-        const char type_letter, 
-        TypeSpec * type)
+    const SymbolPtr & SymbolTable::create_and_add_symbol(const std::string & name, TypeSpec * type)
     {
-        SymbolPtr s_ptr = std::make_shared <Symbol> (id, type_letter, type);
+        if (Predefined::double_type == type || Predefined::long_type == type)
+        {
+            m_current_symbol_id += 2;
+        }
+        else
+        {
+            m_current_symbol_id++;
+        }
+
+        SymbolPtr s_ptr = std::make_shared <Symbol> (m_current_symbol_id, type);
         m_table[name] = s_ptr;
         return m_table[name];
     }
