@@ -102,29 +102,29 @@
 	istore 4
 	; d=100
 	ldc2_w 100.0
-	dstore 5
+	dstore 6
 	; e=-1.1
 	ldc2_w -1.1
-	dstore 7
+	dstore 8
 
-; while((d>0)and(d<200)){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
+; while((d>0)and(d<1000)){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
 while_0:
 	; d > 0
-	dload 5
+	dload 6
 	d2i
 	ldc 0
 	; Exit [while_0] condition
 	if_icmple while_0_end
-	; d < 200
-	dload 5
+	; d < 1000
+	dload 6
 	d2i
-	ldc 200
+	ldc 1000
 	; Exit [while_0] condition
 	if_icmpge while_0_end
 ; if(d%fizz_buzz==0){e**;}
 if_1:
 	; d%fizz_buzz == 0
-	dload 5
+	dload 6
 	iload 4
 	i2d
 	drem
@@ -133,10 +133,10 @@ if_1:
 	; Exit [if_1] condition
 	if_icmpne if_1_end
 	; e**
-	dload 7
+	dload 8
 	dup2
 	dmul
-	dstore 7
+	dstore 8
 	; Exit if-else statement
 	goto if_else_end_1
 if_1_end:
@@ -144,7 +144,7 @@ if_1_end:
 ; elseif(d%fizz==0){fizz_counter++;}
 else_if_1_0:
 	; d%fizz == 0
-	dload 5
+	dload 6
 	iload 2
 	i2d
 	drem
@@ -164,7 +164,7 @@ else_if_1_0_end:
 ; elseif(d%buzz==0){++buzz_counter;}
 else_if_1_1:
 	; d%buzz == 0
-	dload 5
+	dload 6
 	iload 3
 	i2d
 	drem
@@ -206,10 +206,10 @@ else_1:
 if_else_end_1:
 
 	; d--
-	dload 5
+	dload 6
 	dconst_1
 	dsub
-	dstore 5
+	dstore 6
 	; Jump to start of loop
 	goto while_0
 while_0_end:
@@ -238,7 +238,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	dload 7
+	dload 8
 	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -260,7 +260,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	dload 5
+	dload 6
 	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -375,6 +375,6 @@ print_results:
 	invokevirtual RunTimer.printElapsedTime()V
 	return
 
-.limit locals 36
-.limit stack 64
+.limit locals 32
+.limit stack 48
 .end method
