@@ -4,8 +4,14 @@ grammar Cmm;
 #include "TypeSpecifier.hpp"
 }
 
+/***************************************************
+ *                                                 *
+ *                   C O M M O N                   *
+ *                                                 *
+ **************************************************/
+
 compilationUnit
-    :translationUnit? EOF
+    :   translationUnit? EOF
     ;
 
 translationUnit
@@ -13,69 +19,15 @@ translationUnit
     |   translationUnit externalDeclaration
     ;
 
-externalDeclaration
-    :   functionDefinition
-    |   declaration
-    |   Semi
-    ;
-
-functionDefinition
-    locals [
-        string function_header,
-        uint32_t num_local_vars = 0,
-        size_t stack_size = 0,
-    ]
-    : typeSpecifier Identifier parameterTypeList compoundStatement
-    ;
-
-functionDeclaration
-    locals [
-        backend::TypeSpecifier type,
-        char type_letter = 0,
-    ]
-    :   typeSpecifier Identifier(Comma typeSpecifier Identifier)*
-    ;
-
-declaration
-    locals [
-        backend::TypeSpecifier type,
-        char type_letter = 0
-    ]
-    :   typeSpecifier Identifier (Comma Identifier)* Semi
-    |   typeSpecifier assignmentExpression (Comma assignmentExpression)* Semi
-    ;
-
 typeSpecifier
-    :   (Void
+    :
+    (   Void
     |   Bool
     |   Char
     |   Int
     |   Float
     |   Double
     )
-    ;
-
-functionCall
-    : Identifier LeftParen identifierList? RightParen Semi
-    ;
-
-functionReturn
-    : Identifier LeftParen identifierList? RightParen
-    ;
-
-jumpStatement
-    :      Return expression? Semi
-    ;
-
-identifierList
-    : expression (Comma expression)*
-    ;
-
-compoundStatement
-    locals [
-        string scope_name = "Anonymous"
-    ]
-    :   LeftBrace blockItemList? RightBrace
     ;
 
 blockItemList
@@ -89,6 +41,68 @@ blockItem
     |   functionCall
     ;
 
+/***************************************************
+ *                                                 *
+ *             D E C L A R A T I O N S             *
+ *                                                 *
+ **************************************************/
+
+externalDeclaration
+    :   functionDefinition
+    |   declaration
+    |   Semi
+    ;
+
+declaration
+    locals [
+        backend::TypeSpecifier type,
+        char type_letter = 0
+    ]
+    :   typeSpecifier Identifier (Comma Identifier)* Semi
+    |   typeSpecifier assignmentExpression (Comma assignmentExpression)* Semi
+    ;
+
+/***************************************************
+ *                                                 *
+ *                  F U N C T I O N                *
+ *                                                 *
+ **************************************************/
+
+functionParameterList
+    locals [
+        backend::TypeSpecifier type,
+        char type_letter = 0,
+    ]
+    :   typeSpecifier Identifier (Comma typeSpecifier Identifier)*
+    ;
+
+functionDefinition
+    locals [
+        string function_header,
+        uint32_t num_local_vars = 0,
+        size_t stack_size = 0,
+    ]
+    :   typeSpecifier Identifier parameterTypeList compoundStatement
+    ;
+
+parameterTypeList
+    :   LeftParen functionParameterList? RightParen
+    ;
+
+functionCall
+    :   Identifier LeftParen identifierList? RightParen Semi
+    ;
+
+functionReturn
+    :   Identifier LeftParen identifierList? RightParen
+    ;
+
+/***************************************************
+ *                                                 *
+ *                S T A T E M E N T S              *
+ *                                                 *
+ **************************************************/
+
 statement
     :   compoundStatement
     |   expressionStatement
@@ -97,6 +111,48 @@ statement
     |   assignmentStatement
     |   jumpStatement
     |   unaryStatement Semi
+    ;
+
+compoundStatement
+    locals [
+        string scope_name = "Anonymous"
+    ]
+    :   LeftBrace blockItemList? RightBrace
+    ;
+
+expressionStatement
+    :   expression? Semi
+    ;
+
+ifElseStatement
+    :   ifStatement elseIfStatement* elseStatement*
+    ;
+
+ifStatement
+    :   If LeftParen conditionalExpression RightParen statement
+    ;
+
+elseIfStatement
+    locals [
+        uint32_t id = 0
+    ]
+    :   Else If LeftParen conditionalExpression RightParen statement
+    ;
+
+elseStatement
+    :   Else statement
+    ;
+
+iterationStatement
+    :   While LeftParen conditionalExpression RightParen statement
+    ;
+
+assignmentStatement
+    :   assignmentExpression Semi
+    ;
+
+jumpStatement
+    :   Return expression? Semi
     ;
 
 unaryStatement
@@ -111,47 +167,14 @@ unaryStatement
     |   Identifier Power       # unarySquareStatement
     ;
 
-assignmentStatement
-    :   assignmentExpression Semi
-    ;
+/***************************************************
+ *                                                 *
+ *               E X P R E S S I O N S             *
+ *                                                 *
+ **************************************************/
 
-expressionStatement
-    :   expression? Semi
-    ;
-
-ifElseStatement
-    : ifStatement elseIfStatement* elseStatement*
-    ;
-
-ifStatement
-    : If LeftParen conditionalExpression RightParen statement
-    ;
-
-elseIfStatement
-    locals [
-        uint32_t id = 0
-    ]
-    : Else If LeftParen conditionalExpression RightParen statement
-    ;
-
-elseStatement
-    : Else statement
-    ;
-
-/// While Statement
-iterationStatement
-    :   While LeftParen conditionalExpression RightParen statement
-    ;
-
-primaryExpression
-    locals [
-        char type_letter = '?',
-        uint32_t current_nesting_level = 0
-    ]
-    :   Identifier
-    |   IntegerConstant
-    |   FloatConstant
-    |   LeftParen expression RightParen
+identifierList
+    :   expression (Comma expression)*
     ;
 
 expression
@@ -164,6 +187,17 @@ expression
     |   expression opr=( '+' | '-' ) expression                             # addminExpr
     |   expression opr=( '<<' | '>>' | '&' | '|' | '~' | '^' ) expression   # bitExpr
     |   primaryExpression                                                   # primExpr
+    ;
+
+primaryExpression
+    locals [
+        char type_letter = '?',
+        uint32_t current_nesting_level = 0
+    ]
+    :   Identifier
+    |   IntegerConstant
+    |   FloatConstant
+    |   LeftParen expression RightParen
     ;
 
 conditionalExpression
@@ -186,10 +220,6 @@ assignmentExpression
     ]
     :   Identifier Assign expression
     |   Identifier Assign functionReturn
-    ;
-
-parameterTypeList
-    :   LeftParen functionDeclaration? RightParen
     ;
 
 /***************************************************
@@ -339,27 +369,27 @@ FloatConstant
     ;
 
 AndAnd
-    : '&&'
-    | 'and'
+    :   '&&'
+    |   'and'
     ;
 
 OrOr
-    : '||'
-    | 'or'
+    :   '||'
+    |   'or'
     ;
 Not
-    : '!'
-    | 'not'
+    :   '!'
+    |   'not'
     ;
 
 Equal
-    : '=='
-    | 'is'
+    :   '=='
+    |   'is'
     ;
 
 NotEqual
-    : '!='
-    | 'is not'
+    :   '!='
+    |   'is not'
     ;
 
 Identifier

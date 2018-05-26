@@ -22,37 +22,45 @@ namespace backend
         /// Returns the output file
         std::ofstream & get_assembly_file();
 
+        /// @ { Common
         antlrcpp::Any visitCompilationUnit(CmmParser::CompilationUnitContext *context) override;
         antlrcpp::Any visitTranslationUnit(CmmParser::TranslationUnitContext *context) override;
-
         antlrcpp::Any visitTypeSpecifier(CmmParser::TypeSpecifierContext *context) override;
+        /// @ }
+
+        /// @ { Declarations
         antlrcpp::Any visitDeclaration(CmmParser::DeclarationContext *context) override;
-        antlrcpp::Any visitFunctionDeclaration(CmmParser::FunctionDeclarationContext *ctx) override;
+        /// @ }
 
+        /// @ { Functions
+        antlrcpp::Any visitFunctionParameterList(CmmParser::FunctionParameterListContext *context) override;
         antlrcpp::Any visitFunctionDefinition(CmmParser::FunctionDefinitionContext *context) override;
-        antlrcpp::Any visitCompoundStatement(CmmParser::CompoundStatementContext *context) override;
+        /// @ }
 
+        /// @ { Statements
+        antlrcpp::Any visitCompoundStatement(CmmParser::CompoundStatementContext *context) override;
         antlrcpp::Any visitIfElseStatement(CmmParser::IfElseStatementContext *context) override;
         antlrcpp::Any visitIfStatement(CmmParser::IfStatementContext *context) override;
         antlrcpp::Any visitElseIfStatement(CmmParser::ElseIfStatementContext *context) override;
         antlrcpp::Any visitElseStatement(CmmParser::ElseStatementContext *context) override;
-
         antlrcpp::Any visitIterationStatement(CmmParser::IterationStatementContext *context) override;
+        antlrcpp::Any visitAssignmentStatement(CmmParser::AssignmentStatementContext * context) override;
         antlrcpp::Any visitUnaryIncrementStatement(CmmParser::UnaryIncrementStatementContext *context) override;
         antlrcpp::Any visitUnaryDecrementStatement(CmmParser::UnaryDecrementStatementContext *context) override;
         antlrcpp::Any visitUnarySquareStatement(CmmParser::UnarySquareStatementContext *context) override;
-        antlrcpp::Any visitAssignmentStatement(CmmParser::AssignmentStatementContext * context) override;
+        /// @ }
 
-        antlrcpp::Any visitPrimExpr(CmmParser::PrimExprContext *context) override;
+        /// @ { Expressions
         antlrcpp::Any visitMulDivExpr(CmmParser::MulDivExprContext *context) override;
         antlrcpp::Any visitAddminExpr(CmmParser::AddminExprContext *context) override;
         antlrcpp::Any visitBitExpr(CmmParser::BitExprContext *context) override;
+        antlrcpp::Any visitPrimExpr(CmmParser::PrimExprContext *context) override;
         antlrcpp::Any visitBasicConditionalExpr(CmmParser::BasicConditionalExprContext * context) override;
         antlrcpp::Any visitConnectedConditionalExpr(CmmParser::ConnectedConditionalExprContext * context) override;
-        antlrcpp::Any visitNegatedConditionalExpr(CmmParser::NegatedConditionalExprContext *context) override;
         antlrcpp::Any visitParenthesizedConditionalExpr(CmmParser::ParenthesizedConditionalExprContext *context) override;
-
+        antlrcpp::Any visitNegatedConditionalExpr(CmmParser::NegatedConditionalExprContext *context) override;
         antlrcpp::Any visitAssignmentExpression(CmmParser::AssignmentExpressionContext *context) override;
+        /// @ }
 
     private:
 

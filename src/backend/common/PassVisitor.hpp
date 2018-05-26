@@ -24,6 +24,16 @@ namespace backend
             error.print_and_exit();                                 \
         }
 
+    #define CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(first, second)   \
+        catch (first const & error)                                 \
+        {                                                           \
+            error.print_and_exit();                                 \
+        }                                                           \
+        catch (second const & error)                                \
+        {                                                           \
+            error.print_and_exit();                                 \
+        }
+
     enum class PassEnumeration
     {
         pass1 = 1,
