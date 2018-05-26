@@ -27,7 +27,7 @@ private:
 
     vector <string> instruction_buffer;
 
-    string resolve_expression_instruction(Type type, string const & opr);
+    string resolve_expression_instruction(const backend::TypeSpecifier & type, string const & opr);
 
     void emit_symbol_table();
 

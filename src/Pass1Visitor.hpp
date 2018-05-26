@@ -25,7 +25,7 @@ public:
 
     /// Constructor
     explicit Pass1Visitor(const string fname, const bool debug=false);
-    
+
     /// Destructor
     ~Pass1Visitor() { }
 
@@ -75,7 +75,7 @@ private:
     /// Program ID
     SymTabEntry *program_id;
 
-    /// Output file    
+    /// Output file
     ofstream j_file;
 
     /// Flag to print debug messages or not
@@ -87,7 +87,7 @@ private:
      *  @param context : The context object to look up and modify
      *  @throws        : InvalidType
      */
-    void lookup_symbol_type(string const & variable, Type & type, char & type_letter);
+    void lookup_symbol_type(string const & variable, backend::TypeSpecifier & type, char & type_letter);
 
 };
 

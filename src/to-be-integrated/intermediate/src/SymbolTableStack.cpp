@@ -7,10 +7,10 @@ namespace intermediate
 
     SymbolTableStack::SymbolTableStack() : m_current_nesting_level(0)
     {
-        SymbolTablePtr table_ptr = std::make_shared <SymbolTable> 
+        SymbolTablePtr table_ptr = std::make_shared <SymbolTable>
         (
-            SymbolTableScope::global, 
-            "global", 
+            SymbolTableScope::global,
+            "global",
             0
         );
 
@@ -32,7 +32,7 @@ namespace intermediate
         return stack.back();
     }
 
-    void SymbolTableStack::push_symbol_locally(const std::string & name, Type type)
+    void SymbolTableStack::push_symbol_locally(const std::string & name, backend::TypeSpecifier type)
     {
         stack.back()->create_and_add_symbol(name, type);
     }
@@ -67,7 +67,7 @@ namespace intermediate
                 break;
             }
         }
-        
+
         return symbol;
     }
 

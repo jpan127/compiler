@@ -5,9 +5,9 @@
 namespace intermediate
 {
 
-    const SymbolPtr & SymbolTable::create_and_add_symbol(const std::string & name, Type type)
+    const SymbolPtr & SymbolTable::create_and_add_symbol(const std::string & name, backend::TypeSpecifier type)
     {
-        if (Type::t_double == type || Type::t_long == type)
+        if (backend::Type::t_double == type.get_type() || backend::Type::t_long == type.get_type())
         {
             m_current_symbol_id += 2;
         }
@@ -35,14 +35,7 @@ namespace intermediate
 
     bool SymbolTable::symbol_exists(const std::string & name) const
     {
-        bool exists = false;
-
-        if (m_table.find(name) != m_table.end())
-        {
-            exists = true;
-        }
-
-        return exists;
+        return (m_table.find(name) != m_table.end());
     }
 
 } /// intermediate

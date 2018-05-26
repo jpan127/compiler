@@ -21,25 +21,26 @@ externalDeclaration
     |   Semi
     ;
 
-functionDefinition 
+functionDefinition
     locals [
         string function_header,
         uint32_t num_local_vars = 0,
         size_t stack_size = 0,
     ]
-    : typeSpecifier Identifier parameterTypeList compoundStatement;
+    : typeSpecifier Identifier parameterTypeList compoundStatement
+    ;
 
 functionDeclaration
     locals [
-        Type type = Type::t_null,
+        backend::TypeSpecifier type,
         char type_letter = 0,
     ]
     :   typeSpecifier Identifier(Comma typeSpecifier Identifier)*
     ;
 
-declaration 
+declaration
     locals [
-        Type type = Type::t_null, 
+        backend::TypeSpecifier type,
         char type_letter = 0
     ]
     :   typeSpecifier Identifier (Comma Identifier)* Semi
@@ -72,7 +73,10 @@ identifierList
     : expression (Comma expression)*
     ;
 
-compoundStatement locals [ string scope_name = "Anonymous" ]
+compoundStatement
+    locals [
+        string scope_name = "Anonymous"
+    ]
     :   LeftBrace blockItemList? RightBrace
     ;
 
@@ -99,7 +103,7 @@ statement
 
 unaryStatement
     locals [
-        Type type = Type::t_null,
+        backend::TypeSpecifier type,
         char type_letter = '?'
     ]
     :   PlusPlus   Identifier  # unaryIncrementStatement
@@ -152,9 +156,9 @@ primaryExpression
     |   LeftParen expression RightParen
     ;
 
-expression 
+expression
     locals [
-        Type type = Type::t_null,
+        backend::TypeSpecifier type,
         string expr_operator,
         char type_letter = '?'
     ]
@@ -164,8 +168,8 @@ expression
     |   primaryExpression                                                   # primExpr
     ;
 
-conditionalExpression 
-    locals [ 
+conditionalExpression
+    locals [
         string iteration_name,  /// Stores the name of the parent statement (while_N | if_N)
         string opr,             /// Stores the operator chars
         string opcode           /// Stores the instruction opcode used in Pass 2
@@ -178,7 +182,7 @@ conditionalExpression
 
 assignmentExpression
     locals [
-        Type type = Type::t_null, 
+        backend::TypeSpecifier type,
         char type_letter = 0,
         uint32_t current_nesting_level = 0
     ]
@@ -187,7 +191,8 @@ assignmentExpression
     ;
 
 parameterTypeList
-    :   LeftParen functionDeclaration? RightParen;
+    :   LeftParen functionDeclaration? RightParen
+    ;
 
 /***************************************************
  *                                                 *

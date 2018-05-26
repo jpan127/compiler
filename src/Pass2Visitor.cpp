@@ -1,7 +1,3 @@
-#include <iostream>
-#include <string>
-#include <typeinfo>
-
 #include "Pass2Visitor.hpp"
 
 
@@ -12,7 +8,7 @@
  *      XSUB instructions will subtract bottom operand - top operand, with bottom operand as the first operand pushed onto the stack
  */
 
-Pass2Visitor::Pass2Visitor(const string fname, ofstream & j_file, const bool debug) : PassVisitor(2), program_name(fname), j_file(j_file), debug_flag(debug)
+Pass2Visitor::Pass2Visitor(const std::string fname, std::ofstream & j_file, const bool debug) : PassVisitor(2), program_name(fname), j_file(j_file), debug_flag(debug)
 {
     /// Empty
 }
@@ -23,9 +19,9 @@ Pass2Visitor::~Pass2Visitor()
     j_file.close();
 }
 
-string Pass2Visitor::resolve_expression_instruction(Type type, string const & opr)
+std::string Pass2Visitor::resolve_expression_instruction(const backend::TypeSpecifier & type, std::string const & opr)
 {
-    static const map <const string, const string> operator_to_opcode_map =
+    static const std::map <const std::string, const std::string> operator_to_opcode_map =
     {
         { "*"  , "mul" },
         { "/"  , "div" },
@@ -41,7 +37,7 @@ string Pass2Visitor::resolve_expression_instruction(Type type, string const & op
     };
 
     // Get opcode prefix
-    string opcode(1, instruction_prefix_map_lookup(type));
+    std::string opcode(1, instruction_prefix_map_lookup(type));
 
     // Get opcode
     if (operator_to_opcode_map.find(opr) != operator_to_opcode_map.end())
@@ -86,7 +82,7 @@ void Pass2Visitor::emit_symbol_table()
                     case 'I': j_file << "%d\\n\"" << endl; break;
                     case 'L': j_file << "%d\\n\"" << endl; break;
                     default :
-                        throw InvalidType(string("Invalid type letter found : ") + string(1, symbol.second.get_type_letter()));
+                        throw InvalidType(std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
                 }
 
                 j_file << TAB << "ldc 1"                      << endl;
@@ -103,7 +99,7 @@ void Pass2Visitor::emit_symbol_table()
                     case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
                     case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
                     default : 
-                        throw InvalidType(string("Invalid type letter found : ") + string(1, symbol.second.get_type_letter()));
+                        throw InvalidType(std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
                 }
 
                 j_file << TAB << "aastore" << endl;
@@ -212,7 +208,7 @@ antlrcpp::Any Pass2Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitio
 
     visit(context->parameterTypeList());
     visit(context->compoundStatement());
-  
+
     j_file << ".limit locals " << (context->num_local_vars+10) * 2                  << endl;
     j_file << ".limit stack " << context->stack_size                                << endl;
     j_file << ".end method" << endl;
@@ -267,7 +263,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
      */
 
     // Add a comment
-    const string comment = "\t; " + context->getText();
+    const std::string comment = "\t; " + context->getText();
     if (context->current_nesting_level == 1)
     {
         instruction_buffer.push_back(comment);
@@ -277,7 +273,7 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
         j_file << comment << endl;
     }
 
-    Type expression_type = Type::t_int;
+    backend::Type expression_type = backend::Type::t_int;
 
     try
     {
@@ -285,9 +281,9 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
         {
             // Visit right hand side expression first
             auto result = visit(context->expression());
-            expression_type = static_cast <Type> (result);
+            expression_type = static_cast <backend::Type> (result);
 
-            const string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
+            const std::string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
             if (type_convert_instruction.size() > 0)
             {
                 j_file << TAB << type_convert_instruction << endl;
@@ -307,14 +303,9 @@ antlrcpp::Any Pass2Visitor::visitAssignmentExpression(CmmParser::AssignmentExpre
         /// @TODO : Remove this hack
         // If we cannot cast to a TypeSpec properly then the result did not return a TypeSpec, in which case continue because it does not matter
     }
-    catch (AntlrParsedIncorrectly const & error)
-    {
-        error.print_and_exit();
-    }
+    CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(AntlrParsedIncorrectly)
 
-    string instruction;
-
-    instruction += create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
+    std::string instruction = create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
 
     if (context->current_nesting_level == 1)
     {
@@ -338,7 +329,7 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
      *  If float    : emit ldc
      */
 
-    string instruction;
+    std::string instruction;
 
     if (context->primaryExpression()->Identifier())
     {
@@ -354,11 +345,11 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
     else if (context->primaryExpression()->IntegerConstant() ||
             (context->primaryExpression()->FloatConstant()))
     {
-        cout << "******" << context->type << endl;
+        cout << TAB << context->type << endl;
         // Doubles need to be treated differently
-        if (Type::t_double == context->type)
+        if (backend::Type::t_double == context->type.get_type())
         {
-            string double_value;
+            std::string double_value;
 
             // If integer constant add decimal
             if (context->primaryExpression()->IntegerConstant())
@@ -375,9 +366,9 @@ antlrcpp::Any Pass2Visitor::visitPrimExpr(CmmParser::PrimExprContext *context)
             instruction += "ldc2_w ";
             instruction += double_value;
         }
-        else if (Type::t_float == context->type)
+        else if (backend::Type::t_float == context->type.get_type())
         {
-            string float_value;
+            std::string float_value;
 
             // If integer constant add decimal
             if (context->primaryExpression()->IntegerConstant())
@@ -428,17 +419,16 @@ antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *contex
     for (uint8_t i = 0; i < 2; i++)
     {
         visit(context->expression(i));
-        Type operand_type = context->expression(i)->type;
 
         // Type mismatches need to be converted
-        const string type_convert_instruction = convert_type_if_neccessary(operand_type, context->type);
+        const std::string type_convert_instruction = convert_type_if_neccessary(context->expression(i)->type, context->type);
         if (type_convert_instruction.size() > 0)
         {
             j_file << TAB << type_convert_instruction << endl;
         }
     }
 
-    string opcode;
+    std::string opcode;
 
     try
     {
@@ -470,17 +460,16 @@ antlrcpp::Any Pass2Visitor::visitAddminExpr(CmmParser::AddminExprContext *contex
     for (uint8_t i = 0; i < 2; i++)
     {
         visit(context->expression(i));
-        Type operand_type = context->expression(i)->type;
-    
+
         // Type mismatches need to be converted
-        const string type_convert_instruction = convert_type_if_neccessary(operand_type, context->type);
+        const std::string type_convert_instruction = convert_type_if_neccessary(context->expression(i)->type, context->type);
         if (type_convert_instruction.size() > 0)
         {
             j_file << TAB << type_convert_instruction << endl;
         }
     }
 
-    string opcode;
+    std::string opcode;
 
     try
     {
@@ -512,17 +501,16 @@ antlrcpp::Any Pass2Visitor::visitBitExpr(CmmParser::BitExprContext *context)
     for (uint8_t i = 0; i < 2; i++)
     {
         visit(context->expression(i));
-        Type operand_type = context->expression(i)->type;
-    
+
         // Type mismatches need to be converted
-        const string type_convert_instruction = convert_type_if_neccessary(operand_type, context->type);
+        const std::string type_convert_instruction = convert_type_if_neccessary(context->expression(i)->type, context->type);
         if (type_convert_instruction.size() > 0)
         {
             j_file << TAB << type_convert_instruction << endl;
         }
     }
 
-    string opcode;
+    std::string opcode;
 
     try
     {
@@ -551,11 +539,11 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(CmmParser::BasicConditiona
      *  Emits branch instruction for exiting the current branch
      */
 
-    const string lhs_name = context->expression(0)->getText();
-    const string rhs_name = context->expression(1)->getText();
+    const std::string lhs_name = context->expression(0)->getText();
+    const std::string rhs_name = context->expression(1)->getText();
 
     // Emit an explanation comment for condition
-    j_file << TAB 
+    j_file << TAB
            << "; "
            << lhs_name
            << " "
@@ -569,13 +557,13 @@ antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(CmmParser::BasicConditiona
     {
         visit(context->expression(i));
         // Doubles and floats need to be converted before jump comparison instruction
-        if (Type::t_double == context->expression(i)->type)
+        if (backend::Type::t_double == context->expression(i)->type.get_type())
         {
             j_file << TAB
                    << "d2i"
                    << endl;
         }
-        else if (Type::t_float  == context->expression(i)->type)
+        else if (backend::Type::t_float  == context->expression(i)->type.get_type())
         {
             j_file << TAB
                    << "f2i"
@@ -618,7 +606,7 @@ antlrcpp::Any Pass2Visitor::visitConnectedConditionalExpr(CmmParser::ConnectedCo
     // Left and right operands should have pushed values to the stack
     if ("or" == context->opr)
     {
-        // If left condition is > 0, jump 
+        // If left condition is > 0, jump
         j_file << TAB
                << "ifgt "
                << context->iteration_name
@@ -667,7 +655,7 @@ antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(CmmParser::Parenth
 
 antlrcpp::Any Pass2Visitor::visitJumpStatement(CmmParser::JumpStatementContext *context)
 {
-    if( PassVisitor::current_function == "main")
+    if (PassVisitor::current_function == "main")
     {
         try
         {
@@ -678,17 +666,28 @@ antlrcpp::Any Pass2Visitor::visitJumpStatement(CmmParser::JumpStatementContext *
             error.print_and_exit();
         }
         // Emit the main program epilogue
-        j_file                                                                          << endl;
-        j_file << "\t; Print Elapsed Time"                                                << endl;
-        j_file << "\tgetstatic     " << program_name << "/_runTimer LRunTimer;"         << endl;
-        j_file << "\tinvokevirtual RunTimer.printElapsedTime()V"                        << endl;
+        j_file                                                                       << endl;
+        j_file << TAB << "; Print Elapsed Time"                                      << endl;
+        j_file << TAB << "getstatic     " << program_name << "/_runTimer LRunTimer;" << endl;
+        j_file << TAB << "invokevirtual RunTimer.printElapsedTime()V"                << endl;
     }
 
-    if (context->expression()) visit(context->expression());
-    j_file  << TAB;
-    if (context->expression()) j_file << instruction_prefix_map.at(context->expression()->type);
-    j_file << "return"                                                              << endl;
-    j_file                                                                          << endl;
+    if (context->expression())
+    {
+        visit(context->expression());
+    }
+
+    try
+    {
+        if (context->expression())
+        {
+            j_file << TAB << instruction_prefix_map_lookup(context->expression()->type);
+        }
+    }
+    CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
+
+    j_file << TAB << "return" << endl << endl;
+
     return nullptr;
 }
 
@@ -714,14 +713,14 @@ antlrcpp::Any Pass2Visitor::visitIterationStatement(CmmParser::IterationStatemen
      *  Emit a label for the end of loop
      */
 
-    j_file << endl 
+    j_file << endl
            << "; "
            << context->getText()
            << endl;
 
     // Emit the iteration label
-    j_file << context->conditionalExpression()->iteration_name 
-           << ":" 
+    j_file << context->conditionalExpression()->iteration_name
+           << ":"
            << endl;
 
     // Emit while loop
@@ -759,7 +758,7 @@ antlrcpp::Any Pass2Visitor::visitIfElseStatement(CmmParser::IfElseStatementConte
     visitChildren(context);
 
     // Only increment scope_counter at the end of the entire statement
-    const string end_label = "if_else_end_" + std::to_string(PassVisitor::scope_counter++);
+    const std::string end_label = "if_else_end_" + std::to_string(PassVisitor::scope_counter++);
 
     // Add label to branch to for exiting the loop
     j_file << end_label
@@ -941,19 +940,19 @@ antlrcpp::Any Pass2Visitor::visitUnaryDecrementStatement(CmmParser::UnaryDecreme
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
     // Load one @TODO : Clean up
-    if (context->type == Type::t_double)
+    if (context->type.get_type() == backend::Type::t_double)
     {
         j_file << TAB
                << "dconst_1"
                << endl;
     }
-    else if (context->type == Type::t_float)
+    else if (context->type.get_type() == backend::Type::t_float)
     {
         j_file << TAB
                << "fconst_1"
                << endl;
     }
-    else if (context->type == Type::t_int)
+    else if (context->type.get_type() == backend::Type::t_int)
     {
         j_file << TAB
                << "iconst_1"
@@ -988,7 +987,7 @@ antlrcpp::Any Pass2Visitor::visitUnarySquareStatement(CmmParser::UnarySquareStat
     j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
 
     j_file << TAB
-           << ((context->type == Type::t_double) ? ("dup2") : ("dup"))
+           << ((context->type.get_type() == backend::Type::t_double) ? ("dup2") : ("dup"))
            << endl;
 
     // Multiply

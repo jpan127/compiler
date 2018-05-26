@@ -52,7 +52,7 @@ namespace intermediate
          *  @param name : Name of symbol
          *  @param type : Type of the symbol
          */
-        void push_symbol_locally(const std::string & name, Type type);
+        void push_symbol_locally(const std::string & name, backend::TypeSpecifier type);
 
         /**
          *  Pushes a new symbol table onto the stack

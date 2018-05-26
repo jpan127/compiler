@@ -26,9 +26,9 @@ namespace intermediate
          *  Initializes the constant member variables
          *  @TODO : Change to TypeSpecifier
          */
-        Symbol(const uint32_t id, Type type) : m_id(id),  m_type(type) 
+        Symbol(const uint32_t id, backend::TypeSpecifier type) : m_id(id),  m_type(type)
         {
-            m_type_letter = letter_map.at(type);
+            m_type_letter = letter_map.at(type.get_type());
         }
 
         /// Assignment operator
@@ -45,7 +45,7 @@ namespace intermediate
         char get_type_letter() const { return m_type_letter; }
 
         /// Returns the type specifier of the symbol
-        Type get_type() const { return m_type; }
+        const backend::TypeSpecifier & get_type() const { return m_type; }
 
     private:
 
@@ -56,19 +56,19 @@ namespace intermediate
         char m_type_letter;
 
         /// Pointer to the Predefined type
-        Type m_type;
+        backend::TypeSpecifier m_type;
 
         /// Keeps track of the line numbers this symbol was referenced
         std::vector <uint32_t> line_numbers;
 
-        const std::unordered_map <Type, char> letter_map =
+        const std::unordered_map <backend::Type, char> letter_map =
         {
-            { Type::t_void   , 'V' },
-            { Type::t_bool   , 'B' },
-            { Type::t_char   , 'C' },
-            { Type::t_int    , 'I' },
-            { Type::t_float  , 'F' },
-            { Type::t_double , 'D' },
+            { backend::Type::t_void   , 'V' },
+            { backend::Type::t_bool   , 'B' },
+            { backend::Type::t_char   , 'C' },
+            { backend::Type::t_int    , 'I' },
+            { backend::Type::t_float  , 'F' },
+            { backend::Type::t_double , 'D' },
         };
 
     };

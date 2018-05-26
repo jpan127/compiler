@@ -1,93 +1,47 @@
 #include "PassVisitor.hpp"
 
-#include "wci/intermediate/SymTabFactory.h"
-#include "wci/intermediate/symtabimpl/Predefined.h"
-
-using namespace std;
-using namespace wci;
-using namespace wci::intermediate;
-using namespace wci::intermediate::symtabimpl;
 
 
+/*////////////////////////////////////////////////////////////
+ *                                                           *
+ *              S T A T I C  V A R I A B L E S               *
+ *                                                           *
+ */////////////////////////////////////////////////////////////
 
 uint64_t PassVisitor::scope_counter = 0;
 
-const unordered_map <string, Type> PassVisitor::type_map =
+std::string PassVisitor::current_function = "global";
+
+std::unordered_map <std::string, std::unordered_map <std::string, ::intermediate::Symbol>> PassVisitor::variable_id_map =
 {
-    { "void"    , Type::t_void   },
-    { "bool"    , Type::t_bool   },
-    { "char"    , Type::t_char   },
-    { "int"     , Type::t_int    },
-    { "float"   , Type::t_float  },
-    { "double"  , Type::t_double },
+    { "global" , std::unordered_map <std::string, ::intermediate::Symbol> () },
 };
 
-const unordered_map <Type, char> PassVisitor::letter_map =
+std::unordered_map <std::string, std::string> PassVisitor::function_definition_map;
+
+const backend::TypeSpecifier PassVisitor::resolve_expression_type(const backend::TypeSpecifier & lhs_type, const backend::TypeSpecifier & rhs_type)
 {
-    { Type::t_void   , 'V' },
-    { Type::t_bool   , 'B' },
-    { Type::t_char   , 'C' },
-    { Type::t_int    , 'I' },
-    { Type::t_float  , 'F' },
-    { Type::t_double , 'D' },
-};
-
-const unordered_map <Type, char> PassVisitor::instruction_prefix_map =
-{
-    { Type::t_bool   , 'i' },
-    { Type::t_char   , 'i' },
-    { Type::t_int    , 'i' },
-    { Type::t_float  , 'f' },
-    { Type::t_double , 'd' },
-};
-
-unordered_map <string, unordered_map <string, ::intermediate::Symbol>> PassVisitor::variable_id_map =
-{
-    { "global" , unordered_map <string, ::intermediate::Symbol> () },
-};
-
-unordered_map <string, string> PassVisitor::function_definition_map;
-
-string PassVisitor::current_function = "global";
-
-Type PassVisitor::resolve_expression_type(Type lhs_type, Type rhs_type)
-{
-    // If any are double then result is double
-    if (Type::t_double == lhs_type || Type::t_double == rhs_type)
-    {
-        return Type::t_double;
-    }
-    // If any are not real and neither are double then result is real
-    else if (Type::t_float == lhs_type || Type::t_float == rhs_type)
-    {
-        return Type::t_float;
-    }
-    // Otherwise integer
-    else
-    {
-        return Type::t_int;
-    }
+    return (lhs_type < rhs_type) ? (rhs_type) : (lhs_type);
 }
 
 bool PassVisitor::print_debug_context(antlr4::ParserRuleContext * context, const std::string & rule_name) const
 {
     constexpr size_t longest_name = 35;
-    const string error_prefix = "<missing";
-    const string space_padding(longest_name - rule_name.length(), ' ');
-    const string text = context->getText();
+    const std::string error_prefix = "<missing";
+    const std::string space_padding(longest_name - rule_name.length(), ' ');
+    const std::string text = context->getText();
 
-    // if (text.find("<missing") != std::string::npos)
     if (std::equal(error_prefix.begin(), error_prefix.end(), text.begin()))
     {
         cout << "-----------------------------------------------------------" << endl;
         cout << "[PASS"
              << std::to_string(pass_number)
-             << "][" 
-             << context->children.size() 
-             << "][COMPILATION ERROR] " 
-             << rule_name 
-             << " : " 
-             << context->getText() 
+             << "]["
+             << context->children.size()
+             << "][COMPILATION ERROR] "
+             << rule_name
+             << " : "
+             << context->getText()
              << endl;
         cout << "Skipping this node!" << endl;
         cout << "-----------------------------------------------------------" << endl;
@@ -97,69 +51,69 @@ bool PassVisitor::print_debug_context(antlr4::ParserRuleContext * context, const
     {
         cout << "[PASS"
              << std::to_string(pass_number)
-             << "][" 
-             << context->children.size() 
-             << "] " 
-             << rule_name 
-             << space_padding 
-             << " : " 
-             << context->getText() 
+             << "]["
+             << context->children.size()
+             << "] "
+             << rule_name
+             << space_padding
+             << " : "
+             << context->getText()
              << endl;
         return true;
     }
 }
 
-char PassVisitor::letter_map_lookup(const Type type) const
+char PassVisitor::letter_map_lookup(const backend::TypeSpecifier & type) const
 {
-    char ret = '?';
-
-    bool found = false;
-    for (auto t : letter_map)
+    static const std::unordered_map <backend::Type, char> letter_map =
     {
-        if (t.first == type)
-        {
-            ret = t.second;
-            found = true;
-            break;
-        }
-    }
+        { backend::Type::t_void   , 'V' },
+        { backend::Type::t_bool   , 'B' },
+        { backend::Type::t_char   , 'C' },
+        { backend::Type::t_int    , 'I' },
+        { backend::Type::t_float  , 'F' },
+        { backend::Type::t_double , 'D' },
+    };
 
-    // If not found, compilation should not continue
-    if (!found)
+    const backend::Type & t = type.get_type();
+
+    if (letter_map.find(t) != letter_map.end())
     {
-        throw InvalidType("[letter_map_lookup] Type not found : " + to_string(type));
+        return letter_map.at(t);
     }
-
-    return ret;
+    else
+    {
+        throw InvalidType("[letter_map_lookup] Type not found : " + type.to_string());
+        return '?';
+    }
 }
 
-char PassVisitor::instruction_prefix_map_lookup(const Type type) const
+char PassVisitor::instruction_prefix_map_lookup(const backend::TypeSpecifier & type) const
 {
-    char ret = '?';
-
-    bool found = false;
-    for (auto t : instruction_prefix_map)
+    static const std::unordered_map <backend::Type, char> instruction_prefix_map =
     {
-        if (t.first == type)
-        {
-            ret = t.second;
-            found = true;
-            break;
-        }
-    }
+        { backend::Type::t_bool   , 'i' },
+        { backend::Type::t_char   , 'i' },
+        { backend::Type::t_int    , 'i' },
+        { backend::Type::t_float  , 'f' },
+        { backend::Type::t_double , 'd' },
+    };
 
-    // If not found, compilation should not continue
-    if (!found)
+    const backend::Type & t = type.get_type();
+
+    if (instruction_prefix_map.find(t) != instruction_prefix_map.end())
     {
-        throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + to_string(type));
+        return instruction_prefix_map.at(t);
     }
-
-    return ret;
+    else
+    {
+        throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + type.to_string());
+    }
 }
 
-string PassVisitor::create_get_variable_instruction(const string program_name, const string variable, const char type_letter)
+std::string PassVisitor::create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
 {
-    string instruction = "\t";
+    std::string instruction = "\t";
 
     for (auto function : variable_id_map)
     {
@@ -179,7 +133,7 @@ string PassVisitor::create_get_variable_instruction(const string program_name, c
                         case 'F': instruction += "fload " + std::to_string(symbols.second.get_id()); break;
                         case 'D': instruction += "dload " + std::to_string(symbols.second.get_id()); break;
                         case 'L': instruction += "lload " + std::to_string(symbols.second.get_id()); break;
-                        default : 
+                        default :
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
                 }
@@ -191,9 +145,9 @@ string PassVisitor::create_get_variable_instruction(const string program_name, c
     return "???????????????????????????????????";
 }
 
-string PassVisitor::create_put_variable_instruction(const string program_name, const string variable, const char type_letter)
+std::string PassVisitor::create_put_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
 {
-    string instruction = "\t";
+    std::string instruction = "\t";
 
     for (auto function : variable_id_map)
     {
@@ -213,7 +167,7 @@ string PassVisitor::create_put_variable_instruction(const string program_name, c
                         case 'F': instruction += "fstore " + std::to_string(symbols.second.get_id()); break;
                         case 'D': instruction += "dstore " + std::to_string(symbols.second.get_id()); break;
                         case 'L': instruction += "lstore " + std::to_string(symbols.second.get_id()); break;
-                        default : 
+                        default :
                             throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                     }
                 }
@@ -225,7 +179,7 @@ string PassVisitor::create_put_variable_instruction(const string program_name, c
     return "???????????????????????????????????";
 }
 
-uint32_t PassVisitor::get_variable_id(const string variable) const
+uint32_t PassVisitor::get_variable_id(const std::string variable) const
 {
     for (auto function : variable_id_map)
     {
@@ -241,7 +195,7 @@ uint32_t PassVisitor::get_variable_id(const string variable) const
     return static_cast <uint32_t> (-1);
 }
 
-bool PassVisitor::is_global(const string variable) const
+bool PassVisitor::is_global(const std::string variable) const
 {
     for (auto symbols : variable_id_map["global"])
     {
@@ -254,21 +208,24 @@ bool PassVisitor::is_global(const string variable) const
     return false;
 }
 
-string PassVisitor::convert_type_if_neccessary(Type current_type, Type needed_type)
+std::string PassVisitor::convert_type_if_neccessary(const backend::TypeSpecifier & current_type, const backend::TypeSpecifier & needed_type)
 {
-    string instruction;
+    std::string instruction;
 
-    if (current_type != needed_type)
+    const backend::Type & current = current_type.get_type();
+    const backend::Type & needed  = needed_type.get_type();
+
+    if (current != needed)
     {
-             if (Type::t_double == current_type) { instruction += "d2"; }
-        else if (Type::t_float  == current_type) { instruction += "f2"; }
-        else if (Type::t_int    == current_type) { instruction += "i2"; }
-        else { throw InvalidType("Unsupported type for conversion instruction : " + to_string(current_type)); }
+             if (backend::Type::t_double == current) { instruction += "d2"; }
+        else if (backend::Type::t_float  == current) { instruction += "f2"; }
+        else if (backend::Type::t_int    == current) { instruction += "i2"; }
+        else { throw InvalidType("Unsupported type for conversion instruction : " + current_type.to_string()); }
 
-             if (Type::t_double == needed_type) { instruction += "d"; }
-        else if (Type::t_float  == needed_type) { instruction += "f"; }
-        else if (Type::t_int    == needed_type) { instruction += "i"; }
-        else { throw InvalidType("Unsupported type for conversion instruction : " + to_string(current_type)); }
+             if (backend::Type::t_double == needed) { instruction += "d"; }
+        else if (backend::Type::t_float  == needed) { instruction += "f"; }
+        else if (backend::Type::t_int    == needed) { instruction += "i"; }
+        else { throw InvalidType("Unsupported type for conversion instruction : " + needed_type.to_string()); }
     }
 
     return instruction;
