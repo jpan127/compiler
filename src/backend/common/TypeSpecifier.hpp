@@ -1,7 +1,6 @@
 #pragma once
 
 #include "common.hpp"
-#include <unordered_map>
 
 
 
@@ -26,7 +25,6 @@ namespace backend
     public:
 
         /// Constructor that takes the type
-        /// @TODO : Rethink how this should be used
         TypeSpecifier(const std::string type) { set_type(type); }
         TypeSpecifier(const Type type) : m_type(type) { }
         TypeSpecifier() : m_type(Type::t_null) { }
@@ -44,7 +42,6 @@ namespace backend
             return *this;
         }
 
-        /// @TODO : Make overloaded operators for comparing TypeSpecifier with Type, is that appropriate?
         /// @ { Overloaded comparison operators
         friend bool operator == (const TypeSpecifier & lhs, const TypeSpecifier & rhs);
         friend bool operator != (const TypeSpecifier & lhs, const TypeSpecifier & rhs);
@@ -52,6 +49,12 @@ namespace backend
         friend bool operator >  (const TypeSpecifier & lhs, const TypeSpecifier & rhs);
         friend bool operator <= (const TypeSpecifier & lhs, const TypeSpecifier & rhs);
         friend bool operator >= (const TypeSpecifier & lhs, const TypeSpecifier & rhs);
+        friend bool operator == (const Type & lhs, const TypeSpecifier & rhs);
+        friend bool operator != (const Type & lhs, const TypeSpecifier & rhs);
+        friend bool operator <  (const Type & lhs, const TypeSpecifier & rhs);
+        friend bool operator >  (const Type & lhs, const TypeSpecifier & rhs);
+        friend bool operator <= (const Type & lhs, const TypeSpecifier & rhs);
+        friend bool operator >= (const Type & lhs, const TypeSpecifier & rhs);
         /// @ }
 
         /// Stringifies the enumerated type

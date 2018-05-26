@@ -1,9 +1,7 @@
 grammar Cmm;
 
 @header {
-#include "wci/intermediate/symtab.h"
 #include "TypeSpecifier.hpp"
-using namespace wci::intermediate;
 }
 
 compilationUnit

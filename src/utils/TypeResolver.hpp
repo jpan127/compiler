@@ -27,7 +27,7 @@ namespace utils
      *  @param rhs : Type specifier of the right operand
      *  @returns   : A type specifier which is the greater precedence of the two operands
      */
-    // backend::TypeSpecifier resolve_types(const backend::TypeSpecifier & lhs, const backend::TypeSpecifier & rhs);
+    backend::TypeSpecifier resolve_types(const backend::TypeSpecifier & lhs, const backend::TypeSpecifier & rhs);
 
     /**
      *  Determines if a type conversion instruction is necessary
@@ -35,6 +35,6 @@ namespace utils
      *  @param end   : Type specifier of the right operand
      *  @returns     : A type conversion instruction
      */
-    // TypeConversion determine_conversion_requirement(const backend::TypeSpecifier & start, const backend::TypeSpecifier & end);
+    TypeConversion determine_conversion_requirement(const backend::TypeSpecifier & start, const backend::TypeSpecifier & end);
 
 }

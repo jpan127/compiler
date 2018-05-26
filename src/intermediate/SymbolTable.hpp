@@ -51,7 +51,7 @@ namespace intermediate
          *  Creates a new symbol and adds it into the symbol table
          *  @param name : Name of the symbol
          *  @returns    : A shared pointer to the newly created symbol
-         *  @note @todo : First use of shared_ptr, need to evaluate
+         *  @note       : First use of shared_ptr, need to evaluate
          */
         const SymbolPtr & create_and_add_symbol(const std::string & name, backend::TypeSpecifier type);
 

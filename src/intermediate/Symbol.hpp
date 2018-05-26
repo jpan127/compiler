@@ -1,9 +1,8 @@
 #pragma once
 
-#include <unordered_map>
-
 #include "common.hpp"
 #include "TypeSpecifier.hpp"
+
 
 
 namespace intermediate
@@ -24,7 +23,8 @@ namespace intermediate
         /**
          *  Constructor
          *  Initializes the constant member variables
-         *  @TODO : Change to TypeSpecifier
+         *  @param id   : ID of the symbol at time of construction
+         *  @param type : Type of symbol
          */
         Symbol(const uint32_t id, backend::TypeSpecifier type) : m_id(id),  m_type(type)
         {
@@ -34,7 +34,10 @@ namespace intermediate
         /// Assignment operator
         Symbol & operator = (Symbol rhs)
         {
-            std::swap(rhs, *this);
+            std::swap(m_id           , rhs.m_id          );
+            std::swap(m_type_letter  , rhs.m_type_letter );
+            std::swap(m_type         , rhs.m_type        );
+            std::swap(m_line_numbers , rhs.m_line_numbers);
             return *this;
         }
 
@@ -59,7 +62,7 @@ namespace intermediate
         backend::TypeSpecifier m_type;
 
         /// Keeps track of the line numbers this symbol was referenced
-        std::vector <uint32_t> line_numbers;
+        std::vector <uint32_t> m_line_numbers;
 
         const std::unordered_map <backend::Type, char> letter_map =
         {

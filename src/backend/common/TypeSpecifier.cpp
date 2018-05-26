@@ -60,30 +60,19 @@ namespace backend
         return out;
     }
 
-    bool operator == (const TypeSpecifier & lhs, const TypeSpecifier & rhs)
-    {
-        return (TypeSpecifier::type_weight_map.at(lhs.m_type) == TypeSpecifier::type_weight_map.at(rhs.m_type));
-    }
-    bool operator != (const TypeSpecifier & lhs, const TypeSpecifier & rhs)
-    {
-        return !(operator == (lhs, rhs));
-    }
-    bool operator < (const TypeSpecifier & lhs, const TypeSpecifier & rhs)
-    {
-        return (TypeSpecifier::type_weight_map.at(lhs.m_type) < TypeSpecifier::type_weight_map.at(rhs.m_type));
-    }
-    bool operator > (const TypeSpecifier & lhs, const TypeSpecifier & rhs)
-    {
-        return (operator < (rhs, lhs));
-    }
-    bool operator <= (const TypeSpecifier & lhs, const TypeSpecifier & rhs)
-    {
-        return !(operator > (lhs, rhs));
-    }
-    bool operator >= (const TypeSpecifier & lhs, const TypeSpecifier & rhs)
-    {
-        return !(operator < (lhs, rhs));
-    }
+    bool operator == (const TypeSpecifier & lhs, const TypeSpecifier & rhs) { return (TypeSpecifier::type_weight_map.at(lhs.m_type) == TypeSpecifier::type_weight_map.at(rhs.m_type)); }
+    bool operator != (const TypeSpecifier & lhs, const TypeSpecifier & rhs) { return !(operator == (lhs, rhs));                                                                        }
+    bool operator <  (const TypeSpecifier & lhs, const TypeSpecifier & rhs) { return (TypeSpecifier::type_weight_map.at(lhs.m_type) < TypeSpecifier::type_weight_map.at(rhs.m_type));  }
+    bool operator >  (const TypeSpecifier & lhs, const TypeSpecifier & rhs) { return (operator < (rhs, lhs));                                                                          }
+    bool operator <= (const TypeSpecifier & lhs, const TypeSpecifier & rhs) { return !(operator > (lhs, rhs));                                                                         }
+    bool operator >= (const TypeSpecifier & lhs, const TypeSpecifier & rhs) { return !(operator < (lhs, rhs));                                                                         }
+
+    bool operator == (const Type & lhs, const TypeSpecifier & rhs) { return (TypeSpecifier::type_weight_map.at(lhs) == TypeSpecifier::type_weight_map.at(rhs.m_type)); }
+    bool operator != (const Type & lhs, const TypeSpecifier & rhs) { return !(operator == (lhs, rhs));                                                                 }
+    bool operator <  (const Type & lhs, const TypeSpecifier & rhs) { return (TypeSpecifier::type_weight_map.at(lhs) < TypeSpecifier::type_weight_map.at(rhs.m_type));  }
+    bool operator >  (const Type & lhs, const TypeSpecifier & rhs) { return (operator < (rhs, lhs));                                                                   }
+    bool operator <= (const Type & lhs, const TypeSpecifier & rhs) { return !(operator > (lhs, rhs));                                                                  }
+    bool operator >= (const Type & lhs, const TypeSpecifier & rhs) { return !(operator < (lhs, rhs));                                                                  }
 
     std::string TypeSpecifier::to_string() const
     {
@@ -109,6 +98,7 @@ namespace backend
         }
         else
         {
+            /// @TODO : After compiler is done and validated, this can be used as a CompilerError
             throw InvalidType("Type not supported : " + type);
         }
     }

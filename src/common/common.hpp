@@ -7,6 +7,7 @@
 #include <vector>
 #include <string>
 #include <map>
+#include <unordered_map>
 #include <memory>
 
 /// Common project includes

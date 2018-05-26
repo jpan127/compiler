@@ -1,14 +1,12 @@
-#include <iostream>
-#include <fstream>
-
 #include "antlr4-runtime.h"
 #include "CmmLexer.h"
 #include "CmmParser.h"
+
+#include "common.hpp"
 #include "Pass1Visitor.hpp"
 #include "Pass2Visitor.hpp"
 
-using namespace antlrcpp;
-using namespace antlr4;
+
 
 static const char * pass1_msg = "------------------------------------------------\n"
                                 "                   P A S S  1                   \n"
@@ -38,21 +36,20 @@ int main(int argc, const char *args[])
     std::cout << args[1] << std::endl;
 
     /// ANLTR Input Stream
-    ANTLRInputStream input(ins);
+    antlr4::ANTLRInputStream input(ins);
 
     /// Lexer
     CmmLexer lexer(&input);
 
     /// Tokenizer
-    CommonTokenStream tokens(&lexer);
+    antlr4::CommonTokenStream tokens(&lexer);
 
     /// Parser
     CmmParser parser(&tokens);
 
     /// Parse Tree
-    tree::ParseTree *tree = parser.compilationUnit();
+    antlr4::tree::ParseTree *tree = parser.compilationUnit();
 
-    std::cout << pass1_msg << std::endl;
 
     std::string file_name = args[1];
     file_name = file_name.substr(0, file_name.find_last_of("."));
@@ -62,17 +59,17 @@ int main(int argc, const char *args[])
     try
     {
         /// First Pass
-        Pass1Visitor *pass1 = new Pass1Visitor(program_name, true);
-        pass1->visit(tree);
-
-        std::cout << pass2_msg << std::endl;
+        std::cout << pass1_msg << std::endl;
+        backend::Pass1Visitor pass1(program_name, true);
+        pass1.visit(tree);
 
         /// Output Stream
-        std::ofstream & j_file = pass1->get_assembly_file();
+        std::ofstream & j_file = pass1.get_assembly_file();
 
         /// Second Pass
-        Pass2Visitor *pass2 = new Pass2Visitor(program_name, j_file, true);
-        pass2->visit(tree);
+        std::cout << pass2_msg << std::endl;
+        backend::Pass2Visitor pass2(program_name, j_file, true);
+        pass2.visit(tree);
 
         /// Sanity clean up
         if (j_file.is_open())
