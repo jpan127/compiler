@@ -5,21 +5,16 @@
 namespace backend
 {
 
-    antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
+    void Pass2Visitor::visit_expression(CmmParser::ExpressionContext * context,
+        const std::vector <CmmParser::ExpressionContext *> & expressions,
+        const std::string & expr_operator)
     {
-        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Visits children expressions first which will push to stack
-         *  Then this node will emit an instruction using the previously pushed values
-         */
-
         for (uint8_t i = 0; i < 2; i++)
         {
-            visit(context->expression(i));
+            visit(expressions[i]);
 
             // Type mismatches need to be converted
-            const std::string type_convert_instruction = convert_type_if_neccessary(context->expression(i)->type, context->type);
+            const std::string type_convert_instruction = convert_type_if_neccessary(expressions[i]->type, context->type);
             if (type_convert_instruction.size() > 0)
             {
                 j_file << TAB << type_convert_instruction << endl;
@@ -30,11 +25,23 @@ namespace backend
 
         try
         {
-            opcode = resolve_expression_instruction(context->type, context->expr_operator);
+            opcode = resolve_expression_instruction(context->type, expr_operator);
         }
         CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, InvalidOperator);
 
         j_file << "\t" << opcode << endl;
+    }
+
+    antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
+    {
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+        const std::vector <CmmParser::ExpressionContext *> & expressions = context->expression();
+        visit_expression(
+            context,
+            expressions,
+            context->expr_operator
+        );
 
         return context->type;
     }
@@ -43,32 +50,26 @@ namespace backend
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        /**
-         *  Visits children expressions first which will push to stack
-         *  Then this node will emit an instruction using the previously pushed values
-         */
+        const std::vector <CmmParser::ExpressionContext *> & expressions = context->expression();
+        visit_expression(
+            context,
+            expressions,
+            context->expr_operator
+        );
 
-        for (uint8_t i = 0; i < 2; i++)
-        {
-            visit(context->expression(i));
+        return context->type;
+    }
 
-            // Type mismatches need to be converted
-            const std::string type_convert_instruction = convert_type_if_neccessary(context->expression(i)->type, context->type);
-            if (type_convert_instruction.size() > 0)
-            {
-                j_file << TAB << type_convert_instruction << endl;
-            }
-        }
+    antlrcpp::Any Pass2Visitor::visitBitExpr(CmmParser::BitExprContext *context)
+    {
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        std::string opcode;
-
-        try
-        {
-            opcode = resolve_expression_instruction(context->type, context->expr_operator);
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, InvalidOperator);
-
-        j_file << "\t" << opcode << endl;
+        const std::vector <CmmParser::ExpressionContext *> & expressions = context->expression();
+        visit_expression(
+            context,
+            expressions,
+            context->expr_operator
+        );
 
         return context->type;
     }
@@ -158,40 +159,6 @@ namespace backend
         return nullptr;
     }
 
-    antlrcpp::Any Pass2Visitor::visitBitExpr(CmmParser::BitExprContext *context)
-    {
-        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Visits children expressions first which will push to stack
-         *  Then this node will emit an instruction using the previously pushed values
-         */
-
-        for (uint8_t i = 0; i < 2; i++)
-        {
-            visit(context->expression(i));
-
-            // Type mismatches need to be converted
-            const std::string type_convert_instruction = convert_type_if_neccessary(context->expression(i)->type, context->type);
-            if (type_convert_instruction.size() > 0)
-            {
-                j_file << TAB << type_convert_instruction << endl;
-            }
-        }
-
-        std::string opcode;
-
-        try
-        {
-            opcode = resolve_expression_instruction(context->type, context->expr_operator);
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, InvalidOperator);
-
-        j_file << "\t" << opcode << endl;
-
-        return context->type;
-    }
-
     antlrcpp::Any Pass2Visitor::visitBasicConditionalExpr(CmmParser::BasicConditionalExprContext *context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
@@ -259,11 +226,12 @@ namespace backend
          *  Responsible for only checking the top 2 values on the stack
          *  For an OR operation, if any of them are nonzero positive, jump
          *  For an AND operation, if both of them are nonzero positive, jump
+         *  @note : Nothing needs to be done because for AND conditions both must be met, 
+         *          and both are checked previously in child nodes
          */
 
-        // Visit left and right sides first
-        auto lhs_result = visit(context->conditionalExpression(0));
-        auto rhs_result = visit(context->conditionalExpression(1));
+        // Visit children first
+        visitChildren(context);
 
         // Left and right operands should have pushed values to the stack
         if ("or" == context->opr)
@@ -279,10 +247,6 @@ namespace backend
                    << context->iteration_name
                    << endl;
         }
-        else if ("and" == context->opr)
-        {
-            // Nothing needs to be done because for AND conditions both must be met, and both are checked previously in child nodes
-        }
 
         return nullptr;
     }
@@ -290,22 +254,12 @@ namespace backend
     antlrcpp::Any Pass2Visitor::visitNegatedConditionalExpr(CmmParser::NegatedConditionalExprContext *context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Nothing yet
-         */
-
         return visitChildren(context);
     }
 
     antlrcpp::Any Pass2Visitor::visitParenthesizedConditionalExpr(CmmParser::ParenthesizedConditionalExprContext *context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Nothing yet
-         */
-
         return visitChildren(context);
     }
 
@@ -329,15 +283,13 @@ namespace backend
             j_file << comment << endl;
         }
 
-        backend::TypeSpecifier expression_type;
-
         try
         {
             if (context->expression())
             {
                 // Visit right hand side expression first
                 visit(context->expression());
-                expression_type = context->expression()->type;
+                const backend::TypeSpecifier expression_type = context->expression()->type;
 
                 const std::string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
                 if (type_convert_instruction.size() > 0)
@@ -356,7 +308,7 @@ namespace backend
         }
         CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(AntlrParsedIncorrectly)
 
-        std::string instruction = create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
+        const std::string instruction = create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
 
         if (context->current_nesting_level == 1)
         {
@@ -367,7 +319,7 @@ namespace backend
             j_file << instruction << endl;
         }
 
-        return expression_type;
+        return nullptr;
     }
 
 } /// backend

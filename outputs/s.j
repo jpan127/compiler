@@ -22,12 +22,6 @@
 ; floatmak5=.1;
 .field private static mak5 F
 
-
-; intf
-
-
-; intb
-
 .method public static fizzy(I)I
 ; intfizzy(intf){intnegate=f*-1;returnnegate;}
 

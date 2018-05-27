@@ -84,6 +84,20 @@ namespace backend
          */
         void lookup_symbol_type(std::string const & variable, backend::TypeSpecifier & type, char & type_letter);
 
+        /**
+         *  Visits a generic expression node
+         *  Sets the expression operator, visits children, and resolves expression type
+         *  @param context      : The context object to look up and modify
+         *  @param operator_set : The set of operators that are allowed in the current context
+         *  @param is_bit_expr  : Flag to show that the node is a bitExpr expression node, which checks for disallowed float operands
+         */
+        void visit_expression(CmmParser::ExpressionContext * context,
+            const std::set <std::string> & operator_set,
+            const bool is_bit_expr,
+            std::string & expr_operator,
+            const std::string opr,
+            const backend::TypeSpecifier & lhs_type,
+            const backend::TypeSpecifier & rhs_type);
     };
 
 } /// backend

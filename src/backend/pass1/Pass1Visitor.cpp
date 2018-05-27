@@ -22,15 +22,19 @@ namespace backend
 
     void Pass1Visitor::lookup_symbol_type(std::string const & variable, backend::TypeSpecifier & type, char & type_letter)
     {
-        if (auto symbol = symbol_table_stack.lookup_symbol_globally(variable))
+        try
         {
-            type.set_type(symbol->get_type());
-            type_letter = letter_map_lookup(type);
+            if (auto symbol = symbol_table_stack.lookup_symbol_globally(variable))
+            {
+                type.set_type(symbol->get_type());
+                type_letter = letter_map_lookup(type);
+            }
+            else
+            {
+                throw MissingSymbol(variable);
+            }
         }
-        else
-        {
-            throw MissingSymbol(variable);
-        }
+        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
     }
 
 } /// backend

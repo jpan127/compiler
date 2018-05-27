@@ -5,6 +5,48 @@
 namespace backend
 {
 
+    void Pass2Visitor::visit_unary_statement(CmmParser::UnaryStatementContext * context,
+        const std::string & identifier,
+        const std::string & opr,
+        const bool is_duplicate)
+    {
+        // Comment
+        j_file << TAB
+               << "; "
+               << context->getText()
+               << endl;
+
+        // Get instruction
+        j_file << create_get_variable_instruction(program_name, identifier, context->type_letter) << endl;
+
+        if (is_duplicate)
+        {
+            j_file << TAB
+                   << ((context->type.get_type() == backend::Type::t_double) ? ("dup2") : ("dup"))
+                   << endl;
+        }
+        else
+        {
+            // Load 1
+            switch (context->type.get_type())
+            {
+                case backend::Type::t_double : j_file << TAB << "dconst_1" << endl; break;
+                case backend::Type::t_float  : j_file << TAB << "fconst_1" << endl; break;
+                case backend::Type::t_int    : j_file << TAB << "iconst_1" << endl; break;
+                default:
+                    throw InvalidType("[visit_unary_statement] Type : " + context->type.to_string());
+            }
+        }
+
+        // ADD
+        j_file << TAB
+               << resolve_expression_instruction(context->type, opr)
+               << endl;
+
+        // Put instruction
+        j_file << create_put_variable_instruction(program_name, identifier, context->type_letter) << endl;
+    }
+
     antlrcpp::Any Pass2Visitor::visitIfElseStatement(CmmParser::IfElseStatementContext *context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
@@ -193,11 +235,6 @@ namespace backend
     antlrcpp::Any Pass2Visitor::visitAssignmentStatement(CmmParser::AssignmentStatementContext *context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Nothing yet
-         */
-
         return visitChildren(context);
     }
 
@@ -205,11 +242,7 @@ namespace backend
     {
         if (PassVisitor::current_function == "main")
         {
-            try
-            {
-                emit_symbol_table();
-            }
-            CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
+            emit_symbol_table();
 
             // Emit the main program epilogue
             j_file                                                                       << endl;
@@ -227,12 +260,14 @@ namespace backend
         {
             if (context->expression())
             {
-                j_file << TAB << instruction_prefix_map_lookup(context->expression()->type);
+                j_file << TAB << instruction_prefix_map_lookup(context->expression()->type) << "return" << endl << endl;
+            }
+            else
+            {
+                j_file << TAB << "return" << endl << endl;
             }
         }
         CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
-
-        j_file << TAB << "return" << endl << endl;
 
         return nullptr;
     }
@@ -241,31 +276,12 @@ namespace backend
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        /**
-         *  Retrieve variable
-         *  Load a constant one
-         *  Emit an ADD instruction
-         *  Write back variable
-         */
-
-        j_file << TAB
-               << "; "
-               << context->getText()
-               << endl;
-
-        j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
-
-        // Load one
-        j_file << TAB
-               << "iconst_1"
-               << endl;
-
-        // ADD
-        j_file << TAB
-               << resolve_expression_instruction(context->type, "+")
-               << endl;
-
-        j_file << create_put_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
+        visit_unary_statement(
+            context,
+            context->Identifier()->getText(),
+            "+",
+            false
+        );
 
         return visitChildren(context);
     }
@@ -274,35 +290,12 @@ namespace backend
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        /**
-         *  Retrieve variable
-         *  Load a constant one
-         *  Emit a SUB instruction
-         *  Write back variable
-         *  @note : First variable pushed onto stack will be the LHS of a sub operation
-         */
-
-        j_file << TAB
-               << "; "
-               << context->getText()
-               << endl;
-
-        j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
-
-        switch (context->type.get_type())
-        {
-            case backend::Type::t_double : j_file << TAB << "dconst_1" << endl; break;
-            case backend::Type::t_float  : j_file << TAB << "fconst_1" << endl; break;
-            case backend::Type::t_int    : j_file << TAB << "iconst_1" << endl; break;
-            default                      :                                      break;
-        }
-
-        // SUB
-        j_file << TAB
-               << resolve_expression_instruction(context->type, "-")
-               << endl;
-
-        j_file << create_put_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
+        visit_unary_statement(
+            context,
+            context->Identifier()->getText(),
+            "-",
+            false
+        );
 
         return visitChildren(context);
     }
@@ -311,29 +304,12 @@ namespace backend
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        /**
-         *  Retrieve variable twice
-         *  Multiply them together = square
-         *  Write back variable
-         */
-
-        j_file << TAB
-               << "; "
-               << context->getText()
-               << endl;
-
-        j_file << create_get_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
-
-        j_file << TAB
-               << ((context->type.get_type() == backend::Type::t_double) ? ("dup2") : ("dup"))
-               << endl;
-
-        // Multiply
-        j_file << TAB
-               << resolve_expression_instruction(context->type, "*")
-               << endl;
-
-        j_file << create_put_variable_instruction(program_name, context->Identifier()->getText(), context->type_letter) << endl;
+        visit_unary_statement(
+            context,
+            context->Identifier()->getText(),
+            "*",
+            true
+        );
 
         return visitChildren(context);
     }

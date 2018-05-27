@@ -85,11 +85,7 @@ namespace backend
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
         // Look up type of this expression in the symbol table stack
-        try
-        {
-            lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+        lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
 
         return visitChildren(context);
     }
@@ -99,11 +95,7 @@ namespace backend
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
         // Look up type of this expression in the symbol table stack
-        try
-        {
-            lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+        lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
 
         return visitChildren(context);
     }
@@ -113,11 +105,7 @@ namespace backend
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
         // Look up type of this expression in the symbol table stack
-        try
-        {
-            lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+        lookup_symbol_type(context->Identifier()->getText(), context->type, context->type_letter);
 
         return visitChildren(context);
     }

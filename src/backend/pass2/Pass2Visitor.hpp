@@ -74,6 +74,15 @@ namespace backend
 
         void emit_symbol_table();
 
+        void visit_expression(CmmParser::ExpressionContext * context,
+            const std::vector <CmmParser::ExpressionContext *> & expressions,
+            const std::string & expr_operator);
+
+        void visit_unary_statement(CmmParser::UnaryStatementContext * context,
+            const std::string & identifier,
+            const std::string & opr,
+            const bool is_duplicate);
+
     };
 
 } /// backend

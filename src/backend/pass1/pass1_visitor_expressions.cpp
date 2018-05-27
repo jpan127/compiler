@@ -4,16 +4,14 @@
 
 namespace backend
 {
-
-    antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
+    void Pass1Visitor::visit_expression(CmmParser::ExpressionContext * context,
+        const std::set <std::string> & operator_set,
+        const bool is_bit_expr,
+        std::string & expr_operator,
+        const std::string opr,
+        const backend::TypeSpecifier & lhs_type,
+        const backend::TypeSpecifier & rhs_type)
     {
-        static const std::set <std::string> operator_set =
-        {
-            "*", "/", "%"
-        };
-
-        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
         /**
          *  Determines the expression operator
          *  Determines the type of the resulting expression
@@ -22,119 +20,24 @@ namespace backend
 
         try
         {
-            if (operator_set.find(context->opr->getText()) != operator_set.end())
+            if (operator_set.find(opr) != operator_set.end())
             {
-                context->expr_operator = context->opr->getText();
+                expr_operator = opr;
             }
             else
             {
-                throw InvalidOperator("Operator does not match : " + context->opr->getText());
+                throw InvalidOperator("Operator does not match : " + opr);
             }
-        }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidOperator);
 
-        visit(context->expression(0));
-        visit(context->expression(1));
+            visitChildren(context);
 
-        const backend::TypeSpecifier lhs_type = context->expression(0)->type;
-        const backend::TypeSpecifier rhs_type = context->expression(1)->type;
-
-        context->type = resolve_expression_type(lhs_type, rhs_type);
-
-        cout << TAB
-             << lhs_type.to_string()
-             << " "
-             << rhs_type.to_string()
-             << endl;
-
-        return visitChildren(context);
-    }
-
-    antlrcpp::Any Pass1Visitor::visitAddminExpr(CmmParser::AddminExprContext *context)
-    {
-        static const std::set <std::string> operator_set =
-        {
-            "+", "-"
-        };
-
-        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Determines the expression operator
-         *  Determines the type of the resulting expression
-         *  Stores it for pass 2
-         */
-
-        try
-        {
-            if (operator_set.find(context->opr->getText()) != operator_set.end())
+            if (is_bit_expr)
             {
-                context->expr_operator = context->opr->getText();
-            }
-            else
-            {
-                throw InvalidOperator("Operator does not match : " + context->opr->getText());
-            }
-        }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidOperator);
-
-        visit(context->expression(0));
-        visit(context->expression(1));
-
-        const backend::TypeSpecifier lhs_type = context->expression(0)->type;
-        const backend::TypeSpecifier rhs_type = context->expression(1)->type;
-
-        context->type = resolve_expression_type(lhs_type, rhs_type);
-
-        cout << TAB
-             << lhs_type.to_string()
-             << " "
-             << rhs_type.to_string()
-             << endl;
-
-        return nullptr;
-    }
-
-    antlrcpp::Any Pass1Visitor::visitBitExpr(CmmParser::BitExprContext *context)
-    {
-        static const std::set <std::string> operator_set =
-        {
-            "<<" , ">>" , "&"  , "|"  , "~"  , "^"
-        };
-
-        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
-
-        /**
-         *  Determines the expression operator
-         *  Determines the type of the resulting expression
-         *  Stores it for pass 2
-         */
-
-        try
-        {
-            if (operator_set.find(context->opr->getText()) != operator_set.end())
-            {
-                context->expr_operator = context->opr->getText();
-            }
-            else
-            {
-                throw InvalidOperator("Operator does not match : " + context->opr->getText());
-            }
-        }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidOperator);
-
-        try
-        {
-            visit(context->expression(0));
-            visit(context->expression(1));
-
-            const backend::TypeSpecifier lhs_type = context->expression(0)->type;
-            const backend::TypeSpecifier rhs_type = context->expression(1)->type;
-
-            if ((backend::Type::t_float == lhs_type.get_type()) ||
-                (backend::Type::t_float == rhs_type.get_type()))
-            {
-                throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
+                if ((backend::Type::t_float == lhs_type.get_type()) ||
+                    (backend::Type::t_float == rhs_type.get_type()))
+                {
+                    throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
+                }
             }
 
             context->type = resolve_expression_type(lhs_type, rhs_type);
@@ -145,7 +48,62 @@ namespace backend
                  << rhs_type.to_string()
                  << endl;
         }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(CompilerError);
+        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidOperator, CompilerError);
+    }
+
+    antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
+    {
+        static const std::set <std::string> operator_set = { "*", "/", "%" };
+
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+        visit_expression(
+            context,
+            operator_set,
+            false,
+            context->expr_operator,
+            context->opr->getText(),
+            context->expression(0)->type,
+            context->expression(1)->type
+        );
+
+        return visitChildren(context);
+    }
+
+    antlrcpp::Any Pass1Visitor::visitAddminExpr(CmmParser::AddminExprContext *context)
+    {
+        static const std::set <std::string> operator_set = { "+", "-" };
+
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+        visit_expression(
+            context,
+            operator_set,
+            false,
+            context->expr_operator,
+            context->opr->getText(),
+            context->expression(0)->type,
+            context->expression(1)->type
+        );
+
+        return nullptr;
+    }
+
+    antlrcpp::Any Pass1Visitor::visitBitExpr(CmmParser::BitExprContext *context)
+    {
+        static const std::set <std::string> operator_set = { "<<" , ">>" , "&"  , "|"  , "~"  , "^" };
+
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+        visit_expression(
+            context,
+            operator_set,
+            true,
+            context->expr_operator,
+            context->opr->getText(),
+            context->expression(0)->type,
+            context->expression(1)->type
+        );
 
         return nullptr;
     }
@@ -165,11 +123,7 @@ namespace backend
             if (context->primaryExpression()->Identifier())
             {
                 // Look up type of this expression in the symbol table stack
-                try
-                {
-                    lookup_symbol_type(context->getText(), context->type, context->type_letter);
-                }
-                CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+                lookup_symbol_type(context->primaryExpression()->Identifier()->getText(), context->type, context->type_letter);
             }
             else if (context->primaryExpression()->IntegerConstant())
             {
@@ -287,12 +241,8 @@ namespace backend
 
         const std::string variable = context->Identifier()->getText();
 
-        try
-        {
-            cout << TAB << variable << " " << context->type << endl;
-            lookup_symbol_type(variable, context->type, context->type_letter);
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+        lookup_symbol_type(variable, context->type, context->type_letter);
+        cout << TAB << variable << " " << context->type << endl;
 
         // context->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
         context->current_nesting_level = symbol_table_stack.get_current_nesting_level();
