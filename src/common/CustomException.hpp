@@ -11,6 +11,7 @@
 /// Base class for custom exceptions
 class CustomException : public std::exception
 {
+
 public:
 
     /// Prints the error message then exits the program
@@ -42,6 +43,7 @@ protected:
 
     /// The error message explaining the exception
     const std::string error;
+
 };
 
 /**
@@ -55,6 +57,13 @@ protected:
     public:                                                                   \
         name(const std::string msg) : CustomException("["#name"] " + msg) { } \
     }
+
+/**
+ *  Throws an exception but logs the function name too
+ *  @note : Purposely left out the semicolon so macro calls keep the semicolon
+ */
+#define THROW_EXCEPTION(exception, message)                                 \
+    throw exception(string(__PRETTY_FUNCTION__) + string(" : ") + message)
 
 /// @ { Custom exception classes
 DEFINE_CUSTOM_EXCEPTION(InvalidCase);

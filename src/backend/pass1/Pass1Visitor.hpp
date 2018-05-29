@@ -76,7 +76,7 @@ namespace backend
          *  @param context : The context object to look up and modify
          *  @throws        : InvalidType
          */
-        void lookup_symbol_type(std::string const & variable, backend::TypeSpecifier & type, char & type_letter);
+        void lookup_symbol_type(const std::string & variable, backend::TypeSpecifier & type, char & type_letter);
 
         /**
          *  Visits a generic expression node

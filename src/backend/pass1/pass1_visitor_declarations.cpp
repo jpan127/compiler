@@ -43,7 +43,7 @@ namespace backend
         // Find function in map
         if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
         {
-            throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
+            THROW_EXCEPTION(MissingSymbol, "Function is not in variable_id_map : " + PassVisitor::current_function);
         }
         else
         {

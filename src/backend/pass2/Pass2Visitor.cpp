@@ -19,7 +19,7 @@ namespace backend
         j_file.close();
     }
 
-    std::string Pass2Visitor::resolve_expression_instruction(const backend::TypeSpecifier & type, std::string const & opr)
+    std::string Pass2Visitor::resolve_expression_instruction(const backend::TypeSpecifier & type, const std::string & opr)
     {
         static const std::map <const std::string, const std::string> operator_to_opcode_map =
         {
@@ -46,7 +46,7 @@ namespace backend
         }
         else
         {
-            throw InvalidOperator(opr);
+            THROW_EXCEPTION(InvalidOperator, opr);
         }
 
         return opcode;
@@ -82,7 +82,7 @@ namespace backend
                         case 'I': j_file << "%d\\n\"" << endl; break;
                         case 'L': j_file << "%d\\n\"" << endl; break;
                         default :
-                            throw InvalidType(std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
+                            THROW_EXCEPTION(InvalidType, std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
                     }
 
                     j_file << TAB << "ldc 1"                      << endl;
@@ -99,7 +99,7 @@ namespace backend
                         case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
                         case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
                         default :
-                            throw InvalidType(std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
+                            THROW_EXCEPTION(InvalidType, std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
                     }
 
                     j_file << TAB << "aastore" << endl;

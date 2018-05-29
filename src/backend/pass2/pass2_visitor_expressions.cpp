@@ -9,7 +9,8 @@ namespace backend
         const std::vector <CmmParser::ExpressionContext *> & expressions,
         const std::string & expr_operator)
     {
-        for (uint8_t i = 0; i < 2; i++)
+        constexpr uint8_t num_expressions = 2;
+        for (uint8_t i = 0; i < num_expressions; i++)
         {
             visit(expressions[i]);
 
@@ -168,7 +169,8 @@ namespace backend
                << endl;
 
         // Visit both operands
-        for (uint8_t i = 0; i < 2; i++)
+        constexpr uint8_t num_operands = 2;
+        for (uint8_t i = 0; i < num_operands; i++)
         {
             visit(context->expression(i));
             // Doubles and floats need to be converted before jump comparison instruction

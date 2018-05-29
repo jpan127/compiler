@@ -86,7 +86,7 @@ namespace backend
         }
         else
         {
-            throw InvalidType("[letter_map_lookup] Type not found : " + type.to_string());
+            THROW_EXCEPTION(InvalidType, "Type not found : " + type.to_string());
             return '?';
         }
     }
@@ -110,7 +110,7 @@ namespace backend
         }
         else
         {
-            throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + type.to_string());
+            THROW_EXCEPTION(InvalidType, "Can only resolve instructions for [double | float | int], got : " + type.to_string());
         }
     }
 
@@ -137,7 +137,7 @@ namespace backend
                             case 'D': instruction += "dload " + std::to_string(symbols.second.get_id()); break;
                             case 'L': instruction += "lload " + std::to_string(symbols.second.get_id()); break;
                             default :
-                                throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
+                                THROW_EXCEPTION(InvalidType, "Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                         }
                     }
                     return instruction;
@@ -171,7 +171,7 @@ namespace backend
                             case 'D': instruction += "dstore " + std::to_string(symbols.second.get_id()); break;
                             case 'L': instruction += "lstore " + std::to_string(symbols.second.get_id()); break;
                             default :
-                                throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
+                                THROW_EXCEPTION(InvalidType, "Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
                         }
                     }
                     return instruction;
@@ -223,12 +223,12 @@ namespace backend
                  if (backend::Type::t_double == current) { instruction += "d2"; }
             else if (backend::Type::t_float  == current) { instruction += "f2"; }
             else if (backend::Type::t_int    == current) { instruction += "i2"; }
-            else { throw InvalidType("Unsupported type for conversion instruction : " + current_type.to_string()); }
+            else { THROW_EXCEPTION(InvalidType, "Unsupported type for conversion instruction : " + current_type.to_string()); }
 
                  if (backend::Type::t_double == needed) { instruction += "d"; }
             else if (backend::Type::t_float  == needed) { instruction += "f"; }
             else if (backend::Type::t_int    == needed) { instruction += "i"; }
-            else { throw InvalidType("Unsupported type for conversion instruction : " + needed_type.to_string()); }
+            else { THROW_EXCEPTION(InvalidType, "Unsupported type for conversion instruction : " + needed_type.to_string()); }
         }
 
         return instruction;

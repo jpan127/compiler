@@ -25,7 +25,7 @@ namespace backend
         }
         else
         {
-            throw InvalidOperator("Operator does not match : " + opr);
+            THROW_EXCEPTION(InvalidOperator, "Operator does not match : " + opr);
         }
 
         visitChildren(context);
@@ -35,7 +35,7 @@ namespace backend
             if ((backend::Type::t_float == lhs_type.get_type()) ||
                 (backend::Type::t_float == rhs_type.get_type()))
             {
-                throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
+                THROW_EXCEPTION(CompilerError, "Bit operations cannot be performed on floating point types : " + context->getText());
             }
         }
 
@@ -160,7 +160,7 @@ namespace backend
         else if (opr == ">=")                    { opcode = "if_icmplt"; }  ///< (x >= y) branch if <
         else if (opr == "==" || opr == "is")     { opcode = "if_icmpne"; }  ///< (x == y) branch if !=
         else if (opr == "!=" || opr == "is not") { opcode = "if_icmpeq"; }  ///< (x != y) branch if ==
-        else                                     { throw InvalidOperator(opr); }
+        else                                     { THROW_EXCEPTION(InvalidOperator, opr); }
 
         context->opr = opr;
         context->opcode = opcode;
@@ -189,7 +189,7 @@ namespace backend
         }
         else
         {
-            throw AntlrParsedIncorrectly("[visitConnectedConditionalExpr] Does not have proper operands");
+            THROW_EXCEPTION(AntlrParsedIncorrectly, "Does not have proper operands");
         }
 
         // Set operand expressions to be the same iteration name

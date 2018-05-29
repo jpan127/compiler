@@ -82,7 +82,7 @@ namespace backend
             case ArrayType::atype_int     : ofile << TAB << "newarray int"    << NEW_LINE; break;
             case ArrayType::atype_long    : ofile << TAB << "newarray long"   << NEW_LINE; break;
             default:
-                throw InvalidCase("[JasminEmitter][emit_newarray] Invalid ArrayType");
+                THROW_EXCEPTION(InvalidCase, "Invalid ArrayType");
         }
     }
     /// @ }

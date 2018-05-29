@@ -25,7 +25,7 @@ int main(int argc, const char *args[])
         /// Make sure argument exists
         if (argc < 2)
         {
-            throw MissingArgument("Missing argument : path to sample program");
+            THROW_EXCEPTION(MissingArgument, "Missing argument : path to sample program");
         }
 
         /// Input Stream
@@ -56,7 +56,7 @@ int main(int argc, const char *args[])
         std::ofstream j_file(program_name + ".j");
         if (j_file.fail())
         {
-            throw FileOpenError("Failed to open file :" + program_name + ".j");
+            THROW_EXCEPTION(FileOpenError, "Failed to open file :" + program_name + ".j");
         }
 
         constexpr bool debug = true;

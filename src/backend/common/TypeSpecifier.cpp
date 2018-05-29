@@ -99,7 +99,7 @@ namespace backend
         else
         {
             /// @TODO : After compiler is done and validated, this can be used as a CompilerError
-            throw InvalidType("Type not supported : " + type);
+            THROW_EXCEPTION(InvalidType, "Type not supported : " + type);
         }
     }
 

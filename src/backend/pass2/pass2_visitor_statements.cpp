@@ -31,7 +31,7 @@ namespace backend
                 case backend::Type::t_float  : j_file << TAB << "fconst_1" << endl; break;
                 case backend::Type::t_int    : j_file << TAB << "iconst_1" << endl; break;
                 default:
-                    throw InvalidType("[visit_unary_statement] Type : " + context->type.to_string());
+                    THROW_EXCEPTION(InvalidType, "Type : " + context->type.to_string());
             }
         }
 

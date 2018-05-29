@@ -14,7 +14,7 @@ namespace backend
         cout << "Pass1Visitor: symtab stack initialized" << endl;
     }
 
-    void Pass1Visitor::lookup_symbol_type(std::string const & variable, backend::TypeSpecifier & type, char & type_letter)
+    void Pass1Visitor::lookup_symbol_type(const std::string & variable, backend::TypeSpecifier & type, char & type_letter)
     {
         if (auto symbol = symbol_table_stack.lookup_symbol_globally(variable))
         {
@@ -23,7 +23,7 @@ namespace backend
         }
         else
         {
-            throw MissingSymbol(variable);
+            THROW_EXCEPTION(MissingSymbol, variable);
         }
     }
 

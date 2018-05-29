@@ -26,7 +26,7 @@ namespace backend
 
             if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
             {
-                throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
+                THROW_EXCEPTION(MissingSymbol, "Function is not in variable_id_map : " + PassVisitor::current_function);
             }
             else
             {
@@ -58,7 +58,7 @@ namespace backend
         if (PassVisitor::variable_id_map.find(PassVisitor::current_function)         != PassVisitor::variable_id_map.end() &&
             PassVisitor::function_definition_map.find(PassVisitor::current_function) != PassVisitor::function_definition_map.end())
         {
-            throw CompilerError("Function already defined : " + PassVisitor::current_function);
+            THROW_EXCEPTION(CompilerError, "Function already defined : " + PassVisitor::current_function);
         }
         // Stores function declaration and registers the function into the map
         else

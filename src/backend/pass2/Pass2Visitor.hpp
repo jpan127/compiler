@@ -68,7 +68,7 @@ namespace backend
 
         std::vector <std::string> instruction_buffer;
 
-        std::string resolve_expression_instruction(const backend::TypeSpecifier & type, std::string const & opr);
+        std::string resolve_expression_instruction(const backend::TypeSpecifier & type, const std::string & opr);
 
         void emit_symbol_table();
 
