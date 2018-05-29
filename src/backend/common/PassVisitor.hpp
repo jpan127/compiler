@@ -52,7 +52,7 @@ namespace backend
     protected:
 
         /// Protected constructor
-        PassVisitor(const uint8_t pass_number) : pass_number(pass_number) { }
+        PassVisitor(const uint8_t pass_number, std::ofstream & j_file) : pass_number(pass_number), j_file(j_file) { }
 
         /// Virtual destructor
         virtual ~PassVisitor() { }
@@ -61,7 +61,7 @@ namespace backend
         const uint8_t pass_number;
 
         /// Just a tab character
-        static const char TAB = '\t';
+        static constexpr char TAB = '\t';
 
         /// Maps scope names to maps of symbol names to symbol attributes
         static std::unordered_map <std::string, std::unordered_map <std::string, intermediate::Symbol>> variable_id_map;
@@ -74,6 +74,9 @@ namespace backend
 
         /// Counts up for each compound statement
         static uint64_t scope_counter;
+
+        /// Output file
+        std::ofstream & j_file;
 
         /**
          *  Determines the resulting type depending on the two operands
@@ -157,6 +160,15 @@ namespace backend
          *  @returns            : A string with the type instruction, empty if no instruction needed
          */
         std::string convert_type_if_neccessary(const backend::TypeSpecifier & current_type, const backend::TypeSpecifier & needed_type);
+
+        void emit_comment(antlr4::ParserRuleContext * context, const uint8_t indents=0) const
+        {
+            for (uint8_t i = 0; i < indents; i++)
+            {
+                j_file << TAB;
+            }
+            j_file << "; " << context->getText() << endl;
+        }
 
     };
 

@@ -14,13 +14,10 @@ namespace backend
     public:
 
         /// Constructor
-        explicit Pass1Visitor(const std::string fname, const bool debug=false);
+        Pass1Visitor(const std::string fname, std::ofstream & j_file, const bool debug=false);
 
         /// Destructor
         ~Pass1Visitor() { }
-
-        /// Returns the output file
-        std::ofstream & get_assembly_file();
 
         /// @ { Common
         antlrcpp::Any visitCompilationUnit(CmmParser::CompilationUnitContext *context) override;
@@ -69,9 +66,6 @@ namespace backend
 
         /// Symbol Table Stack
         intermediate::SymbolTableStack symbol_table_stack;
-
-        /// Output file
-        std::ofstream j_file;
 
         /// Flag to print debug messages or not
         const bool debug_flag;

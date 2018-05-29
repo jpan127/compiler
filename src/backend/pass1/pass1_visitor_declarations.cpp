@@ -70,7 +70,7 @@ namespace backend
         if (symbol_table_stack.get_current_nesting_level() == 1)
         {
             // Make a comment as to what the declaration is
-            j_file << "\n; " << context->getText() << endl;
+            j_file << "; " << context->getText() << endl;
 
             // Output the variable declaration
             // @example : .field private static c D = 0
@@ -78,7 +78,6 @@ namespace backend
                    << variable_name
                    << " "
                    << context->type_letter
-                   << endl
                    << endl;
         }
 

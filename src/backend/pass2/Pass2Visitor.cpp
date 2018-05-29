@@ -5,7 +5,10 @@
 namespace backend
 {
 
-    Pass2Visitor::Pass2Visitor(const std::string fname, std::ofstream & j_file, const bool debug) : PassVisitor(2), program_name(fname), j_file(j_file), debug_flag(debug)
+    Pass2Visitor::Pass2Visitor(const std::string fname, std::ofstream & j_file, const bool debug) :
+        PassVisitor(2, j_file),
+        program_name(fname),
+        debug_flag(debug)
     {
         /// Empty
     }

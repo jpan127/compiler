@@ -64,8 +64,6 @@ namespace backend
 
         std::string program_name;
 
-        std::ofstream & j_file;
-
         const bool debug_flag;
 
         std::vector <std::string> instruction_buffer;

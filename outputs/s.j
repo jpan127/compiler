@@ -2,23 +2,17 @@
 .super java/lang/Object
 
 .field private static _runTimer LRunTimer;
-
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;                     Global Variables                    ;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; intmak1=128;
 .field private static mak1 I
-
-
 ; intmak2=256;
 .field private static mak2 I
-
-
 ; intmak3=1;
 .field private static mak3 I
-
-
 ; intmak4=-1;
 .field private static mak4 I
-
-
 ; floatmak5=.1;
 .field private static mak5 F
 
@@ -36,6 +30,7 @@
 .limit locals 22
 .limit stack 8
 .end method
+
 .method public static buzzy(I)I
 ; intbuzzy(intb){intsquare;square=b;square**;returnsquare;}
 
@@ -60,8 +55,11 @@
 	new RunTimer
 	dup
 	invokenonvirtual RunTimer/<init>()V
-	putstatic        s/_runTimer LRunTimer;
+	putstatic	s/_runTimer LRunTimer;
 
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+	;                   Global Variables                    ;
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 	; mak1=128
 	ldc 128
 	putstatic	s/mak1 I
@@ -77,6 +75,8 @@
 	; mak5=.1
 	ldc .1
 	putstatic	s/mak5 F
+	;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 	; fizz_counter=0
 	ldc 0
 	istore 0
@@ -100,7 +100,6 @@
 	; e=-1.1
 	ldc2_w -1.1
 	dstore 8
-
 ; while((d>0)and(d<1000)){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
 while_0:
 	; d > 0
@@ -232,7 +231,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	dload 8
+dload 8
 	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -243,7 +242,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 1
+iload 1
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -254,7 +253,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	dload 6
+dload 6
 	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -265,7 +264,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 0
+iload 0
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -276,7 +275,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 2
+iload 2
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -287,7 +286,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 3
+iload 3
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -298,7 +297,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	iload 4
+iload 4
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -309,7 +308,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	getstatic	s/mak4 I
+getstatic	s/mak4 I
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -320,7 +319,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	getstatic	s/mak5 F
+getstatic	s/mak5 F
 	invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -331,7 +330,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	getstatic	s/mak1 I
+getstatic	s/mak1 I
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -342,7 +341,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	getstatic	s/mak3 I
+getstatic	s/mak3 I
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
@@ -353,7 +352,7 @@ print_results:
 	anewarray java/lang/Object
 	dup
 	iconst_0
-	getstatic	s/mak2 I
+getstatic	s/mak2 I
 	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
 	aastore
 	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;

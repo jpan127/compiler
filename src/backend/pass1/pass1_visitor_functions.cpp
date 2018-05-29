@@ -53,6 +53,7 @@ namespace backend
         return visitChildren(context);
     }
 
+    /// @TODO : This function needs to be simplified / cleaned up
     antlrcpp::Any Pass1Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitionContext * context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
@@ -82,7 +83,7 @@ namespace backend
         context->compoundStatement()->scope_name = context->Identifier()->getText();
 
         // Create a header for pass2visitor to use when creating the method
-        context->function_header = ".method public static " + PassVisitor::current_function + "(";
+        context->function_header = "\n.method public static " + PassVisitor::current_function + "(";
 
         if (context->parameterTypeList()->functionParameterList())
         {

@@ -21,15 +21,12 @@ namespace backend
             }
         }
 
-        std::string opcode;
-
         try
         {
-            opcode = resolve_expression_instruction(context->type, expr_operator);
+            const std::string opcode = resolve_expression_instruction(context->type, expr_operator);
+            j_file << "\t" << opcode << endl;
         }
         CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, InvalidOperator);
-
-        j_file << "\t" << opcode << endl;
     }
 
     antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
@@ -84,7 +81,7 @@ namespace backend
          *  If float    : emit ldc
          */
 
-        std::string instruction;
+        std::string instruction = "\t";
 
         if (context->primaryExpression()->Identifier())
         {
@@ -114,9 +111,7 @@ namespace backend
                     double_value += context->primaryExpression()->FloatConstant()->getText();
                 }
 
-                instruction += "\t";
-                instruction += "ldc2_w ";
-                instruction += double_value;
+                instruction += "ldc2_w " + double_value;
             }
             else if (backend::Type::t_float == context->type.get_type())
             {
@@ -133,25 +128,24 @@ namespace backend
                     float_value += context->primaryExpression()->FloatConstant()->getText();
                 }
 
-                instruction += "\t";
-                instruction += "ldc ";
-                instruction += float_value;
+                instruction += "ldc " + float_value;
             }
             else
             {
-                instruction += "\t";
-                instruction += "ldc ";
-                instruction += context->primaryExpression()->IntegerConstant()->getText();
+                instruction += "ldc " + context->primaryExpression()->IntegerConstant()->getText();
             }
         }
 
-        if (context->primaryExpression()->current_nesting_level == 1)
+        if (instruction.length() > 2)
         {
-            instruction_buffer.push_back(instruction);
-        }
-        else
-        {
-            j_file << instruction << endl;
+            if (context->primaryExpression()->current_nesting_level == 1)
+            {
+                instruction_buffer.push_back(instruction);
+            }
+            else
+            {
+                j_file << instruction << endl;
+            }
         }
 
         visitChildren(context);
@@ -226,7 +220,7 @@ namespace backend
          *  Responsible for only checking the top 2 values on the stack
          *  For an OR operation, if any of them are nonzero positive, jump
          *  For an AND operation, if both of them are nonzero positive, jump
-         *  @note : Nothing needs to be done because for AND conditions both must be met, 
+         *  @note : Nothing needs to be done because for AND conditions both must be met,
          *          and both are checked previously in child nodes
          */
 
@@ -289,8 +283,8 @@ namespace backend
             {
                 // Visit right hand side expression first
                 visit(context->expression());
-                const backend::TypeSpecifier expression_type = context->expression()->type;
 
+                const backend::TypeSpecifier expression_type = context->expression()->type;
                 const std::string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
                 if (type_convert_instruction.size() > 0)
                 {
@@ -301,12 +295,8 @@ namespace backend
             {
                 visit(context->functionReturn());
             }
-            else
-            {
-                throw AntlrParsedIncorrectly("Assignment expression did not match any case");
-            }
         }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(AntlrParsedIncorrectly)
+        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType)
 
         const std::string instruction = create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
 

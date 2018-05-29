@@ -116,7 +116,7 @@ namespace backend
 
     std::string PassVisitor::create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
     {
-        std::string instruction = "\t";
+        std::string instruction;
 
         for (auto function : variable_id_map)
         {

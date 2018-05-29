@@ -5,19 +5,13 @@
 namespace backend
 {
 
-    Pass1Visitor::Pass1Visitor(const std::string fname, const bool debug) :
-        PassVisitor(1),
+    Pass1Visitor::Pass1Visitor(const std::string fname, std::ofstream & j_file, const bool debug) :
+        PassVisitor(1, j_file),
         program_name(fname),
         symbol_table_stack(),
-        j_file(nullptr),
         debug_flag(debug)
     {
         cout << "Pass1Visitor: symtab stack initialized" << endl;
-    }
-
-    std::ofstream & Pass1Visitor::get_assembly_file()
-    {
-        return j_file;
     }
 
     void Pass1Visitor::lookup_symbol_type(std::string const & variable, backend::TypeSpecifier & type, char & type_letter)

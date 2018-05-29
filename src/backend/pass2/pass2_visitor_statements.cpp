@@ -11,13 +11,10 @@ namespace backend
         const bool is_duplicate)
     {
         // Comment
-        j_file << TAB
-               << "; "
-               << context->getText()
-               << endl;
+        emit_comment(context, 1);
 
         // Get instruction
-        j_file << create_get_variable_instruction(program_name, identifier, context->type_letter) << endl;
+        j_file << TAB << create_get_variable_instruction(program_name, identifier, context->type_letter) << endl;
 
         if (is_duplicate)
         {
@@ -84,9 +81,7 @@ namespace backend
          *          At the end of the inside of the branch, jumps to end of the entire if-else statement
          */
 
-        j_file << "; "
-               << context->getText()
-               << endl;
+        emit_comment(context, 0);
 
         // Emit start label
         j_file << context->conditionalExpression()->iteration_name
@@ -130,9 +125,7 @@ namespace backend
          *          At the end of the inside of the branch, jumps to end of the entire if-else statement
          */
 
-        j_file << "; "
-               << context->getText()
-               << endl;
+        emit_comment(context, 0);
 
         // Emit start label
         j_file << context->conditionalExpression()->iteration_name
@@ -176,9 +169,7 @@ namespace backend
          *          At the end of the inside of the branch, jumps to end of the entire if-else statement
          */
 
-        j_file << "; "
-               << context->getText()
-               << endl;
+        emit_comment(context, 0);
 
         // Emit start label
         j_file << "else_"
@@ -200,10 +191,7 @@ namespace backend
          *  Emit a label for the end of loop
          */
 
-        j_file << endl
-               << "; "
-               << context->getText()
-               << endl;
+        emit_comment(context, 0);
 
         // Emit the iteration label
         j_file << context->conditionalExpression()->iteration_name

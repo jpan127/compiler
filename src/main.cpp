@@ -56,19 +56,32 @@ int main(int argc, const char *args[])
     file_name = file_name.substr(file_name.find_last_of("/") + 1);
     const std::string program_name = file_name;
 
+    /// Output Stream
+    std::ofstream j_file;
+
+    // Open output stream file
     try
     {
+        j_file.open(program_name + ".j");
+        if (j_file.fail())
+        {
+            throw FileOpenError("Failed to open file :" + program_name + ".j");
+        }
+    }
+    CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(FileOpenError);
+
+    try
+    {
+        constexpr bool debug = true;
+
         /// First Pass
         std::cout << pass1_msg << std::endl;
-        backend::Pass1Visitor pass1(program_name, true);
+        backend::Pass1Visitor pass1(program_name, j_file, debug);
         pass1.visit(tree);
-
-        /// Output Stream
-        std::ofstream & j_file = pass1.get_assembly_file();
 
         /// Second Pass
         std::cout << pass2_msg << std::endl;
-        backend::Pass2Visitor pass2(program_name, j_file, true);
+        backend::Pass2Visitor pass2(program_name, j_file, debug);
         pass2.visit(tree);
 
         /// Sanity clean up

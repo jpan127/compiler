@@ -4,6 +4,7 @@
 
 namespace backend
 {
+
     void Pass1Visitor::visit_expression(CmmParser::ExpressionContext * context,
         const std::set <std::string> & operator_set,
         const bool is_bit_expr,
