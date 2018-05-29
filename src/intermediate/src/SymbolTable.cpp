@@ -9,15 +9,14 @@ namespace intermediate
     {
         if (backend::Type::t_double == type.get_type() || backend::Type::t_long == type.get_type())
         {
-            m_current_symbol_id += 2;
-        }
-        else
-        {
             m_current_symbol_id++;
         }
-
+            cout << "$$$$ " << name << " " << m_current_symbol_id << endl;
         SymbolPtr s_ptr = std::make_shared <Symbol> (m_current_symbol_id, type);
         m_table[name] = s_ptr;
+
+        m_current_symbol_id++;
+
         return m_table[name];
     }
 
@@ -36,6 +35,18 @@ namespace intermediate
     bool SymbolTable::symbol_exists(const std::string & name) const
     {
         return (m_table.find(name) != m_table.end());
+    }
+
+    std::vector <SymbolPtr> SymbolTable::glob_all_symbols() const
+    {
+        std::vector <SymbolPtr> symbols;
+
+        for (auto pair : m_table)
+        {
+            symbols.push_back(pair.second);
+        }
+
+        return symbols;
     }
 
 } /// intermediate

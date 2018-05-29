@@ -11,6 +11,8 @@ namespace backend
         symbol_table_stack(),
         debug_flag(debug)
     {
+        // Store the global symbol table, created in the constructor of symbol table stack, inside the symbol store
+        PassVisitor::store.register_symbol_table(symbol_table_stack.get_local_symbol_table());
         cout << "Pass1Visitor: symtab stack initialized" << endl;
     }
 

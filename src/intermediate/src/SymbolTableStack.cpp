@@ -71,4 +71,33 @@ namespace intermediate
         return symbol;
     }
 
+    bool SymbolTableStack::function_exists(const std::string & name) const
+    {
+        bool found = false;
+
+        for (auto table : stack)
+        {
+            if (name == table->get_table_name())
+            {
+                found = true;
+                break;
+            }
+        }
+
+        return found;
+    }
+
+    std::vector <SymbolPtr> SymbolTableStack::glob_all_symbols() const
+    {
+        std::vector <SymbolPtr> all_symbols;
+
+        for (auto table : stack)
+        {
+            const std::vector <SymbolPtr> table_symbols = table->glob_all_symbols();
+            all_symbols.insert(all_symbols.end(), table_symbols.begin(), table_symbols.end());
+        }
+
+        return all_symbols;
+    }
+
 } /// intermediate

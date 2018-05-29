@@ -9,8 +9,6 @@ namespace backend
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        const std::string & current_function = symbol_table_stack.get_local_symbol_table()->get_table_name();
-
         // Loop through each parameter
         const std::vector <CmmParser::TypeSpecifierContext *> type_specifiers = context->typeSpecifier();
         for (uint32_t i = 0; i < type_specifiers.size(); ++i)
@@ -25,21 +23,6 @@ namespace backend
 
             // Create and push a new symbol into the local table
             symbol_table_stack.push_symbol_locally(variable_name, context->type);
-
-            if (PassVisitor::variable_id_map.find(current_function) == PassVisitor::variable_id_map.end())
-            {
-                THROW_EXCEPTION(MissingSymbol, "Function is not in variable_id_map : " + current_function);
-            }
-            else
-            {
-                PassVisitor::variable_id_map[current_function].emplace(
-                    variable_name,
-                    intermediate::Symbol(
-                        symbol_table_stack.get_last_symbol_id_locally(),
-                        context->type
-                    )
-                );
-            }
 
             cout << TAB << "Symbol created for : " << variable_name << endl;
         }
@@ -60,6 +43,7 @@ namespace backend
             symbol_table_stack.get_current_nesting_level()
         );
         symbol_table_stack.push_symbol_table(table_ptr);
+        PassVisitor::store.register_symbol_table(table_ptr);
 
         const std::string & current_function = symbol_table_stack.get_local_symbol_table()->get_table_name();
 
@@ -67,15 +51,13 @@ namespace backend
         std::string function_parameters;
 
         // Checks to see if function has already been defined
-        if (PassVisitor::variable_id_map.find(current_function)         != PassVisitor::variable_id_map.end() &&
-            PassVisitor::function_definition_map.find(current_function) != PassVisitor::function_definition_map.end())
+        if (PassVisitor::function_definition_map.find(current_function) != PassVisitor::function_definition_map.end())
         {
             THROW_EXCEPTION(CompilerError, "Function already defined : " + current_function);
         }
         // Stores function declaration and registers the function into the map
         else
         {
-            PassVisitor::variable_id_map[current_function] = std::unordered_map<std::string, intermediate::Symbol>();
             PassVisitor::function_definition_map[current_function] = current_function + "(";
         }
 

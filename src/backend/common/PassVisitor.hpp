@@ -4,6 +4,7 @@
 
 #include "common.hpp"
 #include "SymbolTableStack.hpp"
+#include "SymbolStore.hpp"
 #include "TypeSpecifier.hpp"
 
 
@@ -47,8 +48,8 @@ namespace backend
         /// Just a tab character
         static constexpr char TAB = '\t';
 
-        /// Maps scope names to maps of symbol names to symbol attributes
-        static std::unordered_map <std::string, std::unordered_map <std::string, intermediate::Symbol>> variable_id_map;
+        /// Stores symbol tables
+        static intermediate::SymbolTableStore store;
 
         /// Maps function names to their function invoke signature
         static std::unordered_map <std::string, std::string> function_definition_map;
