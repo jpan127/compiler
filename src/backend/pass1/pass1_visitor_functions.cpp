@@ -14,38 +14,30 @@ namespace backend
         for (uint32_t i = 0; i < type_specifiers.size(); ++i)
         {
             // Set the type members
-            try
-            {
-                const std::string type = type_specifiers[i]->getText();
-                cout << TAB << type << endl;
-                context->type = backend::TypeSpecifier(type);
-                context->type_letter = context->type.get_letter();
-            }
-            CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
+            const std::string type = type_specifiers[i]->getText();
+            cout << TAB << type << endl;
+            context->type = backend::TypeSpecifier(type);
+            context->type_letter = context->type.get_letter();
 
             const std::string variable_name = context->Identifier(i)->getText();
 
             // Create and push a new symbol into the local table
-            try
-            {
-                symbol_table_stack.push_symbol_locally(variable_name, context->type);
+            symbol_table_stack.push_symbol_locally(variable_name, context->type);
 
-                if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
-                {
-                    throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
-                }
-                else
-                {
-                    PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
-                        variable_name,
-                        intermediate::Symbol(
-                            symbol_table_stack.get_last_symbol_id_locally(),
-                            context->type
-                        )
-                    );
-                }
+            if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
+            {
+                throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
             }
-            CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+            else
+            {
+                PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
+                    variable_name,
+                    intermediate::Symbol(
+                        symbol_table_stack.get_last_symbol_id_locally(),
+                        context->type
+                    )
+                );
+            }
 
             cout << TAB << "Symbol created for : " << variable_name << endl;
         }
@@ -62,22 +54,18 @@ namespace backend
         const std::string function_return_type(1, toupper(context->typeSpecifier()->getText()[0]));
         std::string function_parameters;
 
-        try
+        // Checks to see if function has already been defined
+        if (PassVisitor::variable_id_map.find(PassVisitor::current_function)         != PassVisitor::variable_id_map.end() &&
+            PassVisitor::function_definition_map.find(PassVisitor::current_function) != PassVisitor::function_definition_map.end())
         {
-            // Checks to see if function has already been defined
-            if (PassVisitor::variable_id_map.find(PassVisitor::current_function)         != PassVisitor::variable_id_map.end() &&
-                PassVisitor::function_definition_map.find(PassVisitor::current_function) != PassVisitor::function_definition_map.end())
-            {
-                throw CompilerError("Function already defined : " + PassVisitor::current_function);
-            }
-            // Stores function declaration and registers the function into the map
-            else
-            {
-                PassVisitor::variable_id_map[PassVisitor::current_function] = std::unordered_map<std::string, intermediate::Symbol>();
-                PassVisitor::function_definition_map[PassVisitor::current_function] = PassVisitor::current_function + "(";
-            }
+            throw CompilerError("Function already defined : " + PassVisitor::current_function);
         }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(CompilerError);
+        // Stores function declaration and registers the function into the map
+        else
+        {
+            PassVisitor::variable_id_map[PassVisitor::current_function] = std::unordered_map<std::string, intermediate::Symbol>();
+            PassVisitor::function_definition_map[PassVisitor::current_function] = PassVisitor::current_function + "(";
+        }
 
         // Set the compound statement's scope name as the function name
         context->compoundStatement()->scope_name = context->Identifier()->getText();

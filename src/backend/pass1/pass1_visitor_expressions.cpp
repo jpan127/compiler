@@ -19,37 +19,33 @@ namespace backend
          *  Stores it for pass 2
          */
 
-        try
+        if (operator_set.find(opr) != operator_set.end())
         {
-            if (operator_set.find(opr) != operator_set.end())
-            {
-                expr_operator = opr;
-            }
-            else
-            {
-                throw InvalidOperator("Operator does not match : " + opr);
-            }
-
-            visitChildren(context);
-
-            if (is_bit_expr)
-            {
-                if ((backend::Type::t_float == lhs_type.get_type()) ||
-                    (backend::Type::t_float == rhs_type.get_type()))
-                {
-                    throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
-                }
-            }
-
-            context->type = resolve_expression_type(lhs_type, rhs_type);
-
-            cout << TAB
-                 << lhs_type.to_string()
-                 << " "
-                 << rhs_type.to_string()
-                 << endl;
+            expr_operator = opr;
         }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidOperator, CompilerError);
+        else
+        {
+            throw InvalidOperator("Operator does not match : " + opr);
+        }
+
+        visitChildren(context);
+
+        if (is_bit_expr)
+        {
+            if ((backend::Type::t_float == lhs_type.get_type()) ||
+                (backend::Type::t_float == rhs_type.get_type()))
+            {
+                throw CompilerError("Bit operations cannot be performed on floating point types : " + context->getText());
+            }
+        }
+
+        context->type = resolve_expression_type(lhs_type, rhs_type);
+
+        cout << TAB
+             << lhs_type.to_string()
+             << " "
+             << rhs_type.to_string()
+             << endl;
     }
 
     antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
@@ -158,17 +154,13 @@ namespace backend
 
         std::string opcode;
 
-        try
-        {
-                 if (opr == "<")                     { opcode = "if_icmpge"; }  ///< (x <  y) branch if >=
-            else if (opr == "<=")                    { opcode = "if_icmpgt"; }  ///< (x <= y) branch if >
-            else if (opr == ">")                     { opcode = "if_icmple"; }  ///< (x >  y) branch if <=
-            else if (opr == ">=")                    { opcode = "if_icmplt"; }  ///< (x >= y) branch if <
-            else if (opr == "==" || opr == "is")     { opcode = "if_icmpne"; }  ///< (x == y) branch if !=
-            else if (opr == "!=" || opr == "is not") { opcode = "if_icmpeq"; }  ///< (x != y) branch if ==
-            else                                     { throw InvalidOperator(opr); }
-        }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidOperator);
+             if (opr == "<")                     { opcode = "if_icmpge"; }  ///< (x <  y) branch if >=
+        else if (opr == "<=")                    { opcode = "if_icmpgt"; }  ///< (x <= y) branch if >
+        else if (opr == ">")                     { opcode = "if_icmple"; }  ///< (x >  y) branch if <=
+        else if (opr == ">=")                    { opcode = "if_icmplt"; }  ///< (x >= y) branch if <
+        else if (opr == "==" || opr == "is")     { opcode = "if_icmpne"; }  ///< (x == y) branch if !=
+        else if (opr == "!=" || opr == "is not") { opcode = "if_icmpeq"; }  ///< (x != y) branch if ==
+        else                                     { throw InvalidOperator(opr); }
 
         context->opr = opr;
         context->opcode = opcode;
@@ -184,25 +176,21 @@ namespace backend
          *  Saves the operator characters
          */
 
-        try
+        // Left and right operands should have pushed values to the stack
+        if ("||" == context->ConditionalConnectOperator()->getText() ||
+            "or" == context->ConditionalConnectOperator()->getText())
         {
-            // Left and right operands should have pushed values to the stack
-            if ("||" == context->ConditionalConnectOperator()->getText() ||
-                "or" == context->ConditionalConnectOperator()->getText())
-            {
-                context->opr = "or";
-            }
-            else if ("&&"  == context->ConditionalConnectOperator()->getText() ||
-                     "and" == context->ConditionalConnectOperator()->getText())
-            {
-               context->opr = "and";
-            }
-            else
-            {
-                throw AntlrParsedIncorrectly("[visitConnectedConditionalExpr] Does not have proper operands");
-            }
+            context->opr = "or";
         }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(AntlrParsedIncorrectly);
+        else if ("&&"  == context->ConditionalConnectOperator()->getText() ||
+                 "and" == context->ConditionalConnectOperator()->getText())
+        {
+           context->opr = "and";
+        }
+        else
+        {
+            throw AntlrParsedIncorrectly("[visitConnectedConditionalExpr] Does not have proper operands");
+        }
 
         // Set operand expressions to be the same iteration name
         context->conditionalExpression(0)->iteration_name = context->iteration_name;

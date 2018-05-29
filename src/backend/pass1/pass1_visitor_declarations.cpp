@@ -9,14 +9,10 @@ namespace backend
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
-        try
-        {
-            const std::string type = context->typeSpecifier()->getText();
-            cout << TAB << type << endl;
-            context->type = backend::TypeSpecifier(type);
-            context->type_letter = context->type.get_letter();
-        }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
+        const std::string type = context->typeSpecifier()->getText();
+        cout << TAB << type << endl;
+        context->type = backend::TypeSpecifier(type);
+        context->type_letter = context->type.get_letter();
 
         std::string variable_name;
         std::string variable_initial_value = "0";
@@ -40,29 +36,25 @@ namespace backend
             variable_name = context->Identifier(0)->getText();
         }
 
-        try
+        cout << TAB << context->type << " " << context->type_letter << endl;
+
+        symbol_table_stack.push_symbol_locally(variable_name, context->type);
+
+        // Find function in map
+        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
         {
-            cout << TAB << context->type << " " << context->type_letter << endl;
-
-            symbol_table_stack.push_symbol_locally(variable_name, context->type);
-
-            // Find function in map
-            if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
-            {
-                throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
-            }
-            else
-            {
-                PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
-                    variable_name,
-                    intermediate::Symbol(
-                        symbol_table_stack.get_last_symbol_id_locally(),
-                        context->type
-                    )
-                );
-            }
+            throw MissingSymbol("Function is not in variable_id_map : " + PassVisitor::current_function);
         }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, MissingSymbol);
+        else
+        {
+            PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
+                variable_name,
+                intermediate::Symbol(
+                    symbol_table_stack.get_last_symbol_id_locally(),
+                    context->type
+                )
+            );
+        }
 
         cout << TAB << "Symbol created for : " << variable_name << endl;
 

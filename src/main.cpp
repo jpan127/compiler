@@ -8,70 +8,57 @@
 
 
 
-static const char * pass1_msg = "------------------------------------------------\n"
-                                "                   P A S S  1                   \n"
+static const char * pass1_msg = "\n"
+                                "------------------------------------------------\n"
+                                "|                   P A S S  1                 |\n"
                                 "------------------------------------------------\n";
 
-static const char * pass2_msg = "------------------------------------------------\n"
-                                "                   P A S S  2                   \n"
+static const char * pass2_msg = "\n"
+                                "------------------------------------------------\n"
+                                "|                   P A S S  2                 |\n"
                                 "------------------------------------------------\n";
 
 int main(int argc, const char *args[])
 {
-    /// Make sure argument exists
     try
     {
+        /// Make sure argument exists
         if (argc < 2)
         {
             throw MissingArgument("Missing argument : path to sample program");
         }
-    }
-    catch (MissingArgument const & error)
-    {
-        error.print_and_exit();
-    }
 
-    /// Input Stream
-    std::ifstream ins(args[1]);
-    std::cout << args[1] << std::endl;
+        /// Input Stream
+        std::ifstream ins(args[1]);
+        std::cout << args[1] << std::endl;
 
-    /// ANLTR Input Stream
-    antlr4::ANTLRInputStream input(ins);
+        /// ANLTR Input Stream
+        antlr4::ANTLRInputStream input(ins);
 
-    /// Lexer
-    CmmLexer lexer(&input);
+        /// Lexer
+        CmmLexer lexer(&input);
 
-    /// Tokenizer
-    antlr4::CommonTokenStream tokens(&lexer);
+        /// Tokenizer
+        antlr4::CommonTokenStream tokens(&lexer);
 
-    /// Parser
-    CmmParser parser(&tokens);
+        /// Parser
+        CmmParser parser(&tokens);
 
-    /// Parse Tree
-    antlr4::tree::ParseTree *tree = parser.compilationUnit();
+        /// Parse Tree
+        antlr4::tree::ParseTree *tree = parser.compilationUnit();
 
+        /// Get file name and strip rest of string
+        std::string program_name = args[1];
+        program_name = program_name.substr(0, program_name.find_last_of("."));
+        program_name = program_name.substr(program_name.find_last_of("/") + 1);
 
-    std::string file_name = args[1];
-    file_name = file_name.substr(0, file_name.find_last_of("."));
-    file_name = file_name.substr(file_name.find_last_of("/") + 1);
-    const std::string program_name = file_name;
-
-    /// Output Stream
-    std::ofstream j_file;
-
-    // Open output stream file
-    try
-    {
-        j_file.open(program_name + ".j");
+        /// Output Stream
+        std::ofstream j_file(program_name + ".j");
         if (j_file.fail())
         {
             throw FileOpenError("Failed to open file :" + program_name + ".j");
         }
-    }
-    CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(FileOpenError);
 
-    try
-    {
         constexpr bool debug = true;
 
         /// First Pass
@@ -90,13 +77,17 @@ int main(int argc, const char *args[])
             j_file.flush();
             j_file.close();
         }
+
+        delete tree;
+    }
+    catch (const CustomException & e)
+    {
+        e.print_and_exit();
     }
     catch (...)
     {
-        cerr << "Uncaught exception..." << endl;
+        cerr << "Unknown exception..." << endl;
     }
-
-    delete tree;
 
     return 0;
 }

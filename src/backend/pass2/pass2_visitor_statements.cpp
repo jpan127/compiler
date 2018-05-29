@@ -244,18 +244,14 @@ namespace backend
             visit(context->expression());
         }
 
-        try
+        if (context->expression())
         {
-            if (context->expression())
-            {
-                j_file << TAB << instruction_prefix_map_lookup(context->expression()->type) << "return" << endl << endl;
-            }
-            else
-            {
-                j_file << TAB << "return" << endl << endl;
-            }
+            j_file << TAB << instruction_prefix_map_lookup(context->expression()->type) << "return" << endl << endl;
         }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
+        else
+        {
+            j_file << TAB << "return" << endl << endl;
+        }
 
         return nullptr;
     }

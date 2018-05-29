@@ -21,12 +21,8 @@ namespace backend
             }
         }
 
-        try
-        {
-            const std::string opcode = resolve_expression_instruction(context->type, expr_operator);
-            j_file << "\t" << opcode << endl;
-        }
-        CATCH_CUSTOM_EXCEPTIONS_PRINT_AND_EXIT(InvalidType, InvalidOperator);
+        const std::string opcode = resolve_expression_instruction(context->type, expr_operator);
+        j_file << "\t" << opcode << endl;
     }
 
     antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
@@ -85,11 +81,7 @@ namespace backend
 
         if (context->primaryExpression()->Identifier())
         {
-            try
-            {
-                instruction += create_get_variable_instruction(program_name, context->primaryExpression()->Identifier()->getText(), context->type_letter);
-            }
-            CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType);
+            instruction += create_get_variable_instruction(program_name, context->primaryExpression()->Identifier()->getText(), context->type_letter);
         }
         else if (context->primaryExpression()->IntegerConstant() ||
                 (context->primaryExpression()->FloatConstant()))
@@ -277,26 +269,22 @@ namespace backend
             j_file << comment << endl;
         }
 
-        try
+        if (context->expression())
         {
-            if (context->expression())
-            {
-                // Visit right hand side expression first
-                visit(context->expression());
+            // Visit right hand side expression first
+            visit(context->expression());
 
-                const backend::TypeSpecifier expression_type = context->expression()->type;
-                const std::string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
-                if (type_convert_instruction.size() > 0)
-                {
-                    j_file << TAB << type_convert_instruction << endl;
-                }
-            }
-            else if (context->functionReturn())
+            const backend::TypeSpecifier expression_type = context->expression()->type;
+            const std::string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
+            if (type_convert_instruction.size() > 0)
             {
-                visit(context->functionReturn());
+                j_file << TAB << type_convert_instruction << endl;
             }
         }
-        CATCH_CUSTOM_EXCEPTION_PRINT_AND_EXIT(InvalidType)
+        else if (context->functionReturn())
+        {
+            visit(context->functionReturn());
+        }
 
         const std::string instruction = create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
 
