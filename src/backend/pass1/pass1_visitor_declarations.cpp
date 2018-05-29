@@ -41,13 +41,15 @@ namespace backend
         symbol_table_stack.push_symbol_locally(variable_name, context->type);
 
         // Find function in map
-        if (PassVisitor::variable_id_map.find(PassVisitor::current_function) == PassVisitor::variable_id_map.end())
+        const std::string & current_function = symbol_table_stack.get_local_symbol_table()->get_table_name();
+
+        if (PassVisitor::variable_id_map.find(current_function) == PassVisitor::variable_id_map.end())
         {
-            THROW_EXCEPTION(MissingSymbol, "Function is not in variable_id_map : " + PassVisitor::current_function);
+            THROW_EXCEPTION(MissingSymbol, "Function is not in variable_id_map : " + current_function);
         }
         else
         {
-            PassVisitor::variable_id_map[PassVisitor::current_function].emplace(
+            PassVisitor::variable_id_map[current_function].emplace(
                 variable_name,
                 intermediate::Symbol(
                     symbol_table_stack.get_last_symbol_id_locally(),

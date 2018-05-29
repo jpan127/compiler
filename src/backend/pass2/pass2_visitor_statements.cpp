@@ -228,7 +228,7 @@ namespace backend
 
     antlrcpp::Any Pass2Visitor::visitJumpStatement(CmmParser::JumpStatementContext *context)
     {
-        if (PassVisitor::current_function == "main")
+        if (current_function == "main")
         {
             emit_symbol_table();
 

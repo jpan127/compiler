@@ -67,6 +67,9 @@ namespace intermediate
         /// Returns the size of the table
         uint32_t get_size() const { return m_table.size(); }
 
+        /// Returns the name of the table
+        const std::string & get_table_name() const { return m_table_name; }
+
         /// Returns the nesting level of the table
         uint32_t get_nesting_level() const { return m_nesting_level; }
 

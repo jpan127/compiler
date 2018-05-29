@@ -66,6 +66,9 @@ namespace backend
 
         const bool debug_flag;
 
+        /// Stores the current function name
+        std::string current_function = "global";
+
         std::vector <std::string> instruction_buffer;
 
         std::string resolve_expression_instruction(const backend::TypeSpecifier & type, const std::string & opr);

@@ -13,8 +13,6 @@ namespace backend
 
     uint64_t PassVisitor::scope_counter = 0;
 
-    std::string PassVisitor::current_function = "global";
-
     std::unordered_map <std::string, std::unordered_map <std::string, intermediate::Symbol>> PassVisitor::variable_id_map =
     {
         { "global" , std::unordered_map <std::string, intermediate::Symbol> () },

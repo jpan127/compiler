@@ -53,9 +53,6 @@ namespace backend
         /// Maps function names to their function invoke signature
         static std::unordered_map <std::string, std::string> function_definition_map;
 
-        /// Stores the current function name
-        static std::string current_function;
-
         /// Counts up for each compound statement
         static uint64_t scope_counter;
 
