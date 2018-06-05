@@ -39,7 +39,7 @@ namespace intermediate
         {
             SymbolPtr s_ptr = nullptr;
 
-            for (auto table : m_tables)
+            for (const auto & table : m_tables)
             {
                 s_ptr = table->lookup_symbol(name);
                 if (nullptr != s_ptr)
@@ -61,7 +61,7 @@ namespace intermediate
         {
             SymbolPtr s_ptr = nullptr;
 
-            for (auto table : m_tables)
+            for (const auto & table : m_tables)
             {
                 s_ptr = table->lookup_symbol(name);
                 if (nullptr != s_ptr)
@@ -82,7 +82,7 @@ namespace intermediate
         {
             SymbolTablePtr table_ptr = nullptr;
 
-            for (auto table : m_tables)
+            for (const auto & table : m_tables)
             {
                 if (table->get_table_name() == name)
                 {

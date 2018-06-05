@@ -70,7 +70,7 @@ namespace backend
         if (context->parameterTypeList()->functionParameterList())
         {
             // Add each function parameter to jasmin function header
-            for (auto variable : context->parameterTypeList()->functionParameterList()->typeSpecifier())
+            for (const auto & variable : context->parameterTypeList()->functionParameterList()->typeSpecifier())
             {
                 const std::string var_type = variable->getText();
                 function_parameters += toupper(var_type[0]);

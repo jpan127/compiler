@@ -11,7 +11,7 @@ namespace intermediate
         {
             m_current_symbol_id++;
         }
-            cout << "$$$$ " << name << " " << m_current_symbol_id << endl;
+
         SymbolPtr s_ptr = std::make_shared <Symbol> (m_current_symbol_id, type);
         m_table[name] = s_ptr;
 
@@ -41,7 +41,7 @@ namespace intermediate
     {
         std::vector <SymbolPtr> symbols;
 
-        for (auto pair : m_table)
+        for (const auto & pair : m_table)
         {
             symbols.push_back(pair.second);
         }

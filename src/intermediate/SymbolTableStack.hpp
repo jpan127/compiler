@@ -81,10 +81,11 @@ namespace intermediate
          */
         SymbolPtr lookup_symbol_globally(const std::string & name) const;
 
+#if 0
         bool function_exists(const std::string & name) const;
 
-
         std::vector <SymbolPtr> glob_all_symbols() const;
+#endif
 
     private:
 

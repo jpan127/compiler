@@ -59,7 +59,7 @@ namespace intermediate
     {
         SymbolPtr symbol = nullptr;
 
-        for (auto table : stack)
+        for (const auto & table : stack)
         {
             if (nullptr != table->lookup_symbol(name))
             {
@@ -71,11 +71,12 @@ namespace intermediate
         return symbol;
     }
 
+#if 0
     bool SymbolTableStack::function_exists(const std::string & name) const
     {
         bool found = false;
 
-        for (auto table : stack)
+        for (const auto & table : stack)
         {
             if (name == table->get_table_name())
             {
@@ -91,7 +92,7 @@ namespace intermediate
     {
         std::vector <SymbolPtr> all_symbols;
 
-        for (auto table : stack)
+        for (const auto & table : stack)
         {
             const std::vector <SymbolPtr> table_symbols = table->glob_all_symbols();
             all_symbols.insert(all_symbols.end(), table_symbols.begin(), table_symbols.end());
@@ -99,5 +100,6 @@ namespace intermediate
 
         return all_symbols;
     }
+#endif
 
 } /// intermediate

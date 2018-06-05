@@ -69,9 +69,9 @@ namespace backend
         const intermediate::SymbolTablePtr main_table   = store.lookup_symbol_table("main");
         const std::vector <intermediate::SymbolTablePtr> tables_to_print = { global_table , main_table };
 
-        for (auto table : tables_to_print)
+        for (const auto & table : tables_to_print)
         {
-            for (auto symbol : table->get_table())
+            for (const auto & symbol : table->get_table())
             {
                 j_file << TAB << "; Printing symbol - " << symbol.first << endl;
                 j_file << TAB << "ldc \"" + symbol.first << " : ";
