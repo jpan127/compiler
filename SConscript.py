@@ -24,9 +24,6 @@ autogenerate_antlr = env.Command(
 
 AlwaysBuild(autogenerate_antlr)
 
-SOURCE_FILES += Dir(GENERATED_DIR).glob("*.cpp")
-SOURCE_FILES = Flatten(SOURCE_FILES)
-
 object_files = []
 for cpp in SOURCE_FILES:
     object_files.append(
@@ -35,6 +32,20 @@ for cpp in SOURCE_FILES:
             source  = cpp,
             LIBS    = [ANLTR_STATIC_LIB],
             LIBPATH = [ANTLR_LIB_DIR],
+        )
+    )
+for cpp in Dir(GENERATED_DIR).glob("*.cpp"):
+    object_files.append(
+        env.Object(
+            target   = os.path.splitext(cpp.name)[0],
+            source   = cpp,
+            LIBS     = [ANLTR_STATIC_LIB],
+            LIBPATH  = [ANTLR_LIB_DIR],
+            CXXFLAGS = [
+                "-std=c++11",
+                "-g",
+                "-Wno-trigraphs",
+            ],
         )
     )
 

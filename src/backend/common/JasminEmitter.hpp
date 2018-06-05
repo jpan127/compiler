@@ -37,8 +37,8 @@ namespace backend
 
     private:
 
-        const char NEW_LINE = '\n';
-        const char TAB      = '\t';
+        static constexpr char NEW_LINE = '\n';
+        static constexpr char TAB      = '\t';
 
         std::ofstream & ofile;
 

@@ -13,12 +13,7 @@ namespace backend
 
     uint64_t PassVisitor::scope_counter = 0;
 
-    std::string PassVisitor::current_function = "global";
-
-    std::unordered_map <std::string, std::unordered_map <std::string, intermediate::Symbol>> PassVisitor::variable_id_map =
-    {
-        { "global" , std::unordered_map <std::string, intermediate::Symbol> () },
-    };
+    intermediate::SymbolTableStore PassVisitor::store;
 
     std::unordered_map <std::string, std::string> PassVisitor::function_definition_map;
 
@@ -86,7 +81,7 @@ namespace backend
         }
         else
         {
-            throw InvalidType("[letter_map_lookup] Type not found : " + type.to_string());
+            THROW_EXCEPTION(InvalidType, "Type not found : " + type.to_string());
             return '?';
         }
     }
@@ -110,105 +105,68 @@ namespace backend
         }
         else
         {
-            throw InvalidType("[instruction_prefix_map_lookup] Can only resolve instructions for [double | float | int], got : " + type.to_string());
+            THROW_EXCEPTION(InvalidType, "Can only resolve instructions for [double | float | int], got : " + type.to_string());
         }
     }
 
     std::string PassVisitor::create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
     {
         std::string instruction = "\t";
+        std::string scope;
+        const intermediate::SymbolPtr s_ptr = store.lookup_symbol(variable, scope);
 
-        for (auto function : variable_id_map)
+        if (nullptr == s_ptr)
         {
-            for (auto symbols : function.second)
+            throw MissingSymbol(variable);
+        }
+        else if ("global" == scope)
+        {
+            instruction += "getstatic\t" + program_name + "/" + variable + " " + type_letter;
+        }
+        else
+        {
+            switch (type_letter)
             {
-                if (symbols.first == variable)
-                {
-                    if (function.first == "global")
-                    {
-                        instruction += "getstatic\t" + program_name + "/" + variable + " " + type_letter;
-                    }
-                    else
-                    {
-                        switch (type_letter)
-                        {
-                            case 'I': instruction += "iload " + std::to_string(symbols.second.get_id()); break;
-                            case 'F': instruction += "fload " + std::to_string(symbols.second.get_id()); break;
-                            case 'D': instruction += "dload " + std::to_string(symbols.second.get_id()); break;
-                            case 'L': instruction += "lload " + std::to_string(symbols.second.get_id()); break;
-                            default :
-                                throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
-                        }
-                    }
-                    return instruction;
-                }
+                case 'I': instruction += "iload " + std::to_string(s_ptr->get_id()); break;
+                case 'F': instruction += "fload " + std::to_string(s_ptr->get_id()); break;
+                case 'D': instruction += "dload " + std::to_string(s_ptr->get_id()); break;
+                case 'L': instruction += "lload " + std::to_string(s_ptr->get_id()); break;
+                default :
+                    THROW_EXCEPTION(InvalidType, "Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
             }
         }
 
-        return "???????????????????????????????????";
+        return instruction;
     }
 
     std::string PassVisitor::create_put_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
     {
         std::string instruction = "\t";
+        std::string scope;
+        const intermediate::SymbolPtr s_ptr = store.lookup_symbol(variable, scope);
 
-        for (auto function : variable_id_map)
+        if (nullptr == s_ptr)
         {
-            for (auto symbols : function.second)
+            throw MissingSymbol(variable);
+        }
+        else if ("global" == scope)
+        {
+            instruction += "putstatic\t" + program_name + "/" + variable + " " + type_letter;
+        }
+        else
+        {
+            switch (type_letter)
             {
-                if (symbols.first == variable)
-                {
-                    if (function.first == "global")
-                    {
-                        instruction += "putstatic\t" + program_name + "/" + variable + " " + type_letter;
-                    }
-                    else
-                    {
-                        switch (type_letter)
-                        {
-                            case 'I': instruction += "istore " + std::to_string(symbols.second.get_id()); break;
-                            case 'F': instruction += "fstore " + std::to_string(symbols.second.get_id()); break;
-                            case 'D': instruction += "dstore " + std::to_string(symbols.second.get_id()); break;
-                            case 'L': instruction += "lstore " + std::to_string(symbols.second.get_id()); break;
-                            default :
-                                throw InvalidType("[create_get_variable_instruction] Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
-                        }
-                    }
-                    return instruction;
-                }
+                case 'I': instruction += "istore " + std::to_string(s_ptr->get_id()); break;
+                case 'F': instruction += "fstore " + std::to_string(s_ptr->get_id()); break;
+                case 'D': instruction += "dstore " + std::to_string(s_ptr->get_id()); break;
+                case 'L': instruction += "lstore " + std::to_string(s_ptr->get_id()); break;
+                default :
+                    THROW_EXCEPTION(InvalidType, "Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
             }
         }
 
-        return "???????????????????????????????????";
-    }
-
-    uint32_t PassVisitor::get_variable_id(const std::string variable) const
-    {
-        for (auto function : variable_id_map)
-        {
-            for (auto symbols : function.second)
-            {
-                if (symbols.first == variable)
-                {
-                    return symbols.second.get_id();
-                }
-            }
-        }
-
-        return static_cast <uint32_t> (-1);
-    }
-
-    bool PassVisitor::is_global(const std::string variable) const
-    {
-        for (auto symbols : variable_id_map["global"])
-        {
-            if (symbols.first == variable)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return instruction;
     }
 
     std::string PassVisitor::convert_type_if_neccessary(const backend::TypeSpecifier & current_type, const backend::TypeSpecifier & needed_type)
@@ -223,12 +181,12 @@ namespace backend
                  if (backend::Type::t_double == current) { instruction += "d2"; }
             else if (backend::Type::t_float  == current) { instruction += "f2"; }
             else if (backend::Type::t_int    == current) { instruction += "i2"; }
-            else { throw InvalidType("Unsupported type for conversion instruction : " + current_type.to_string()); }
+            else { THROW_EXCEPTION(InvalidType, "Unsupported type for conversion instruction : " + current_type.to_string()); }
 
                  if (backend::Type::t_double == needed) { instruction += "d"; }
             else if (backend::Type::t_float  == needed) { instruction += "f"; }
             else if (backend::Type::t_int    == needed) { instruction += "i"; }
-            else { throw InvalidType("Unsupported type for conversion instruction : " + needed_type.to_string()); }
+            else { THROW_EXCEPTION(InvalidType, "Unsupported type for conversion instruction : " + needed_type.to_string()); }
         }
 
         return instruction;

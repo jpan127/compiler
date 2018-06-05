@@ -53,7 +53,7 @@ def get_all_subdirectories(root_dir):
     @param root_dir : Starting directory to traverse
     @returns        : List of all directories
     """
-    subdirs = []
+    subdirs = [root_dir]
     for root, dirs, files in os.walk(root_dir):
         subdirs += [os.path.join(root, dir) for dir in dirs]
     return subdirs
@@ -64,22 +64,17 @@ def get_all_subdirectories(root_dir):
 
 CPPPATH = Flatten([
     GENERATED_DIR,
-    "antlr4-runtime",
     get_all_subdirectories("antlr4-runtime"),
-    "src",
     get_all_subdirectories("src"),
     "generated",
 ])
 
 CPPPATH = [Dir(".").Dir(dir) for dir in CPPPATH]
 
-SOURCE_DIRS = Flatten([
-    "src",
-    get_all_subdirectories("src"),
-])
+SOURCE_DIRS = Flatten(get_all_subdirectories("src"))
 
 # Glob all source files from the source directories
-SOURCE_FILES = [Dir(dir).glob("*.cpp") for dir in SOURCE_DIRS]
+SOURCE_FILES = Flatten([Dir(dir).glob("*.cpp") for dir in SOURCE_DIRS])
 
 #=======================================================#
 #                   Main Environment                    #
