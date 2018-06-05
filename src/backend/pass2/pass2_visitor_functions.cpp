@@ -41,7 +41,7 @@ namespace backend
             j_file << "\t;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
 
             // Output all buffered instructions
-            for (auto instruction : instruction_buffer)
+            for (const auto & instruction : instruction_buffer)
             {
                 j_file << instruction << endl;
             }

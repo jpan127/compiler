@@ -40,24 +40,6 @@ namespace backend
 
         symbol_table_stack.push_symbol_locally(variable_name, context->type);
 
-        // Find function in map
-        const std::string & current_function = symbol_table_stack.get_local_symbol_table()->get_table_name();
-
-        if (PassVisitor::variable_id_map.find(current_function) == PassVisitor::variable_id_map.end())
-        {
-            THROW_EXCEPTION(MissingSymbol, "Function is not in variable_id_map : " + current_function);
-        }
-        else
-        {
-            PassVisitor::variable_id_map[current_function].emplace(
-                variable_name,
-                intermediate::Symbol(
-                    symbol_table_stack.get_last_symbol_id_locally(),
-                    context->type
-                )
-            );
-        }
-
         cout << TAB << "Symbol created for : " << variable_name << endl;
 
         // Depending which scope this is in, emit declaration

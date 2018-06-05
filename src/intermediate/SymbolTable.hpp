@@ -76,6 +76,11 @@ namespace intermediate
         /// Returns the last symbol ID
         uint32_t get_last_symbol_id() const { return m_current_symbol_id - 1; }
 
+        /// Returns a vector of all the symbols in the table
+        std::vector <SymbolPtr> glob_all_symbols() const;
+
+        const std::map <const std::string, SymbolPtr> & get_table() const { return m_table; }
+
     private:
 
         /// Scope of this table

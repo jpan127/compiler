@@ -109,7 +109,7 @@ namespace backend
     {
         /// https://cs.au.dk/~mis/dOvs/jvmspec/ref--41.html
         ofile << TAB << "lookupswitch" << NEW_LINE;
-        for (auto pair : switch_map)
+        for (const auto & pair : switch_map)
         {
             ofile << TAB << TAB << pair.first << ": " << pair.second << NEW_LINE;
         }
@@ -118,7 +118,7 @@ namespace backend
     {
         /// https://cs.au.dk/~mis/dOvs/jvmspec/ref-tableswi.html
         ofile << TAB << "tableswitch " << low << " " << high << NEW_LINE;
-        for (auto label : table_map)
+        for (const auto & label : table_map)
         {
             ofile << TAB << TAB << label << NEW_LINE;
         }
@@ -295,8 +295,8 @@ namespace backend
     void JasminEmitter::emit_public_method_signature(const std::string & method_name, const std::vector <std::string> & args, const std::string & return_type)
     {
         ofile << TAB << ".method public static " << method_name << "(";
-        
-        for (auto arg : args)
+
+        for (const auto & arg : args)
         {
             ofile << arg;
         }
@@ -324,7 +324,7 @@ namespace backend
         ofile << TAB << "dup"                           << NEW_LINE;
 
         uint32_t i = 0;
-        for (auto pair : variables)
+        for (const auto & pair : variables)
         {
             ofile << TAB << "ldc "          << i++          << NEW_LINE;
             ofile << TAB << "iload "        << pair.first   << NEW_LINE;

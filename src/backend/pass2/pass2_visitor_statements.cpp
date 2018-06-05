@@ -242,10 +242,6 @@ namespace backend
         if (context->expression())
         {
             visit(context->expression());
-        }
-
-        if (context->expression())
-        {
             j_file << TAB << instruction_prefix_map_lookup(context->expression()->type) << "return" << endl << endl;
         }
         else

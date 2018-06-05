@@ -65,47 +65,47 @@ namespace backend
         j_file << TAB << "invokevirtual java/io/PrintStream/println(Ljava/lang/String;)V"            << endl;
         j_file                                                                                       << endl;
 
-        for (auto function : PassVisitor::variable_id_map)
+        const intermediate::SymbolTablePtr global_table = store.lookup_symbol_table("global");
+        const intermediate::SymbolTablePtr main_table   = store.lookup_symbol_table("main");
+        const std::vector <intermediate::SymbolTablePtr> tables_to_print = { global_table , main_table };
+
+        for (const auto & table : tables_to_print)
         {
-            // Only print symbols in global or main
-            if (function.first == "global" || function.first == "main")
+            for (const auto & symbol : table->get_table())
             {
-                for (auto symbol : function.second)
+                j_file << TAB << "; Printing symbol - " << symbol.first << endl;
+                j_file << TAB << "ldc \"" + symbol.first << " : ";
+
+                switch (symbol.second->get_type_letter())
                 {
-                    j_file << TAB << "; Printing symbol - " << symbol.first << endl;
-                    j_file << TAB << "ldc \"" + symbol.first << " : ";
-
-                    switch (symbol.second.get_type_letter())
-                    {
-                        case 'F': j_file << "%f\\n\"" << endl; break;
-                        case 'D': j_file << "%f\\n\"" << endl; break;
-                        case 'I': j_file << "%d\\n\"" << endl; break;
-                        case 'L': j_file << "%d\\n\"" << endl; break;
-                        default :
-                            THROW_EXCEPTION(InvalidType, std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
-                    }
-
-                    j_file << TAB << "ldc 1"                      << endl;
-                    j_file << TAB << "anewarray java/lang/Object" << endl;
-                    j_file << TAB << "dup"                        << endl;
-                    j_file << TAB << "iconst_0"                   << endl;
-
-                    j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second.get_type_letter()) << endl;
-
-                    switch (symbol.second.get_type_letter())
-                    {
-                        case 'F': j_file << TAB << "invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;"     << endl; break;
-                        case 'D': j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;"   << endl; break;
-                        case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
-                        case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
-                        default :
-                            THROW_EXCEPTION(InvalidType, std::string("Invalid type letter found : ") + std::string(1, symbol.second.get_type_letter()));
-                    }
-
-                    j_file << TAB << "aastore" << endl;
-                    j_file << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << endl;
-                    j_file << endl;
+                    case 'F': j_file << "%f\\n\"" << endl; break;
+                    case 'D': j_file << "%f\\n\"" << endl; break;
+                    case 'I': j_file << "%d\\n\"" << endl; break;
+                    case 'L': j_file << "%d\\n\"" << endl; break;
+                    default :
+                        THROW_EXCEPTION(InvalidType, std::string("Invalid type letter found : ") + std::string(1, symbol.second->get_type_letter()));
                 }
+
+                j_file << TAB << "ldc 1"                      << endl;
+                j_file << TAB << "anewarray java/lang/Object" << endl;
+                j_file << TAB << "dup"                        << endl;
+                j_file << TAB << "iconst_0"                   << endl;
+
+                j_file << create_get_variable_instruction(program_name, symbol.first, symbol.second->get_type_letter()) << endl;
+
+                switch (symbol.second->get_type_letter())
+                {
+                    case 'F': j_file << TAB << "invokestatic java/lang/Float/valueOf(F)Ljava/lang/Float;"     << endl; break;
+                    case 'D': j_file << TAB << "invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;"   << endl; break;
+                    case 'I': j_file << TAB << "invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;" << endl; break;
+                    case 'L': j_file << TAB << "invokestatic java/lang/Long/valueOf(L)Ljava/lang/Long;"       << endl; break;
+                    default :
+                        THROW_EXCEPTION(InvalidType, std::string("Invalid type letter found : ") + std::string(1, symbol.second->get_type_letter()));
+                }
+
+                j_file << TAB << "aastore" << endl;
+                j_file << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << endl;
+                j_file << endl;
             }
         }
 
