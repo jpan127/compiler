@@ -5,6 +5,7 @@
 #include "common.hpp"
 #include "Pass1Visitor.hpp"
 #include "Pass2Visitor.hpp"
+#include "JasminEmitter.hpp"
 
 
 
@@ -59,16 +60,18 @@ int main(int argc, const char *args[])
             THROW_EXCEPTION(FileOpenError, "Failed to open file :" + program_name + ".j");
         }
 
+        backend::JasminEmitter j_emitter(j_file);
+
         constexpr bool debug = true;
 
         /// First Pass
         std::cout << pass1_msg << std::endl;
-        backend::Pass1Visitor pass1(program_name, j_file, debug);
+        backend::Pass1Visitor pass1(program_name, j_file, j_emitter, debug);
         pass1.visit(tree);
 
         /// Second Pass
         std::cout << pass2_msg << std::endl;
-        backend::Pass2Visitor pass2(program_name, j_file, debug);
+        backend::Pass2Visitor pass2(program_name, j_file, j_emitter, debug);
         pass2.visit(tree);
 
         /// Sanity clean up
@@ -84,9 +87,15 @@ int main(int argc, const char *args[])
     {
         e.print_and_exit();
     }
+    catch (const std::exception & e)
+    {
+        cerr << e.what() << endl;
+    }
     catch (...)
     {
-        cerr << "Unknown exception..." << endl;
+        cerr << "------------------------------------------------" << endl;
+        cerr << "              Unknown exception...              " << endl;
+        cerr << "------------------------------------------------" << endl;
     }
 
     return 0;

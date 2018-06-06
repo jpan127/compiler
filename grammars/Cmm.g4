@@ -78,7 +78,9 @@ functionParameterList
 
 functionDefinition
     locals [
-        string function_header,
+        std::string function_header,
+        std::vector <std::string> args,
+        std::string return_type,
         uint32_t num_local_vars = 0,
         size_t stack_size = 0,
     ]

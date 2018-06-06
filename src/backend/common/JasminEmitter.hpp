@@ -17,6 +17,7 @@ namespace backend
         atype_short,
         atype_int,
         atype_long,
+        atype_object,
     };
 
     /**
@@ -31,37 +32,131 @@ namespace backend
 
     class JasminEmitter
     {
-    public:
-
-        JasminEmitter(std::ofstream & ofile);
 
     private:
 
+        /// @ { Useful helper variables
         static constexpr char NEW_LINE = '\n';
         static constexpr char TAB      = '\t';
+        static constexpr uint8_t line_length = 80;
+        static constexpr char const * line = ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;"
+                                             ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
+        /// @ }
 
+        /// Output stream used for emitting assembly instructions
         std::ofstream & ofile;
 
-        /// @ {
+    public:
+
+        /// Constructor with only member as parameter
+        JasminEmitter(std::ofstream & ofile);
+
+        /// @ { Miscellaneous / Not A Specific Instruction
+        /// Init function for a Java main class
         void emit_default_constructor();
+        /**
+         *  Public method prototype
+         *  @param method_name : Name of method
+         *  @param args        : List of arguments whether it is a single char 'I' or a full string for Object
+         *  @param return_type : Type of returned value, same as above
+         */
         void emit_public_method_signature(const std::string & method_name, const std::vector <std::string> & args, const std::string & return_type);
-        void emit_class_variable(const std::string & variable, const char type_letter);
+        /**
+         *  Class member variable declaration
+         *  @param variable    : Name of variable
+         *  @param type_letter : Letter representing the type of the variable
+         */
+        void emit_class_variable(const std::string & variable, const std::string & type_letter);
+        /**
+         *  Main method prototype
+         *  @param program_name : Name of the program
+         */
         void emit_main_class(const std::string & program_name);
+        /**
+         *  The sequence of instructions for a Java printf in Jasmin
+         *  @param format_string : A formatted string with the %-based substitutions
+         *  @param variables     : Map of variables, mapping the variable ID to the name
+         */
         void emit_printf(const std::string & format_string, const std::map <uint32_t, std::string> & variables);
+        /**
+         *  Comment
+         *  @param comment : The string for the comment
+         */
+        void emit_comment(const std::string & comment);
+        /**
+         *  Comment with a configurable number of indentations
+         *  @param comment : The string for the comment
+         *  @param indents : Number of indents
+         */
+        void emit_comment_custom(const std::string & comment, const uint8_t indents=1);
+        /// Emits a new line
+        void emit_new_line()
+        {
+            ofile << std::endl;
+        }
+        /**
+         *  Number of local variables, size of the current method's stack, and the ending label
+         *  @param local_vars : Number of local variables to the method
+         *  @param stack_size : Size of stack in bytes of the method
+         */
+        void emit_function_end(const uint32_t local_vars, const uint32_t stack_size)
+        {
+            ofile << ".limit locals " << local_vars << NEW_LINE;
+            ofile << ".limit stack "  << stack_size << NEW_LINE;
+            ofile << ".end method"                  << NEW_LINE;
+        }
+        /**
+         *  Comment surrounded by a box
+         *  @param comment : The comment that goes in the middle of the box
+         *  @example:
+         *      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+         *      ;           comment           ;
+         *      ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+         */
+        void emit_box_comment(const std::string & comment)
+        {
+            const uint8_t num_spaces_padding = (line_length - comment.length() - 2) / 2;
+            ofile << TAB << line << NEW_LINE;
+            ofile << TAB << ";"  << string(num_spaces_padding, ' ')
+                                 << comment
+                                 << string(num_spaces_padding, ' ')
+                         << ";"  << NEW_LINE;
+            ofile << TAB << line << NEW_LINE;
+        }
+        /**
+         *  Label for branch statements
+         *  @param label : Name of the label
+         */
+        void emit_label(const std::string & label)
+        {
+            ofile << label << ":" << NEW_LINE;
+        }
+        /**
+         *  A comment line for separating blocks of code
+         *  @param indents : Number of indentations before the comment
+         */
+        void emit_line(const uint8_t indents=0)
+        {
+            for (uint8_t i = 0; i < indents; i++)
+            {
+                ofile << TAB;
+            }
+            ofile << line << NEW_LINE;
+        }
         /// @ }
 
         /// @ { Local Variable Instructions
-        void emit_ret(const int32_t value);
-        void emit_aload(const int32_t value);
-        void emit_astore(const int32_t value);
-        void emit_dload(const int32_t value);
-        void emit_dstore(const int32_t value);
-        void emit_fload(const int32_t value);
-        void emit_fstore(const int32_t value);
-        void emit_iload(const int32_t value);
-        void emit_istore(const int32_t value);
-        void emit_lload(const int32_t value);
-        void emit_lstore(const int32_t value);
+        void emit_ret(const std::string & value);
+        void emit_aload(const std::string & value);
+        void emit_astore(const std::string & value);
+        void emit_dload(const std::string & value);
+        void emit_dstore(const std::string & value);
+        void emit_fload(const std::string & value);
+        void emit_fstore(const std::string & value);
+        void emit_iload(const std::string & value);
+        void emit_istore(const std::string & value);
+        void emit_lload(const std::string & value);
+        void emit_lstore(const std::string & value);
         /// @ }
 
         /// @ { Branch Instructions
@@ -272,5 +367,18 @@ namespace backend
         void emit_swap();
         /// @ }
     };
+
+    /// Typedef'd function pointers for JasminEmitter public functions
+    typedef std::function <void(JasminEmitter *, const int32_t      )> int_JasminEmitter_FPTR;
+    typedef std::function <void(JasminEmitter *                     )> void_JasminEmitter_FPTR;
+    typedef std::function <void(JasminEmitter *, const std::string &)> string_JasminEmitter_FPTR;
+
+    /// Typedef'd grouping of a function pointer and the value that should be passed in when the function is called
+    typedef std::pair <int_JasminEmitter_FPTR, const uint32_t> int_JasminEmitter_FUNCT;
+    typedef std::pair <void_JasminEmitter_FPTR, void         > void_JasminEmitter_FUNCT;
+    typedef std::pair <string_JasminEmitter_FPTR, std::string> string_JasminEmitter_FUNCT;
+
+    /// Macro for an empty function pair, since the pair can not be initialized null so it is useful for pre-declaring a pair
+    #define EMPTY_STRING_CALLBACK (std::make_pair(nullptr, ""))
 
 } /// backend

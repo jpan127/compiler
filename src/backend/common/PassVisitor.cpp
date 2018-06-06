@@ -109,10 +109,12 @@ namespace backend
         }
     }
 
-    std::string PassVisitor::create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
+    backend::string_JasminEmitter_FUNCT PassVisitor::create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
     {
-        std::string instruction = "\t";
+        backend::string_JasminEmitter_FPTR instruction;
+        std::string value;
         std::string scope;
+
         const intermediate::SymbolPtr s_ptr = store.lookup_symbol(variable, scope);
 
         if (nullptr == s_ptr)
@@ -121,28 +123,33 @@ namespace backend
         }
         else if ("global" == scope)
         {
-            instruction += "getstatic\t" + program_name + "/" + variable + " " + type_letter;
+            instruction = &backend::JasminEmitter::emit_getstatic;
+            value = program_name + "/" + variable + " " + type_letter;
         }
         else
         {
             switch (type_letter)
             {
-                case 'I': instruction += "iload " + std::to_string(s_ptr->get_id()); break;
-                case 'F': instruction += "fload " + std::to_string(s_ptr->get_id()); break;
-                case 'D': instruction += "dload " + std::to_string(s_ptr->get_id()); break;
-                case 'L': instruction += "lload " + std::to_string(s_ptr->get_id()); break;
+                case 'I': instruction = &backend::JasminEmitter::emit_iload; break;
+                case 'F': instruction = &backend::JasminEmitter::emit_fload; break;
+                case 'D': instruction = &backend::JasminEmitter::emit_dload; break;
+                case 'L': instruction = &backend::JasminEmitter::emit_lload; break;
                 default :
                     THROW_EXCEPTION(InvalidType, "Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
             }
+
+            value = std::to_string(s_ptr->get_id());
         }
 
-        return instruction;
+        return std::make_pair(instruction, value);
     }
 
-    std::string PassVisitor::create_put_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
+    backend::string_JasminEmitter_FUNCT PassVisitor::create_put_variable_instruction(const std::string program_name, const std::string variable, const char type_letter)
     {
-        std::string instruction = "\t";
+        backend::string_JasminEmitter_FPTR instruction;
+        std::string value;
         std::string scope;
+
         const intermediate::SymbolPtr s_ptr = store.lookup_symbol(variable, scope);
 
         if (nullptr == s_ptr)
@@ -151,45 +158,25 @@ namespace backend
         }
         else if ("global" == scope)
         {
-            instruction += "putstatic\t" + program_name + "/" + variable + " " + type_letter;
+            instruction = &backend::JasminEmitter::emit_putstatic;
+            value = program_name + "/" + variable + " " + type_letter;
         }
         else
         {
             switch (type_letter)
             {
-                case 'I': instruction += "istore " + std::to_string(s_ptr->get_id()); break;
-                case 'F': instruction += "fstore " + std::to_string(s_ptr->get_id()); break;
-                case 'D': instruction += "dstore " + std::to_string(s_ptr->get_id()); break;
-                case 'L': instruction += "lstore " + std::to_string(s_ptr->get_id()); break;
+                case 'I': instruction = &backend::JasminEmitter::emit_istore; break;
+                case 'F': instruction = &backend::JasminEmitter::emit_fstore; break;
+                case 'D': instruction = &backend::JasminEmitter::emit_dstore; break;
+                case 'L': instruction = &backend::JasminEmitter::emit_lstore; break;
                 default :
                     THROW_EXCEPTION(InvalidType, "Invalid type letter for variable : " + variable + " type_letter : " + type_letter);
             }
+
+            value = std::to_string(s_ptr->get_id());
         }
 
-        return instruction;
-    }
-
-    std::string PassVisitor::convert_type_if_neccessary(const backend::TypeSpecifier & current_type, const backend::TypeSpecifier & needed_type)
-    {
-        std::string instruction;
-
-        const backend::Type & current = current_type.get_type();
-        const backend::Type & needed  = needed_type.get_type();
-
-        if (current != needed)
-        {
-                 if (backend::Type::t_double == current) { instruction += "d2"; }
-            else if (backend::Type::t_float  == current) { instruction += "f2"; }
-            else if (backend::Type::t_int    == current) { instruction += "i2"; }
-            else { THROW_EXCEPTION(InvalidType, "Unsupported type for conversion instruction : " + current_type.to_string()); }
-
-                 if (backend::Type::t_double == needed) { instruction += "d"; }
-            else if (backend::Type::t_float  == needed) { instruction += "f"; }
-            else if (backend::Type::t_int    == needed) { instruction += "i"; }
-            else { THROW_EXCEPTION(InvalidType, "Unsupported type for conversion instruction : " + needed_type.to_string()); }
-        }
-
-        return instruction;
+        return std::make_pair(instruction, value);
     }
 
 } /// backend

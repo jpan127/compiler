@@ -45,16 +45,8 @@ namespace backend
         // Depending which scope this is in, emit declaration
         if (symbol_table_stack.get_current_nesting_level() == 1)
         {
-            // Make a comment as to what the declaration is
-            j_file << "; " << context->getText() << endl;
-
-            // Output the variable declaration
-            // @example : .field private static c D = 0
-            j_file << ".field private static "
-                   << variable_name
-                   << " "
-                   << context->type_letter
-                   << endl;
+            j_emitter.emit_comment_custom(context->getText(), 0);
+            j_emitter.emit_class_variable(variable_name, string(1, context->type_letter));
         }
 
         return visitChildren(context);

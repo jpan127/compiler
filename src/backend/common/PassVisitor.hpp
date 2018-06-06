@@ -6,6 +6,7 @@
 #include "SymbolTableStack.hpp"
 #include "SymbolStore.hpp"
 #include "TypeSpecifier.hpp"
+#include "JasminEmitter.hpp"
 
 
 
@@ -37,7 +38,9 @@ namespace backend
     protected:
 
         /// Protected constructor
-        PassVisitor(const uint8_t pass_number, std::ofstream & j_file) : pass_number(pass_number), j_file(j_file) { }
+        PassVisitor(const uint8_t pass_number, std::ofstream & j_file) : pass_number(pass_number), j_file(j_file)
+        {
+        }
 
         /// Virtual destructor
         virtual ~PassVisitor() { }
@@ -106,20 +109,20 @@ namespace backend
          *  @param program_name : The name of the program
          *  @param variable     : The name of the variable
          *  @param type_letter  : The type of the variable
-         *  @returns            : The constructed instruction, returns ???? if not found
+         *  @returns            : Pointer to the instruction emit function and the parameters for the consumer to use
          *  @throws             : InvalidType if type letter not supported
          */
-        std::string create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter);
+        backend::string_JasminEmitter_FUNCT create_get_variable_instruction(const std::string program_name, const std::string variable, const char type_letter);
 
         /**
          *  Sets up a PUT instruction depending on global or not global
          *  @param program_name : The name of the program
          *  @param variable     : The name of the variable
          *  @param type_letter  : The type of the variable
-         *  @returns            : The constructed instruction, returns ???? if not found
+         *  @returns            : Pointer to the instruction emit function and the parameters for the consumer to use
          *  @throws             : InvalidType if type letter not supported
          */
-        std::string create_put_variable_instruction(const std::string program_name, const std::string variable, const char type_letter);
+        backend::string_JasminEmitter_FUNCT create_put_variable_instruction(const std::string program_name, const std::string variable, const char type_letter);
 
         /**
          *  Looks up the variable ID in the variable id table
@@ -134,23 +137,6 @@ namespace backend
          *  @returns        : True for global, false for not global
          */
         bool is_global(const std::string variable) const;
-
-        /**
-         *  Determines if a type conversion instruction is necessary when working with two types
-         *  @param current_type : The type the last instruction was working with
-         *  @param needed_type  : The type the next instruction is working with
-         *  @returns            : A string with the type instruction, empty if no instruction needed
-         */
-        std::string convert_type_if_neccessary(const backend::TypeSpecifier & current_type, const backend::TypeSpecifier & needed_type);
-
-        void emit_comment(antlr4::ParserRuleContext * context, const uint8_t indents=0) const
-        {
-            for (uint8_t i = 0; i < indents; i++)
-            {
-                j_file << TAB;
-            }
-            j_file << "; " << context->getText() << endl;
-        }
 
     };
 

@@ -30,7 +30,7 @@ namespace backend
         return visitChildren(context);
     }
 
-    /// @TODO : This function needs to be simplified / cleaned up
+    /// @TODO : [#33] This function needs to be simplified / cleaned up
     antlrcpp::Any Pass1Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitionContext * context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
@@ -48,6 +48,7 @@ namespace backend
         const std::string & current_function = symbol_table_stack.get_local_symbol_table()->get_table_name();
 
         const std::string function_return_type(1, toupper(context->typeSpecifier()->getText()[0]));
+        context->return_type = function_return_type;
         std::string function_parameters;
 
         // Checks to see if function has already been defined
@@ -74,6 +75,7 @@ namespace backend
             {
                 const std::string var_type = variable->getText();
                 function_parameters += toupper(var_type[0]);
+                context->args.push_back(string(1, toupper(var_type[0])));
             }
         }
 

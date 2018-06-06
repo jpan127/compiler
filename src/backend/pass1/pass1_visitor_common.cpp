@@ -10,13 +10,9 @@ namespace backend
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
         // Emit the program header
-        j_file << ".class public " << program_name                              << endl;
-        j_file << ".super java/lang/Object"                                     << endl;
-        j_file                                                                  << endl;
-        j_file << ".field private static _runTimer LRunTimer;"                  << endl;
-        j_file << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
-        j_file << ";                     Global Variables                    ;" << endl;
-        j_file << ";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
+        j_emitter.emit_main_class(program_name);
+        j_emitter.emit_class_variable("_runTimer", "LRunTimer;");
+        j_emitter.emit_box_comment("Global Variables");
 
         auto value = visitChildren(context);
 
