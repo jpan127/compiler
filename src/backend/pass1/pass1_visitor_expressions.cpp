@@ -150,20 +150,7 @@ namespace backend
          *  Saves the opcode
          */
 
-        const std::string opr = context->ConditionalOperator()->getText();
-
-        std::string opcode;
-
-             if (opr == "<")                     { opcode = "if_icmpge"; }  ///< (x <  y) branch if >=
-        else if (opr == "<=")                    { opcode = "if_icmpgt"; }  ///< (x <= y) branch if >
-        else if (opr == ">")                     { opcode = "if_icmple"; }  ///< (x >  y) branch if <=
-        else if (opr == ">=")                    { opcode = "if_icmplt"; }  ///< (x >= y) branch if <
-        else if (opr == "==" || opr == "is")     { opcode = "if_icmpne"; }  ///< (x == y) branch if !=
-        else if (opr == "!=" || opr == "is not") { opcode = "if_icmpeq"; }  ///< (x != y) branch if ==
-        else                                     { THROW_EXCEPTION(InvalidOperator, opr); }
-
-        context->opr = opr;
-        context->opcode = opcode;
+        context->opr = context->ConditionalOperator()->getText();
 
         return visitChildren(context);
     }

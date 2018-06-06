@@ -22,40 +22,51 @@ namespace backend
 
         if (!is_main)
         {
-            j_file << context->function_header << endl;
+            j_emitter.emit_public_method_signature(
+                current_function,
+                context->args,
+                context->return_type
+            );
         }
         else
         {
+            const std::vector <std::string> parameter_types = { "[Ljava/lang/String;" };
+
             // Emit the main program header
-            j_file                                                                  << endl;
-            j_file << ".method public static main([Ljava/lang/String;)V"            << endl;
-            j_file                                                                  << endl;
-            j_file << "\t; Timer Module Instantiation"                              << endl;
-            j_file << "\tnew RunTimer"                                              << endl;
-            j_file << "\tdup"                                                       << endl;
-            j_file << "\tinvokenonvirtual RunTimer/<init>()V"                       << endl;
-            j_file << "\tputstatic\t" << program_name << "/_runTimer LRunTimer;"    << endl;
-            j_file                                                                  << endl;
-            j_file << "\t;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
-            j_file << "\t;                   Global Variables                    ;" << endl;
-            j_file << "\t;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl;
+            j_emitter.emit_new_line();
+            j_emitter.emit_public_method_signature(
+                "main",
+                parameter_types,
+                "V"
+            );
+            j_emitter.emit_new_line();
+            j_emitter.emit_comment("Timer Module Instantiation");
+            j_emitter.emit_new("RunTimer");
+            j_emitter.emit_dup();
+            j_emitter.emit_invokenonvirtual("RunTimer/<init>()V");
+            j_emitter.emit_putstatic(program_name + "/_runTimer LRunTimer;");
+            j_emitter.emit_new_line();
+            j_emitter.emit_box_comment("Global Variables");
 
             // Output all buffered instructions
             for (const auto & instruction : instruction_buffer)
             {
-                j_file << instruction << endl;
+                const backend::string_JasminEmitter_FPTR & emit_fptr = instruction.first;
+                const std::string & value = instruction.second;
+                emit_fptr(&j_emitter, value);
             }
 
-            j_file << "\t;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;" << endl << endl;
+            j_emitter.emit_line();
         }
 
         // Visit children
         visit(context->parameterTypeList());
         visit(context->compoundStatement());
 
-        j_file << ".limit locals " << (context->num_local_vars+10) * 2  << endl;
-        j_file << ".limit stack "  << context->stack_size               << endl;
-        j_file << ".end method"                                         << endl;
+        j_emitter.emit_function_end(
+            (context->num_local_vars+10) * 2,
+            context->stack_size
+        );
 
         current_function = "global";
         return nullptr;
@@ -68,8 +79,15 @@ namespace backend
         // Visit identifier list first
         visitChildren(context);
 
-        j_file << TAB << "invokestatic " << program_name << "/";
-        j_file << PassVisitor::function_definition_map[context->Identifier()->toString()] << endl;
+        const std::string function_name = context->Identifier()->toString();
+        if (PassVisitor::function_definition_map.find(function_name) != PassVisitor::function_definition_map.end())
+        {
+            j_emitter.emit_invokestatic(program_name + "/" + PassVisitor::function_definition_map[context->Identifier()->toString()]);
+        }
+        else
+        {
+            throw MissingFunction(function_name);
+        }
 
         return nullptr;
     }
@@ -81,8 +99,15 @@ namespace backend
         // Visit identifier list first
         visitChildren(context);
 
-        j_file << TAB << "invokestatic " << program_name << "/";
-        j_file << PassVisitor::function_definition_map[context->Identifier()->toString()] << endl;
+        const std::string function_name = context->Identifier()->toString();
+        if (PassVisitor::function_definition_map.find(function_name) != PassVisitor::function_definition_map.end())
+        {
+            j_emitter.emit_invokestatic(program_name + "/" + PassVisitor::function_definition_map[context->Identifier()->toString()]);
+        }
+        else
+        {
+            throw MissingFunction(function_name);
+        }
 
         return nullptr;
     }

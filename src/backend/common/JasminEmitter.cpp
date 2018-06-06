@@ -13,16 +13,16 @@ namespace backend
     }
 
     /// @ { Local Variable Instructions
-    void JasminEmitter::emit_aload(const int32_t value)  { ofile << TAB << "aload "  << value << NEW_LINE; }
-    void JasminEmitter::emit_astore(const int32_t value) { ofile << TAB << "astore " << value << NEW_LINE; }
-    void JasminEmitter::emit_dload(const int32_t value)  { ofile << TAB << "dload "  << value << NEW_LINE; }
-    void JasminEmitter::emit_dstore(const int32_t value) { ofile << TAB << "dstore " << value << NEW_LINE; }
-    void JasminEmitter::emit_fload(const int32_t value)  { ofile << TAB << "fload "  << value << NEW_LINE; }
-    void JasminEmitter::emit_fstore(const int32_t value) { ofile << TAB << "fstore " << value << NEW_LINE; }
-    void JasminEmitter::emit_iload(const int32_t value)  { ofile << TAB << "iload "  << value << NEW_LINE; }
-    void JasminEmitter::emit_istore(const int32_t value) { ofile << TAB << "istore " << value << NEW_LINE; }
-    void JasminEmitter::emit_lload(const int32_t value)  { ofile << TAB << "lload "  << value << NEW_LINE; }
-    void JasminEmitter::emit_lstore(const int32_t value) { ofile << TAB << "lstore " << value << NEW_LINE; }
+    void JasminEmitter::emit_aload(const std::string & value)  { ofile << TAB << "aload "  << value << NEW_LINE; }
+    void JasminEmitter::emit_astore(const std::string & value) { ofile << TAB << "astore " << value << NEW_LINE; }
+    void JasminEmitter::emit_dload(const std::string & value)  { ofile << TAB << "dload "  << value << NEW_LINE; }
+    void JasminEmitter::emit_dstore(const std::string & value) { ofile << TAB << "dstore " << value << NEW_LINE; }
+    void JasminEmitter::emit_fload(const std::string & value)  { ofile << TAB << "fload "  << value << NEW_LINE; }
+    void JasminEmitter::emit_fstore(const std::string & value) { ofile << TAB << "fstore " << value << NEW_LINE; }
+    void JasminEmitter::emit_iload(const std::string & value)  { ofile << TAB << "iload "  << value << NEW_LINE; }
+    void JasminEmitter::emit_istore(const std::string & value) { ofile << TAB << "istore " << value << NEW_LINE; }
+    void JasminEmitter::emit_lload(const std::string & value)  { ofile << TAB << "lload "  << value << NEW_LINE; }
+    void JasminEmitter::emit_lstore(const std::string & value) { ofile << TAB << "lstore " << value << NEW_LINE; }
     /// @ }
 
     /// @ { Branch Instructions
@@ -73,14 +73,15 @@ namespace backend
     {
         switch (type)
         {
-            case ArrayType::atype_boolean : ofile << TAB << "newarray int"    << NEW_LINE; break;
-            case ArrayType::atype_char    : ofile << TAB << "newarray char"   << NEW_LINE; break;
-            case ArrayType::atype_float   : ofile << TAB << "newarray float"  << NEW_LINE; break;
-            case ArrayType::atype_double  : ofile << TAB << "newarray double" << NEW_LINE; break;
-            case ArrayType::atype_byte    : ofile << TAB << "newarray byte"   << NEW_LINE; break;
-            case ArrayType::atype_short   : ofile << TAB << "newarray short"  << NEW_LINE; break;
-            case ArrayType::atype_int     : ofile << TAB << "newarray int"    << NEW_LINE; break;
-            case ArrayType::atype_long    : ofile << TAB << "newarray long"   << NEW_LINE; break;
+            case ArrayType::atype_boolean : ofile << TAB << "anewarray int"              << NEW_LINE; break;
+            case ArrayType::atype_char    : ofile << TAB << "anewarray char"             << NEW_LINE; break;
+            case ArrayType::atype_float   : ofile << TAB << "anewarray float"            << NEW_LINE; break;
+            case ArrayType::atype_double  : ofile << TAB << "anewarray double"           << NEW_LINE; break;
+            case ArrayType::atype_byte    : ofile << TAB << "anewarray byte"             << NEW_LINE; break;
+            case ArrayType::atype_short   : ofile << TAB << "anewarray short"            << NEW_LINE; break;
+            case ArrayType::atype_int     : ofile << TAB << "anewarray int"              << NEW_LINE; break;
+            case ArrayType::atype_long    : ofile << TAB << "anewarray long"             << NEW_LINE; break;
+            case ArrayType::atype_object  : ofile << TAB << "anewarray java/lang/Object" << NEW_LINE; break;
             default:
                 THROW_EXCEPTION(InvalidCase, "Invalid ArrayType");
         }
@@ -280,21 +281,21 @@ namespace backend
 
     void JasminEmitter::emit_default_constructor()
     {
-        ofile                                                                 << NEW_LINE;
-        ofile        << ".method public <init>()V"                            << NEW_LINE;
-        ofile                                                                 << NEW_LINE;
-        ofile << TAB << "\taload_0"                                           << NEW_LINE;
-        ofile << TAB << "\tinvokenonvirtual    java/lang/Object/<init>()V"    << NEW_LINE;
-        ofile << TAB << "\treturn"                                            << NEW_LINE;
-        ofile                                                                 << NEW_LINE;
-        ofile << TAB << ".limit locals 1"                                     << NEW_LINE;
-        ofile << TAB << ".limit stack  1"                                     << NEW_LINE;
-        ofile        << ".end method"                                         << NEW_LINE;
+        ofile                                                              << NEW_LINE;
+        ofile        << ".method public <init>()V"                         << NEW_LINE;
+        ofile                                                              << NEW_LINE;
+        ofile << TAB << "\taload_0"                                        << NEW_LINE;
+        ofile << TAB << "\tinvokenonvirtual    java/lang/Object/<init>()V" << NEW_LINE;
+        ofile << TAB << "\treturn"                                         << NEW_LINE;
+        ofile                                                              << NEW_LINE;
+        ofile << TAB << ".limit locals 1"                                  << NEW_LINE;
+        ofile << TAB << ".limit stack  1"                                  << NEW_LINE;
+        ofile        << ".end method"                                      << NEW_LINE;
     }
 
     void JasminEmitter::emit_public_method_signature(const std::string & method_name, const std::vector <std::string> & args, const std::string & return_type)
     {
-        ofile << TAB << ".method public static " << method_name << "(";
+        ofile << ".method public static " << method_name << "(";
 
         for (const auto & arg : args)
         {
@@ -304,24 +305,24 @@ namespace backend
         ofile << ")" << return_type << NEW_LINE;
     }
 
-    void JasminEmitter::emit_class_variable(const std::string & variable, const char type_letter)
+    void JasminEmitter::emit_class_variable(const std::string & variable, const std::string & type_letter)
     {
-        ofile << TAB << ".field private static " << variable << " " << type_letter << ";" << NEW_LINE;
+        ofile << ".field private static " << variable << " " << type_letter << NEW_LINE;
     }
 
     void JasminEmitter::emit_main_class(const std::string & program_name)
     {
-        ofile << TAB << ".class public " << program_name << NEW_LINE;
-        ofile << TAB << ".super java/lang/Object"        << NEW_LINE;
-        ofile                                            << NEW_LINE;
+        ofile << ".class public " << program_name << NEW_LINE;
+        ofile << ".super java/lang/Object"        << NEW_LINE;
+        ofile                                     << NEW_LINE;
     }
 
     void JasminEmitter::emit_printf(const std::string & format_string, const std::map <uint32_t, std::string> & variables)
     {
-        ofile << TAB << "ldc " << format_string         << NEW_LINE;
-        ofile << TAB << "ldc " << variables.size()      << NEW_LINE;
-        ofile << TAB << "anewarray java/lang/Object"    << NEW_LINE;
-        ofile << TAB << "dup"                           << NEW_LINE;
+        ofile << TAB << "ldc " << format_string      << NEW_LINE;
+        ofile << TAB << "ldc " << variables.size()   << NEW_LINE;
+        ofile << TAB << "anewarray java/lang/Object" << NEW_LINE;
+        ofile << TAB << "dup"                        << NEW_LINE;
 
         uint32_t i = 0;
         for (const auto & pair : variables)
@@ -333,6 +334,20 @@ namespace backend
         }
 
         ofile << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << NEW_LINE;
+    }
+
+    void JasminEmitter::emit_comment(const std::string & comment)
+    {
+        ofile << TAB << "; " << comment << NEW_LINE;
+    }
+
+    void JasminEmitter::emit_comment_custom(const std::string & comment, const uint8_t indents)
+    {
+        for (uint8_t i = 0; i < indents; i++)
+        {
+            ofile << TAB;
+        }
+        ofile << "; " << comment << NEW_LINE;
     }
 
 } /// backend

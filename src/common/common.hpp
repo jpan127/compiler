@@ -9,6 +9,7 @@
 #include <map>
 #include <unordered_map>
 #include <memory>
+#include <functional>
 
 /// Common project includes
 #include "CustomException.hpp"

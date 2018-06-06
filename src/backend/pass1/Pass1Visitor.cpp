@@ -5,11 +5,11 @@
 namespace backend
 {
 
-    Pass1Visitor::Pass1Visitor(const std::string fname, std::ofstream & j_file, const bool debug) :
+    Pass1Visitor::Pass1Visitor(const std::string fname, std::ofstream & j_file, JasminEmitter & j_emitter, const bool debug) :
         PassVisitor(1, j_file),
         program_name(fname),
-        symbol_table_stack(),
-        debug_flag(debug)
+        debug_flag(debug),
+        j_emitter(j_emitter)
     {
         // Store the global symbol table, created in the constructor of symbol table stack, inside the symbol store
         PassVisitor::store.register_symbol_table(symbol_table_stack.get_local_symbol_table());

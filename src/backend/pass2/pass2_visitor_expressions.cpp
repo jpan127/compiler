@@ -1,9 +1,33 @@
 #include "Pass2Visitor.hpp"
+#include "TypeResolver.hpp"
 
 
 
 namespace backend
 {
+
+    void Pass2Visitor::convert_if_necessary(const backend::TypeSpecifier & start, const backend::TypeSpecifier & end)
+    {
+        // Type mismatches need to be converted
+        const utils::TypeConversion conversion = utils::determine_conversion_requirement(start, end);
+        switch (conversion)
+        {
+            case utils::TypeConversion::d2l  : j_emitter.emit_d2l(); break;
+            case utils::TypeConversion::d2f  : j_emitter.emit_d2f(); break;
+            case utils::TypeConversion::d2i  : j_emitter.emit_d2i(); break;
+            case utils::TypeConversion::l2d  : j_emitter.emit_l2d(); break;
+            case utils::TypeConversion::l2f  : j_emitter.emit_l2f(); break;
+            case utils::TypeConversion::l2i  : j_emitter.emit_l2i(); break;
+            case utils::TypeConversion::f2d  : j_emitter.emit_f2d(); break;
+            case utils::TypeConversion::f2l  : j_emitter.emit_f2l(); break;
+            case utils::TypeConversion::f2i  : j_emitter.emit_f2i(); break;
+            case utils::TypeConversion::i2d  : j_emitter.emit_i2d(); break;
+            case utils::TypeConversion::i2l  : j_emitter.emit_i2l(); break;
+            case utils::TypeConversion::i2f  : j_emitter.emit_i2f(); break;
+            case utils::TypeConversion::none :                       break;
+            default                          :                       break;
+        }
+    }
 
     void Pass2Visitor::visit_expression(CmmParser::ExpressionContext * context,
         const std::vector <CmmParser::ExpressionContext *> & expressions,
@@ -15,15 +39,10 @@ namespace backend
             visit(expressions[i]);
 
             // Type mismatches need to be converted
-            const std::string type_convert_instruction = convert_type_if_neccessary(expressions[i]->type, context->type);
-            if (type_convert_instruction.size() > 0)
-            {
-                j_file << TAB << type_convert_instruction << endl;
-            }
+            convert_if_necessary(expressions[i]->type, context->type);
         }
 
-        const std::string opcode = resolve_expression_instruction(context->type, expr_operator);
-        j_file << "\t" << opcode << endl;
+        emit_expression_instruction(context->type, expr_operator);
     }
 
     antlrcpp::Any Pass2Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
@@ -78,11 +97,17 @@ namespace backend
          *  If float    : emit ldc
          */
 
-        std::string instruction = "\t";
+        string_JasminEmitter_FUNCT emit_callback = EMPTY_STRING_CALLBACK;
+        string_JasminEmitter_FPTR emit_fptr = nullptr;
+        std::string value;
 
         if (context->primaryExpression()->Identifier())
         {
-            instruction += create_get_variable_instruction(program_name, context->primaryExpression()->Identifier()->getText(), context->type_letter);
+            emit_callback = create_get_variable_instruction(
+                program_name,
+                context->primaryExpression()->Identifier()->getText(),
+                context->type_letter
+            );
         }
         else if (context->primaryExpression()->IntegerConstant() ||
                 (context->primaryExpression()->FloatConstant()))
@@ -91,54 +116,53 @@ namespace backend
             // Doubles need to be treated differently
             if (backend::Type::t_double == context->type.get_type())
             {
-                std::string double_value;
-
                 // If integer constant add decimal
                 if (context->primaryExpression()->IntegerConstant())
                 {
-                    double_value += context->primaryExpression()->IntegerConstant()->getText();
-                    double_value += ".0";
+                    value += context->primaryExpression()->IntegerConstant()->getText();
+                    value += ".0";
                 }
                 else
                 {
-                    double_value += context->primaryExpression()->FloatConstant()->getText();
+                    value += context->primaryExpression()->FloatConstant()->getText();
                 }
 
-                instruction += "ldc2_w " + double_value;
+                emit_fptr = &backend::JasminEmitter::emit_ldc2_w;
             }
             else if (backend::Type::t_float == context->type.get_type())
             {
-                std::string float_value;
-
                 // If integer constant add decimal
                 if (context->primaryExpression()->IntegerConstant())
                 {
-                    float_value += context->primaryExpression()->IntegerConstant()->getText();
-                    float_value += ".0";
+                    value += context->primaryExpression()->IntegerConstant()->getText();
+                    value += ".0";
                 }
                 else
                 {
-                    float_value += context->primaryExpression()->FloatConstant()->getText();
+                    value += context->primaryExpression()->FloatConstant()->getText();
                 }
 
-                instruction += "ldc " + float_value;
+                emit_fptr = &backend::JasminEmitter::emit_ldc;
             }
             else
             {
-                instruction += "ldc " + context->primaryExpression()->IntegerConstant()->getText();
+                emit_fptr = &backend::JasminEmitter::emit_ldc;
+                value = context->primaryExpression()->IntegerConstant()->getText();
             }
+
+            emit_callback = std::make_pair(
+                std::move(emit_fptr),
+                std::move(value)
+            );
         }
 
-        if (instruction.length() > 2)
+        if (context->primaryExpression()->current_nesting_level == 1)
         {
-            if (context->primaryExpression()->current_nesting_level == 1)
-            {
-                instruction_buffer.push_back(instruction);
-            }
-            else
-            {
-                j_file << instruction << endl;
-            }
+            instruction_buffer.push_back(emit_callback);
+        }
+        else
+        {
+            emit_callback.first(&j_emitter, emit_callback.second);
         }
 
         visitChildren(context);
@@ -159,14 +183,7 @@ namespace backend
         const std::string rhs_name = context->expression(1)->getText();
 
         // Emit an explanation comment for condition
-        j_file << TAB
-               << "; "
-               << lhs_name
-               << " "
-               << context->opr
-               << " "
-               << rhs_name
-               << endl;
+        j_emitter.emit_comment(lhs_name + " " + context->opr + " " + rhs_name);
 
         // Visit both operands
         constexpr uint8_t num_operands = 2;
@@ -176,31 +193,26 @@ namespace backend
             // Doubles and floats need to be converted before jump comparison instruction
             if (backend::Type::t_double == context->expression(i)->type.get_type())
             {
-                j_file << TAB
-                       << "d2i"
-                       << endl;
+                j_emitter.emit_d2i();
             }
             else if (backend::Type::t_float  == context->expression(i)->type.get_type())
             {
-                j_file << TAB
-                       << "f2i"
-                       << endl;
+                j_emitter.emit_f2i();
             }
         }
 
         // Emit an explanation comment for exit
-        j_file << TAB
-               << "; Exit ["
-               << context->iteration_name
-               << "] condition"
-               << endl;
+        j_emitter.emit_comment("Exit [" + context->iteration_name + "] condition");
 
+        const std::string branch_target = context->iteration_name + "_end";
         // Emit the instruction
-        j_file << TAB
-               << context->opcode
-               << " "
-               << context->iteration_name + "_end"
-               << endl;
+             if (context->opr == "<")                              { j_emitter.emit_if_icmpge(branch_target); }  ///< (x <  y) branch if >=
+        else if (context->opr == "<=")                             { j_emitter.emit_if_icmpgt(branch_target); }  ///< (x <= y) branch if >
+        else if (context->opr == ">")                              { j_emitter.emit_if_icmple(branch_target); }  ///< (x >  y) branch if <=
+        else if (context->opr == ">=")                             { j_emitter.emit_if_icmplt(branch_target); }  ///< (x >= y) branch if <
+        else if (context->opr == "==" || context->opr == "is")     { j_emitter.emit_if_icmpne(branch_target); }  ///< (x == y) branch if !=
+        else if (context->opr == "!=" || context->opr == "is not") { j_emitter.emit_if_icmpeq(branch_target); }  ///< (x != y) branch if ==
+        else                                                       { THROW_EXCEPTION(InvalidOperator, context->opr); }
 
         return nullptr;
     }
@@ -225,15 +237,10 @@ namespace backend
         if ("or" == context->opr)
         {
             // If left condition is > 0, jump
-            j_file << TAB
-                   << "ifgt "
-                   << context->iteration_name
-                   << endl;
+            j_emitter.emit_ifgt(context->iteration_name);
+
             // If right condition is > 0, jump
-            j_file << TAB
-                   << "ifgt "
-                   << context->iteration_name
-                   << endl;
+            j_emitter.emit_ifgt(context->iteration_name);
         }
 
         return nullptr;
@@ -261,14 +268,16 @@ namespace backend
          */
 
         // Add a comment
-        const std::string comment = "\t; " + context->getText();
         if (context->current_nesting_level == 1)
         {
-            instruction_buffer.push_back(comment);
+            const backend::string_JasminEmitter_FPTR emit_fptr = &backend::JasminEmitter::emit_comment;
+            const std::string value = context->getText();
+            const backend::string_JasminEmitter_FUNCT emit_comment_callback = std::make_pair(emit_fptr, value);
+            instruction_buffer.push_back(emit_comment_callback);
         }
         else
         {
-            j_file << comment << endl;
+            j_emitter.emit_comment(context->getText());
         }
 
         if (context->expression())
@@ -276,27 +285,27 @@ namespace backend
             // Visit right hand side expression first
             visit(context->expression());
 
-            const backend::TypeSpecifier expression_type = context->expression()->type;
-            const std::string type_convert_instruction = convert_type_if_neccessary(expression_type, context->type);
-            if (type_convert_instruction.size() > 0)
-            {
-                j_file << TAB << type_convert_instruction << endl;
-            }
+            // Types might need to be converted
+            convert_if_necessary(context->expression()->type, context->type);
         }
         else if (context->functionReturn())
         {
             visit(context->functionReturn());
         }
 
-        const std::string instruction = create_put_variable_instruction(program_name, context->Identifier()->toString(), context->type_letter);
+        const backend::string_JasminEmitter_FUNCT emit_put_callback = create_put_variable_instruction(
+            program_name,
+            context->Identifier()->toString(),
+            context->type_letter
+        );
 
         if (context->current_nesting_level == 1)
         {
-            instruction_buffer.push_back(instruction);
+            instruction_buffer.push_back(emit_put_callback);
         }
         else
         {
-            j_file << instruction << endl;
+            emit_put_callback.first(&j_emitter, emit_put_callback.second);
         }
 
         return nullptr;

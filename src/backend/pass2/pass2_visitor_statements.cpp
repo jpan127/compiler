@@ -11,37 +11,47 @@ namespace backend
         const bool is_duplicate)
     {
         // Comment
-        emit_comment(context, 1);
+        j_emitter.emit_comment(context->getText());
 
         // Get instruction
-        j_file << TAB << create_get_variable_instruction(program_name, identifier, context->type_letter) << endl;
+        const backend::string_JasminEmitter_FUNCT emit_get_callback = create_get_variable_instruction(program_name, identifier, context->type_letter);
+        emit_get_callback.first(&j_emitter, emit_get_callback.second);
 
         if (is_duplicate)
         {
-            j_file << TAB
-                   << ((context->type.get_type() == backend::Type::t_double) ? ("dup2") : ("dup"))
-                   << endl;
+            if (context->type.get_type() == backend::Type::t_double)
+            {
+                j_emitter.emit_dup2();
+            }
+            else
+            {
+                j_emitter.emit_dup();
+            }
         }
         else
         {
             // Load 1
             switch (context->type.get_type())
             {
-                case backend::Type::t_double : j_file << TAB << "dconst_1" << endl; break;
-                case backend::Type::t_float  : j_file << TAB << "fconst_1" << endl; break;
-                case backend::Type::t_int    : j_file << TAB << "iconst_1" << endl; break;
+                case backend::Type::t_double : j_emitter.emit_dconst_1(); break;
+                case backend::Type::t_float  : j_emitter.emit_fconst_1(); break;
+                case backend::Type::t_int    : j_emitter.emit_iconst_1(); break;
                 default:
                     THROW_EXCEPTION(InvalidType, "Type : " + context->type.to_string());
             }
         }
 
         // ADD
-        j_file << TAB
-               << resolve_expression_instruction(context->type, opr)
-               << endl;
+        emit_expression_instruction(context->type, opr);
 
         // Put instruction
-        j_file << create_put_variable_instruction(program_name, identifier, context->type_letter) << endl;
+        const backend::string_JasminEmitter_FUNCT emit_put_callback = create_put_variable_instruction(
+            program_name,
+            identifier,
+            context->type_letter
+        );
+
+        emit_put_callback.first(&j_emitter, emit_put_callback.second);
     }
 
     antlrcpp::Any Pass2Visitor::visitIfElseStatement(CmmParser::IfElseStatementContext *context)
@@ -57,13 +67,8 @@ namespace backend
         visitChildren(context);
 
         // Only increment scope_counter at the end of the entire statement
-        const std::string end_label = "if_else_end_" + std::to_string(PassVisitor::scope_counter++);
-
         // Add label to branch to for exiting the loop
-        j_file << end_label
-               << ":"
-               << endl
-               << endl;
+        j_emitter.emit_label("if_else_end_" + std::to_string(PassVisitor::scope_counter++));
 
         return nullptr;
     }
@@ -81,12 +86,10 @@ namespace backend
          *          At the end of the inside of the branch, jumps to end of the entire if-else statement
          */
 
-        emit_comment(context, 0);
+        j_emitter.emit_comment_custom(context->getText(), 0);
 
         // Emit start label
-        j_file << context->conditionalExpression()->iteration_name
-               << ":"
-               << endl;
+        j_emitter.emit_label(context->conditionalExpression()->iteration_name);
 
         // Visit expression child first
         visit(context->conditionalExpression());
@@ -94,20 +97,12 @@ namespace backend
         // Visit children inside the if block
         visit(context->statement());
 
-        j_file << TAB
-               << "; Exit if-else statement"
-               << endl
-               << TAB
-               << "goto "
-               << "if_else_end_" + std::to_string(PassVisitor::scope_counter)
-               << endl;
+        j_emitter.emit_comment("Exit if-else statement");
+
+        j_emitter.emit_goto("if_else_end_" + std::to_string(PassVisitor::scope_counter));
 
         // Emit end label
-        j_file << context->conditionalExpression()->iteration_name
-               << "_end"
-               << ":"
-               << endl
-               << endl;
+        j_emitter.emit_label(context->conditionalExpression()->iteration_name + "_end");
 
         return nullptr;
     }
@@ -125,12 +120,10 @@ namespace backend
          *          At the end of the inside of the branch, jumps to end of the entire if-else statement
          */
 
-        emit_comment(context, 0);
+        j_emitter.emit_comment_custom(context->getText(), 0);
 
         // Emit start label
-        j_file << context->conditionalExpression()->iteration_name
-               << ":"
-               << endl;
+        j_emitter.emit_label(context->conditionalExpression()->iteration_name);
 
         // Visit expression child first
         visit(context->conditionalExpression());
@@ -138,20 +131,12 @@ namespace backend
         // Visit children inside the if block
         visit(context->statement());
 
-        j_file << TAB
-               << "; Exit if-else statement"
-               << endl
-               << TAB
-               << "goto "
-               << "if_else_end_" + std::to_string(PassVisitor::scope_counter)
-               << endl;
+        j_emitter.emit_comment("Exit if-else statement");
+
+        j_emitter.emit_goto("if_else_end_" + std::to_string(PassVisitor::scope_counter));
 
         // Emit end label
-        j_file << context->conditionalExpression()->iteration_name
-               << "_end"
-               << ":"
-               << endl
-               << endl;
+        j_emitter.emit_label(context->conditionalExpression()->iteration_name + "_end");
 
         return nullptr;
     }
@@ -169,13 +154,10 @@ namespace backend
          *          At the end of the inside of the branch, jumps to end of the entire if-else statement
          */
 
-        emit_comment(context, 0);
+        j_emitter.emit_comment_custom(context->getText(), 0);
 
         // Emit start label
-        j_file << "else_"
-               << std::to_string(scope_counter)
-               << ":"
-               << endl;
+        j_emitter.emit_label("else_" + std::to_string(scope_counter));
 
         return visitChildren(context);
     }
@@ -191,31 +173,21 @@ namespace backend
          *  Emit a label for the end of loop
          */
 
-        emit_comment(context, 0);
+        j_emitter.emit_comment_custom(context->getText(), 0);
 
         // Emit the iteration label
-        j_file << context->conditionalExpression()->iteration_name
-               << ":"
-               << endl;
+        j_emitter.emit_label(context->conditionalExpression()->iteration_name);
 
         // Emit while loop
         auto value = visitChildren(context);
 
+        j_emitter.emit_comment("Jump to start of loop");
+
         // Emit a jump to start of loop
-        j_file << TAB
-               << "; Jump to start of loop"
-               << endl
-               << TAB
-               << "goto "
-               << context->conditionalExpression()->iteration_name
-               << endl;
+        j_emitter.emit_goto(context->conditionalExpression()->iteration_name);
 
         // Add label to branch to for exiting the loop
-        j_file << context->conditionalExpression()->iteration_name
-               << "_end"
-               << ":"
-               << endl
-               << endl;
+        j_emitter.emit_label(context->conditionalExpression()->iteration_name + "_end");
 
         return value;
     }
@@ -233,20 +205,28 @@ namespace backend
             emit_symbol_table();
 
             // Emit the main program epilogue
-            j_file                                                                       << endl;
-            j_file << TAB << "; Print Elapsed Time"                                      << endl;
-            j_file << TAB << "getstatic     " << program_name << "/_runTimer LRunTimer;" << endl;
-            j_file << TAB << "invokevirtual RunTimer.printElapsedTime()V"                << endl;
+            j_emitter.emit_new_line();
+            j_emitter.emit_comment("Print Elapsed Time");
+            j_emitter.emit_getstatic(program_name + "/_runTimer LRunTimer;");
+            j_emitter.emit_invokevirtual("RunTimer.printElapsedTime()V");
         }
 
         if (context->expression())
         {
             visit(context->expression());
-            j_file << TAB << instruction_prefix_map_lookup(context->expression()->type) << "return" << endl << endl;
+
+            switch (instruction_prefix_map_lookup(context->expression()->type))
+            {
+                case 'i': j_emitter.emit_ireturn(); break;
+                case 'f': j_emitter.emit_freturn(); break;
+                case 'd': j_emitter.emit_dreturn(); break;
+                default :                           break;
+            }
         }
         else
         {
-            j_file << TAB << "return" << endl << endl;
+            j_emitter.emit_return();
+            j_emitter.emit_new_line();
         }
 
         return nullptr;
