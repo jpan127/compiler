@@ -30,44 +30,33 @@ namespace backend
         return visitChildren(context);
     }
 
-    /// @TODO : [#33] This function needs to be simplified / cleaned up
     antlrcpp::Any Pass1Visitor::visitFunctionDefinition(CmmParser::FunctionDefinitionContext * context)
     {
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
+        /**
+         *  1. Create new symbol table and add to the stack + the store
+         *  2. Create a list of all the function's parameters
+         *  3. Store the function prototype into the map
+         *  4. Visit children
+         *  5. Pop symbol table from the stack
+         */
+
         // Create new symbol table and push it before visiting children
-        intermediate::SymbolTablePtr table_ptr = std::make_shared <intermediate::SymbolTable>
-        (
+        intermediate::SymbolTablePtr table_ptr = std::make_shared <intermediate::SymbolTable> (
             intermediate::SymbolTableScope::function,
             context->Identifier()->getText(),
             symbol_table_stack.get_current_nesting_level()
         );
+
         symbol_table_stack.push_symbol_table(table_ptr);
         PassVisitor::store.register_symbol_table(table_ptr);
 
         const std::string & current_function = symbol_table_stack.get_local_symbol_table()->get_table_name();
-
         const std::string function_return_type(1, toupper(context->typeSpecifier()->getText()[0]));
-        context->return_type = function_return_type;
+
+        // Create parameter list
         std::string function_parameters;
-
-        // Checks to see if function has already been defined
-        if (PassVisitor::function_definition_map.find(current_function) != PassVisitor::function_definition_map.end())
-        {
-            THROW_EXCEPTION(CompilerError, "Function already defined : " + current_function);
-        }
-        // Stores function declaration and registers the function into the map
-        else
-        {
-            PassVisitor::function_definition_map[current_function] = current_function + "(";
-        }
-
-        // Set the compound statement's scope name as the function name
-        context->compoundStatement()->scope_name = context->Identifier()->getText();
-
-        // Create a header for pass2visitor to use when creating the method
-        context->function_header = "\n.method public static " + current_function + "(";
-
         if (context->parameterTypeList()->functionParameterList())
         {
             // Add each function parameter to jasmin function header
@@ -79,26 +68,30 @@ namespace backend
             }
         }
 
-        // Close parameter parenthesis and declare function return type
-        context->function_header += function_parameters + ")" + function_return_type;
-        if (current_function == "main")
+        // Checks to see if function has already been defined
+        if (PassVisitor::function_definition_map.find(current_function) != PassVisitor::function_definition_map.end())
         {
-            PassVisitor::function_definition_map[current_function] += "[Ljava/lang/String;)";
+            THROW_EXCEPTION(CompilerError, "Function already defined : " + current_function);
         }
+        // Stores function declaration and registers the function into the map
         else
         {
-            PassVisitor::function_definition_map[current_function] += function_parameters + ")" + function_return_type;
+            const std::string prototype = (current_function == "main") ?
+                          (current_function + "([Ljava/lang/String;)") :
+                          (current_function + "(" + function_parameters + ")" + function_return_type);
+            PassVisitor::function_definition_map[current_function] = prototype;
         }
-
-        // Add comment of function signature for jasmin file
-        context->function_header += "\n; " + context->getText() + "\n";
 
         // Allow parameterTypeList to add function parameters to symtab
         visit(context->parameterTypeList());
         visit(context->compoundStatement());
 
+        // Set the compound statement's scope name as the function name
+        context->compoundStatement()->scope_name = context->Identifier()->getText();
+
         context->num_local_vars = symbol_table_stack.get_local_symbol_table()->get_size() - 1;
         context->stack_size     = context->num_local_vars * 8;
+        context->return_type    = function_return_type;
 
         // Pop the local table after visiting child nodes
         symbol_table_stack.pop_symbol_table();
