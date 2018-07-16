@@ -5,11 +5,15 @@
 namespace backend
 {
 
-    Pass2Visitor::Pass2Visitor(const std::string fname, std::ofstream & j_file, JasminEmitter & j_emitter, const bool debug) :
+    Pass2Visitor::Pass2Visitor(
+        const std::string fname,
+        std::ofstream & j_file,
+        JasminEmitter & j_emitter,
+        SpeedLoggerPtr logger) :
         PassVisitor(2, j_file),
         program_name(fname),
-        debug_flag(debug),
-        j_emitter(j_emitter)
+        j_emitter(j_emitter),
+        logger(logger)
     {
         /// Empty
     }

@@ -41,11 +41,7 @@ namespace backend
 
         context->type = resolve_expression_type(lhs_type, rhs_type);
 
-        cout << TAB
-             << lhs_type.to_string()
-             << " "
-             << rhs_type.to_string()
-             << endl;
+        logger->debug("LHS : {}, RHS : {}", lhs_type.to_string(), rhs_type.to_string());
     }
 
     antlrcpp::Any Pass1Visitor::visitMulDivExpr(CmmParser::MulDivExprContext *context)
@@ -218,9 +214,8 @@ namespace backend
         const std::string variable = context->Identifier()->getText();
 
         lookup_symbol_type(variable, context->type, context->type_letter);
-        cout << TAB << variable << " " << context->type << endl;
+        logger->debug("Variable : {}, Type : {}", variable, context->type.to_string());
 
-        // context->current_nesting_level = symtab_stack->get_local_symtab()->get_nesting_level();
         context->current_nesting_level = symbol_table_stack.get_current_nesting_level();
 
         return visitChildren(context);

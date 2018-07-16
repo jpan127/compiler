@@ -6,20 +6,41 @@
 #include <exception>
 #include <string>
 
+#include "logger.hpp"
+
 
 
 /// Base class for custom exceptions
 class CustomException : public std::exception
 {
 
+private:
+
+    std::string create_error_message(const std::string & error) const
+    {
+        const std::string message =
+            "----------------------------------------------------------------\n"
+            "Exception : " + error + "\n"
+            "----------------------------------------------------------------\n";
+        return message;
+    }
+
 public:
 
     /// Prints the error message then exits the program
     void print_and_exit() const
     {
-        std::cerr << "----------------------------------------------------------------" << std::endl
-                  << "Exception : " << error                                            << std::endl
-                  << "----------------------------------------------------------------" << std::endl << std::endl;
+        const auto logger = spdlog::get("logger");
+        const std::string message = create_error_message(error);
+
+        if (logger)
+        {
+            logger->error(message);
+        }
+        else
+        {
+            std::cerr << message;
+        }
 
         std::terminate();
     }
@@ -27,9 +48,7 @@ public:
     /// Overloading output stream operator to print the same as print_and_exit()
     friend std::ostream & operator << (std::ostream & out, const CustomException & e)
     {
-        out << "----------------------------------------------------------------" << std::endl
-            << "Exception : " << e.error                                          << std::endl
-            << "----------------------------------------------------------------" << std::endl << std::endl;
+        out << e.create_error_message(e.error);
         return out;
     }
 

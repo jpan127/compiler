@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PassVisitor.hpp"
+#include "logger.hpp"
 
 
 
@@ -13,7 +14,10 @@ namespace backend
     public:
 
         /// Constructor
-        Pass2Visitor(const std::string fname, std::ofstream & j_file, JasminEmitter & j_emitter, const bool debug=false);
+        Pass2Visitor(const std::string fname,
+            std::ofstream & j_file,
+            JasminEmitter & j_emitter,
+            SpeedLoggerPtr logger);
 
         /// Destructor
         virtual ~Pass2Visitor();
@@ -65,9 +69,6 @@ namespace backend
         /// Name of the program under compilation
         std::string program_name;
 
-        /// Flag for print debug messages or not
-        const bool debug_flag;
-
         /// Stores the current function name
         std::string current_function = "global";
 
@@ -76,6 +77,9 @@ namespace backend
 
         /// Responsible for handling the details of the code generation
         JasminEmitter & j_emitter;
+
+        /// Logger
+        SpeedLoggerPtr logger;
 
         /**
          *  Emits the appropriate arithmetic instruction
