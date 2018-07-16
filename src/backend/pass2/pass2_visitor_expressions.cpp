@@ -112,7 +112,7 @@ namespace backend
         else if (context->primaryExpression()->IntegerConstant() ||
                 (context->primaryExpression()->FloatConstant()))
         {
-            cout << TAB << context->type << endl;
+            logger->debug("Type : {}", context->type.to_string());
             // Doubles need to be treated differently
             if (backend::Type::t_double == context->type.get_type())
             {

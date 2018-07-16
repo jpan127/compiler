@@ -1,8 +1,8 @@
 #pragma once
 
+#include "common.hpp"
 #include "CmmBaseVisitor.h"
 
-#include "common.hpp"
 #include "SymbolTableStack.hpp"
 #include "SymbolStore.hpp"
 #include "TypeSpecifier.hpp"
@@ -38,7 +38,9 @@ namespace backend
     protected:
 
         /// Protected constructor
-        PassVisitor(const uint8_t pass_number, std::ofstream & j_file) : pass_number(pass_number), j_file(j_file)
+        PassVisitor(const uint8_t pass_number, std::ofstream & j_file) :
+            pass_number(pass_number),
+            j_file(j_file)
         {
         }
 
@@ -88,7 +90,7 @@ namespace backend
         char instruction_prefix_map_lookup(const backend::TypeSpecifier & type) const;
 
         /**
-         *  Prints the current visit context information if [debug_flag] is true
+         *  Prints the current visit context information
          *  @param context   : Current context or parser rule
          *  @param rule_name : Name of current rule
          */

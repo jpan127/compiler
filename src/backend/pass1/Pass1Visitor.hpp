@@ -2,6 +2,7 @@
 
 #include "PassVisitor.hpp"
 #include "SymbolTableStack.hpp"
+#include "logger.hpp"
 
 
 
@@ -14,7 +15,10 @@ namespace backend
     public:
 
         /// Constructor
-        Pass1Visitor(const std::string fname, std::ofstream & j_file, JasminEmitter & j_emitter, const bool debug=false);
+        Pass1Visitor(const std::string fname,
+            std::ofstream & j_file,
+            JasminEmitter & j_emitter,
+            SpeedLoggerPtr logger);
 
         /// Destructor
         ~Pass1Visitor() { }
@@ -67,8 +71,11 @@ namespace backend
         /// Symbol Table Stack
         intermediate::SymbolTableStack symbol_table_stack;
 
-        /// Flag to print debug messages or not
-        const bool debug_flag;
+        /// Responsible for handling the details of the code generation
+        JasminEmitter & j_emitter;
+
+        /// Logger
+        SpeedLoggerPtr logger;
 
         /// Responsible for handling the details of the code generation
         JasminEmitter & j_emitter;

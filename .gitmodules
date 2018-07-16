@@ -1,3 +1,6 @@
 [submodule "tools/Krakatau"]
 	path = tools/Krakatau
 	url = https://github.com/Storyyeller/Krakatau.git
+[submodule "src/modules/spdlog"]
+	path = src/modules/spdlog
+	url = https://github.com/gabime/spdlog.git
