@@ -1,4 +1,5 @@
 #include "PassVisitor.hpp"
+#include "logger.hpp"
 
 
 
@@ -29,34 +30,31 @@ namespace backend
         const std::string space_padding(longest_name - rule_name.length(), ' ');
         const std::string text = context->getText();
 
+        auto logger = spdlog::get("logger");
+
         if (std::equal(error_prefix.begin(), error_prefix.end(), text.begin()))
         {
-            cout << "-----------------------------------------------------------" << endl;
-            cout << "[PASS"
-                 << std::to_string(pass_number)
-                 << "]["
-                 << context->children.size()
-                 << "][COMPILATION ERROR] "
-                 << rule_name
-                 << " : "
-                 << context->getText()
-                 << endl;
-            cout << "Skipping this node!" << endl;
-            cout << "-----------------------------------------------------------" << endl;
+            logger->debug("-----------------------------------------------------------");
+            logger->debug("[PASS{}][{}][COMPILATION ERROR] {} : {}",
+                std::to_string(pass_number),
+                context->children.size(),
+                rule_name,
+                context->getText()
+            );
+            logger->debug("Skipping this node!");
+            logger->debug("-----------------------------------------------------------");
             return false;
         }
         else
         {
-            cout << "[PASS"
-                 << std::to_string(pass_number)
-                 << "]["
-                 << context->children.size()
-                 << "] "
-                 << rule_name
-                 << space_padding
-                 << " : "
-                 << context->getText()
-                 << endl;
+            logger->debug("[PASS{}][{}] {}{} : {}",
+                std::to_string(pass_number),
+                context->children.size(),
+                rule_name,
+                space_padding,
+                context->getText()
+            );
+
             return true;
         }
     }
