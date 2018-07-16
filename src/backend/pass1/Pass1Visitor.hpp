@@ -77,6 +77,9 @@ namespace backend
         /// Logger
         SpeedLoggerPtr logger;
 
+        /// Responsible for handling the details of the code generation
+        JasminEmitter & j_emitter;
+
         /**
          *  Looks up the symbol type of context->Identifier()->getText()
          *  Stores [context->type] and [context->type_letter]
