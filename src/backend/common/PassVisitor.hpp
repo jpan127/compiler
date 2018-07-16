@@ -42,6 +42,7 @@ namespace backend
             pass_number(pass_number),
             j_file(j_file)
         {
+            /// Empty
         }
 
         /// Virtual destructor
@@ -95,16 +96,6 @@ namespace backend
          *  @param rule_name : Name of current rule
          */
         bool print_debug_context(antlr4::ParserRuleContext * context, const std::string & rule_name) const;
-
-        /**
-         *  Wrapper for determining if an identifier is a digit or not
-         *  @param identifier : String identifier
-         *  @returns          : True for digit
-         */
-        static bool is_digit(const std::string & identifier)
-        {
-            return std::isdigit(identifier[0]) || (identifier[0] == '-' && std::isdigit(identifier[1]));
-        }
 
         /**
          *  Sets up a GET instruction depending on global or not global

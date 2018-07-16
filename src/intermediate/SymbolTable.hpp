@@ -62,6 +62,7 @@ namespace intermediate
          */
         SymbolPtr lookup_symbol(const std::string & name) const;
 
+        /// Returns true if a symbol exists in the table
         bool symbol_exists(const std::string & name) const;
 
         /// Returns the size of the table
@@ -79,6 +80,7 @@ namespace intermediate
         /// Returns a vector of all the symbols in the table
         std::vector <SymbolPtr> glob_all_symbols() const;
 
+        /// Returns a reference to the table data structure
         const std::map <const std::string, SymbolPtr> & get_table() const { return m_table; }
 
     private:

@@ -13,7 +13,6 @@
 
 
 static constexpr bool debug = true;
-static const std::string logger_name = "logger";
 
 static const char * pass1_msg =
     "\n"
@@ -36,7 +35,7 @@ static const char * unknown_exception_msg =
 int main(int argc, const char *args[])
 {
     /// Create logger
-    SpeedLoggerPtr logger = logger_create(logger_name, debug);
+    SpeedLoggerPtr logger = logger_create(debug);
 
     const std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
     {

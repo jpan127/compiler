@@ -11,7 +11,12 @@ float mak5 = .1;
  */
 int fizzy(int f)
 {
+    printf("[fizzy] Before : %d\n", f);
+
     int negate = f * -1;
+
+    printf("[fizzy] After  : %d\n", negate);
+
     return negate;
 }
 
@@ -21,9 +26,13 @@ int fizzy(int f)
  */
 int buzzy(int b)
 {
+    printf("[buzzy] Before : %d\n", b);
+
     int square;
     square = b;
     square**;
+
+    printf("[buzzy] After  : %d\n", square);
     return square;
 }
 
@@ -76,6 +85,8 @@ void main()
 
         /// Unary operator
         d--;
+
+        printf("[%f] %d %d %d %d\n", d, fizz_counter, buzz_counter, fizz, buzz);
     }
 
     /// Call functions and store value in lvalue

@@ -110,4 +110,23 @@ namespace backend
         return visitChildren(context);
     }
 
+    antlrcpp::Any Pass1Visitor::visitPrintfStatement(CmmParser::PrintfStatementContext *context)
+    {
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+        // Get all format value substitutions and store it
+        const std::vector <CmmParser::ValueContext *> values = context->value();
+        for (const auto & v : values)
+        {
+            context->args.push_back(v->getText());
+        }
+
+        // Save the format string
+        context->format_string = context->String()->getText();
+
+        logger->debug("{}", context->format_string);
+
+        return visitChildren(context);
+    }
+
 } /// backend

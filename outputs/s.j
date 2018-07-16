@@ -16,17 +16,53 @@
 ; floatmak5=.1;
 .field private static mak5 F
 .method public static fizzy(I)I
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "[fizzy] Before : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 0
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+	pop
+	; End printf
 	; negate=f*-1
 	iload 0
 	ldc -1
 	imul
 	istore 1
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "[fizzy] After  : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 1
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+	pop
+	; End printf
 	iload 1
 	ireturn
 .limit locals 22
 .limit stack 8
 .end method
 .method public static buzzy(I)I
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "[buzzy] Before : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 0
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+	pop
+	; End printf
 	; square=b
 	iload 0
 	istore 1
@@ -35,6 +71,18 @@
 	dup
 	imul
 	istore 1
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "[buzzy] After  : %d\n"
+	ldc 1
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	iload 1
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+	pop
+	; End printf
 	iload 1
 	ireturn
 .limit locals 22
@@ -91,7 +139,7 @@
 	; e=-1.1
 	ldc2_w -1.1
 	dstore 8
-; while((d>0)and(d<1000)){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;}
+; while((d>0)and(d<1000)){if(d%fizz_buzz==0){e**;}elseif(d%fizz==0){fizz_counter++;}elseif(d%buzz==0){++buzz_counter;}else{mak1=mak1^mak2;mak2=mak2&mak3;mak3=mak3<<1;mak4=mak4*-2;}d--;printf("[%f] %d %d %d %d\n",d,fizz_counter,buzz_counter,fizz,buzz);}
 while_0:
 	; d > 0
 	dload 6
@@ -190,6 +238,38 @@ if_else_end_1:
 	dconst_1
 	dsub
 	dstore 6
+	getstatic java/lang/System/out Ljava/io/PrintStream;
+	ldc "[%f] %d %d %d %d\n"
+	ldc 5
+	anewarray java/lang/Object
+	dup
+	iconst_0
+	dload 6
+	invokestatic java/lang/Double/valueOf(D)Ljava/lang/Double;
+	aastore
+	dup
+	iconst_1
+	iload 0
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	dup
+	iconst_2
+	iload 1
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	dup
+	iconst_3
+	iload 2
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	dup
+	iconst_4
+	iload 3
+	invokestatic java/lang/Integer/valueOf(I)Ljava/lang/Integer;
+	aastore
+	invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;
+	pop
+	; End printf
 	; Jump to start of loop
 	goto while_0
 while_0_end:

@@ -49,6 +49,7 @@ namespace backend
         antlrcpp::Any visitUnaryIncrementStatement(CmmParser::UnaryIncrementStatementContext *context) override;
         antlrcpp::Any visitUnaryDecrementStatement(CmmParser::UnaryDecrementStatementContext *context) override;
         antlrcpp::Any visitUnarySquareStatement(CmmParser::UnarySquareStatementContext *context) override;
+        antlrcpp::Any visitPrintfStatement(CmmParser::PrintfStatementContext *context) override;
         /// @ }
 
         /// @ { Expressions

@@ -1,4 +1,5 @@
 #include "JasminEmitter.hpp"
+#include "TypeResolver.hpp"
 
 /// https://cs.au.dk/~mis/dOvs/jvmspec/ref-Java.html
 
@@ -317,23 +318,89 @@ namespace backend
         ofile                                     << NEW_LINE;
     }
 
-    void JasminEmitter::emit_printf(const std::string & format_string, const std::map <uint32_t, std::string> & variables)
+    void JasminEmitter::emit_printf(const std::string & format_string,
+        const std::vector <std::string> & args,
+        const std::string & current_function,
+        const intermediate::SymbolTablePtr local_table)
     {
-        ofile << TAB << "ldc " << format_string      << NEW_LINE;
-        ofile << TAB << "ldc " << variables.size()   << NEW_LINE;
-        ofile << TAB << "anewarray java/lang/Object" << NEW_LINE;
-        ofile << TAB << "dup"                        << NEW_LINE;
+        const uint32_t num_specifiers = args.size();
 
-        uint32_t i = 0;
-        for (const auto & pair : variables)
+        // Set up the printstream object
+        emit_getstatic("java/lang/System/out Ljava/io/PrintStream;");
+
+        // Prepare an array for the format specifiers
+        emit_ldc(format_string);
+        emit_ldc(std::to_string(num_specifiers));
+        emit_anewarray("java/lang/Object");
+        emit_dup();
+
+        // Load each argument
+        for (uint32_t ii = 0; ii < num_specifiers; ii++)
         {
-            ofile << TAB << "ldc "          << i++          << NEW_LINE;
-            ofile << TAB << "iload "        << pair.first   << NEW_LINE;
-            ofile << TAB << "invokestatic " << pair.second  << NEW_LINE;
-            ofile << TAB << "aastore"                       << NEW_LINE;
+            const std::string & current_arg = args[ii];
+            const bool is_last_arg = (ii == (num_specifiers - 1));
+
+            // Emit array index
+            emit_integer(ii);
+
+            // If argument is digit then it is a constant, then load constant
+            if (utils::is_digit(current_arg))
+            {
+                // Emit value
+                emit_ldc(current_arg);
+                // Emit java/lang/Integer/valueOf
+                emit_value_of(determine_constant_type(current_arg));
+            }
+            // If argument is a variable, need to load variable reference number
+            else
+            {
+                // Lookup symbol in the table
+                const intermediate::SymbolPtr symbol = local_table->lookup_symbol(current_arg);
+                if (symbol)
+                {
+                    const char type_letter = symbol->get_type_letter();
+                    // Emit value
+                    switch (type_letter)
+                    {
+                        case 'F': emit_fload(std::to_string(symbol->get_id())); break;
+                        case 'D': emit_dload(std::to_string(symbol->get_id())); break;
+                        case 'I': emit_iload(std::to_string(symbol->get_id())); break;
+                        case 'L': emit_lload(std::to_string(symbol->get_id())); break;
+                    }
+
+                    // Emit java/lang/Integer/valueOf
+                    emit_value_of(type_letter);
+                }
+                else
+                {
+                #if DEBUG
+                    THROW_EXCEPTION(
+                        MissingSymbol,
+                        "Symbol is not in the current symbol table " + current_arg + " , " + current_function
+                    );
+                #else
+                    THROW_EXCEPTION(
+                        CompilerError,
+                        "printf argument " + current_arg + " does not exist"
+                    );
+                #endif
+                }
+            }
+
+            // Store arg reference in array
+            emit_aastore();
+
+            // The last argument doesnt need a dup instruction, but all others do
+            if (!is_last_arg)
+            {
+                emit_dup();
+            }
         }
 
-        ofile << TAB << "invokevirtual java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;" << NEW_LINE;
+        // Invoke printf
+        emit_invokevirtual("java/io/PrintStream/printf(Ljava/lang/String;[Ljava/lang/Object;)Ljava/io/PrintStream;");
+        emit_pop();
+        emit_comment("End printf");
     }
 
     void JasminEmitter::emit_comment(const std::string & comment)
@@ -348,6 +415,56 @@ namespace backend
             ofile << TAB;
         }
         ofile << "; " << comment << NEW_LINE;
+    }
+
+    /*////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+     *                                                                                                                   *
+     *                                            P R I V AT E  M E T H O D S                                            *
+     *                                                                                                                   *
+     */////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    void JasminEmitter::emit_integer(const uint32_t integer)
+    {
+        switch (integer)
+        {
+            case 0  : emit_iconst_0(); break;
+            case 1  : emit_iconst_1(); break;
+            case 2  : emit_iconst_2(); break;
+            case 3  : emit_iconst_3(); break;
+            case 4  : emit_iconst_4(); break;
+            case 5  : emit_iconst_5(); break;
+            default : emit_ldc(std::to_string(integer)); break;
+        }
+    }
+
+    char JasminEmitter::determine_constant_type(const std::string & constant)
+    {
+        const char decimal_point = '.';
+        char type_letter = 'I';
+
+        if (constant.find(decimal_point) != std::string::npos)
+        {
+            type_letter = 'F';
+        }
+
+        return type_letter;
+    }
+
+    void JasminEmitter::emit_value_of(const char type_letter)
+    {
+        switch (type_letter)
+        {
+            case 'F': emit_invokestatic("java/lang/Float/valueOf(F)Ljava/lang/Float;");     break;
+            case 'D': emit_invokestatic("java/lang/Double/valueOf(D)Ljava/lang/Double;");   break;
+            case 'I': emit_invokestatic("java/lang/Integer/valueOf(I)Ljava/lang/Integer;"); break;
+            case 'L': emit_invokestatic("java/lang/Long/valueOf(L)Ljava/lang/Long;");       break;
+            default :
+                THROW_EXCEPTION(
+                    InvalidType,
+                    std::string("Invalid type letter found : ") +
+                    std::string(1, type_letter)
+                );
+        }
     }
 
 } /// backend
