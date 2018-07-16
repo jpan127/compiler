@@ -41,6 +41,13 @@ blockItem
     |   functionCall
     ;
 
+/// Im not sure why this doesn't work as a lexer rule, but it does as a parser rule
+value
+    :   Identifier
+    |   IntegerConstant
+    |   FloatConstant
+    ;
+
 /***************************************************
  *                                                 *
  *             D E C L A R A T I O N S             *
@@ -113,6 +120,16 @@ statement
     |   assignmentStatement
     |   jumpStatement
     |   unaryStatement Semi
+    |   printfStatement
+    ;
+
+printfStatement
+    locals [
+        std::string format_string,
+        std::vector <std::string> args,
+    ]
+    // printf("Printing : %f", 100.0f);
+    :   Printf LeftParen String ( Comma value )* RightParen Semi
     ;
 
 compoundStatement
@@ -275,6 +292,7 @@ ConditionalOperator
     |   NotEqual
     ;
 
+
 /***************************************************
  *                                                 *
  *                      Lexer                      *
@@ -288,7 +306,8 @@ Power            : '**';
 IgnoreWildCard   : '_';
 Namespace        : 'namespace';
 ScopeResolution  : '::';
-String           : 'string';
+DoubleQuote      : '"';
+Printf           : 'printf';
 /// @ }
 Break            : 'break';
 Case             : 'case';
@@ -399,6 +418,10 @@ Identifier
         (   IdentifierNondigit
         |   Digit
         )*
+    ;
+
+String
+    :   DoubleQuote .*? DoubleQuote // Regex : /"([^"\\]*(\\.[^"\\]*)*)"/
     ;
 
 Whitespace

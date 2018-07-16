@@ -6,7 +6,7 @@ LIBS_PATH="$REPO_PATH/libs"
 
 # Need to use these CD commands because java would not find the jars in a different directory
 START_FROM_ROOT_DIR="cd $REPO_PATH"
-MOVE_J_FILE_TO_OUPUTS="mv s.j outputs"
+MOVE_J_FILE_TO_OUPUTS="cp s.j outputs"
 ASSEMBLE_CMD="cd $ASSEMBLER_PATH && java -jar "jasmin.jar" -g "../../outputs/$1.j""
 MOVE_TO_OUTPUTS="mv s.class ../../outputs"
 EXECUTE_CMD="cd $LIBS_PATH && java -cp \".;../outputs;PascalRTL.jar\" "$1""

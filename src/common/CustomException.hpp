@@ -19,8 +19,9 @@ private:
     std::string create_error_message(const std::string & error) const
     {
         const std::string message =
+            "\n"
             "----------------------------------------------------------------\n"
-            "Exception : " + error + "\n"
+            "" + error + "\n"
             "----------------------------------------------------------------\n";
         return message;
     }
@@ -30,7 +31,7 @@ public:
     /// Prints the error message then exits the program
     void print_and_exit() const
     {
-        const auto logger = spdlog::get("logger");
+        const auto logger = logger_get_default_logger();
         const std::string message = create_error_message(error);
 
         if (logger)
@@ -82,7 +83,7 @@ protected:
  *  @note : Purposely left out the semicolon so macro calls keep the semicolon
  */
 #define THROW_EXCEPTION(exception, message)                                 \
-    throw exception(string(__PRETTY_FUNCTION__) + string(" : ") + message)
+    throw exception(string(__PRETTY_FUNCTION__) + string(" :\n") + message)
 
 /// @ { Custom exception classes
 DEFINE_CUSTOM_EXCEPTION(InvalidCase);
@@ -94,4 +95,5 @@ DEFINE_CUSTOM_EXCEPTION(InvalidType);
 DEFINE_CUSTOM_EXCEPTION(AntlrParsedIncorrectly);
 DEFINE_CUSTOM_EXCEPTION(CompilerError);
 DEFINE_CUSTOM_EXCEPTION(MissingArgument);
+DEFINE_CUSTOM_EXCEPTION(KeyError);
 /// @ }

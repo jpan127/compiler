@@ -37,4 +37,16 @@ namespace utils
      */
     TypeConversion determine_conversion_requirement(const backend::TypeSpecifier & start, const backend::TypeSpecifier & end);
 
+    /**
+     *  Wrapper for determining if an identifier is a digit or not
+     *  @param identifier : String identifier
+     *  @returns          : True for digit
+     */
+    inline bool is_digit(const std::string & identifier)
+    {
+        return  (identifier[0] == '-')        ?
+                (std::isdigit(identifier[1])) :
+                (std::isdigit(identifier[0]));
+    }
+
 }

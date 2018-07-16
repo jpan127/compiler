@@ -1,4 +1,6 @@
 #include "Pass2Visitor.hpp"
+#include "FormatStringParser.hpp"
+#include "TypeResolver.hpp"
 
 
 
@@ -270,6 +272,46 @@ namespace backend
             "*",
             true
         );
+
+        return visitChildren(context);
+    }
+
+    antlrcpp::Any Pass2Visitor::visitPrintfStatement(CmmParser::PrintfStatementContext *context)
+    {
+        PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
+
+        // Check if the format string has the appropriate amount of specifiers
+        FormatStringParser format_string_parser(context->format_string);
+        const bool matches = format_string_parser.check_num_specifiers_match(context->args);
+
+        // If the number of specifiers does not match the number of arguments, log errors and throw an exception
+        if (!matches)
+        {
+            std::string arg_list;
+            for (const auto & arg : context->args)
+            {
+                arg_list += arg + " ";
+            }
+
+            logger->error("Format String : {}", context->format_string);
+            logger->error("Arguments     : {}", arg_list);
+
+            THROW_EXCEPTION(CompilerError, "printf statement does mat have the right amount of specifiers");
+        }
+        else
+        {
+            // Get the local symbol table, which is the only one that printf supports
+            const intermediate::SymbolTablePtr local_table = store.lookup_symbol_table(current_function);
+
+            j_emitter.emit_comment(context->getText());
+
+            j_emitter.emit_printf(
+                context->format_string,
+                context->args,
+                current_function,
+                local_table
+            );
+        }
 
         return visitChildren(context);
     }

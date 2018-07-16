@@ -30,7 +30,7 @@ namespace backend
         const std::string space_padding(longest_name - rule_name.length(), ' ');
         const std::string text = context->getText();
 
-        auto logger = spdlog::get("logger");
+        auto logger = logger_get_default_logger();
 
         if (std::equal(error_prefix.begin(), error_prefix.end(), text.begin()))
         {

@@ -1,4 +1,5 @@
 #include "Pass1Visitor.hpp"
+#include "TypeResolver.hpp"
 
 
 
@@ -23,7 +24,7 @@ namespace backend
             logger->debug("Has assignment : {}", variable_name);
 
             if (context->assignmentExpression(0)->expression() &&
-                PassVisitor::is_digit(context->assignmentExpression(0)->expression()->getText()))
+                utils::is_digit(context->assignmentExpression(0)->expression()->getText()))
             {
                 variable_initial_value = context->assignmentExpression(0)->expression()->getText();
                 context->assignmentExpression(0)->expression()->type_letter = context->type_letter;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "common.hpp"
+#include "SymbolTableStack.hpp"
 
 
 
@@ -46,6 +47,26 @@ namespace backend
         /// Output stream used for emitting assembly instructions
         std::ofstream & ofile;
 
+        /**
+         *  Emits an instruction for loading a constant integer
+         *  If the integer is less than 6, it uses an iconst instruction, otherwise ldc
+         *  @param integer : The integer to load
+         */
+        void emit_integer(const uint32_t integer);
+
+        /**
+         *  From a string representation of a constant, determine its type letter
+         *  @param constant : The string representation of a constant
+         *  @returns        : The determined type letter
+         */
+        char determine_constant_type(const std::string & constant);
+
+        /**
+         *  Emits a static method invokation for the valueof() function depending on the type
+         *  @param type_letter : The letter of the type of the value that is on the top of the stack
+         */
+        void emit_value_of(const char type_letter);
+
     public:
 
         /// Constructor with only member as parameter
@@ -74,10 +95,16 @@ namespace backend
         void emit_main_class(const std::string & program_name);
         /**
          *  The sequence of instructions for a Java printf in Jasmin
-         *  @param format_string : A formatted string with the %-based substitutions
-         *  @param variables     : Map of variables, mapping the variable ID to the name
+         *  @param format_string    : A formatted string with the % specifiers
+         *  @param args             : Vector of arguments that replaces the specifiers
+         *  @param current_function : The current function of compilation, for debugging purposes
+         *  @param local_table      : The local symbol table to retrieve symbols from
          */
-        void emit_printf(const std::string & format_string, const std::map <uint32_t, std::string> & variables);
+        void emit_printf(const std::string & format_string,
+            const std::vector <std::string> & args,
+            const std::string & current_function,
+            const intermediate::SymbolTablePtr local_table);
+
         /**
          *  Comment
          *  @param comment : The string for the comment
