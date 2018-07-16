@@ -15,7 +15,7 @@ namespace backend
         {
             // Set the type members
             const std::string type = type_specifiers[i]->getText();
-            cout << TAB << type << endl;
+            logger->debug("{}", type);
             context->type = backend::TypeSpecifier(type);
             context->type_letter = context->type.get_letter();
 
@@ -24,7 +24,7 @@ namespace backend
             // Create and push a new symbol into the local table
             symbol_table_stack.push_symbol_locally(variable_name, context->type);
 
-            cout << TAB << "Symbol created for : " << variable_name << endl;
+            logger->debug("Symbol created for : {}", variable_name);
         }
 
         return visitChildren(context);

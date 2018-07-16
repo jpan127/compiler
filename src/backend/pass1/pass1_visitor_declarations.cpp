@@ -10,7 +10,7 @@ namespace backend
         PRINT_CONTEXT_AND_EXIT_IF_PARSE_ERROR();
 
         const std::string type = context->typeSpecifier()->getText();
-        cout << TAB << type << endl;
+        logger->debug("Type : {}", type);
         context->type = backend::TypeSpecifier(type);
         context->type_letter = context->type.get_letter();
 
@@ -20,8 +20,7 @@ namespace backend
         if (context->assignmentExpression(0))
         {
             variable_name = context->assignmentExpression(0)->Identifier()->getText();
-            cout << TAB << "Has assignment\n";
-            cout << TAB << variable_name << endl;
+            logger->debug("Has assignment : {}", variable_name);
 
             if (context->assignmentExpression(0)->expression() &&
                 PassVisitor::is_digit(context->assignmentExpression(0)->expression()->getText()))
@@ -36,11 +35,11 @@ namespace backend
             variable_name = context->Identifier(0)->getText();
         }
 
-        cout << TAB << context->type << " " << context->type_letter << endl;
+        logger->debug("Type : {}, Letter : {}", context->type.to_string(), context->type_letter);
 
         symbol_table_stack.push_symbol_locally(variable_name, context->type);
 
-        cout << TAB << "Symbol created for : " << variable_name << endl;
+        logger->debug("Symbol created for : {}", variable_name);
 
         // Depending which scope this is in, emit declaration
         if (symbol_table_stack.get_current_nesting_level() == 1)
